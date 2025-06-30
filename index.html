@@ -1,17 +1,255 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Hello World!</title>
-<link rel="stylesheet" href="bluestyle.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryyan Safar | Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@900,700,600,500,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<h1>Hello world!</h1>
-<div><img src="hello world.png" alt="Hello World from Space" style="width:100%;max-width:640px" title="Whatchu know about rolling down in the deep?!"></div>
-<p>This is the first file in my new Git Repo.</p>
-<p>This line is here to show how merging works.</p>
-<div><img src="git hello.png" alt="Hello Git" style="width:100%;max-width:640px"></div>
-<p>This is a new paragraph to see what branches can do in github</p>
-
+  <header class="hero super-hero">
+    <div class="hero-bg-animated"></div>
+    <div class="hero-content">
+      <h1 class="big-title">Ryyan Safar</h1>
+      <h2 class="typewriter" id="typewriter"></h2>
+      <div class="hero-links">
+        <a href="https://www.linkedin.com/in/ryyan-safar-038a82288/" target="_blank" title="LinkedIn"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" /></a>
+        <a href="https://github.com/ryyansafar" target="_blank" title="GitHub"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" /></a>
+        <a href="mailto:safarryyan@gmail.com" title="Email"><img src="https://img.icons8.com/ios-filled/50/ffffff/new-post.png" alt="Email" style="background:transparent;width:32px;height:32px;"/></a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span id="exp-count">0</span>+ Years Experience</div>
+        <div class="stat"><span id="proj-count">0</span>+ Projects</div>
+        <div class="stat"><span id="lead-count">0</span>+ Leadership Roles</div>
+      </div>
+      <div class="tech-icons">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" />
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="C" />
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" alt="C++" />
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/matlab/matlab-original.svg" alt="MATLAB" />
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" />
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5" />
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3" />
+      </div>
+      <a href="#about" class="cta-btn">Explore My Work</a>
+    </div>
+    <svg class="hero-blob" viewBox="0 0 600 600"><g transform="translate(300,300)"><path d="M120,-144.6C154.2,-120.2,179.2,-77.2,181.2,-36.2C183.2,4.8,162.2,43.8,137.2,80.2C112.2,116.6,83.2,150.4,45.2,168.2C7.2,186,-39.8,187.8,-77.2,170.2C-114.6,152.6,-142.4,115.6,-154.2,75.2C-166,34.8,-161.8,-9,-146.2,-47.2C-130.6,-85.4,-103.6,-118,-68.2,-142.2C-32.8,-166.4,11,-182.2,52.2,-172.2C93.4,-162.2,131.8,-126.2,120,-144.6Z" fill="#f59e42" fill-opacity="0.18"></path></g></svg>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#volunteering">Volunteering</a></li>
+      <li><a href="#resume">Resume</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <main>
+    <section id="about" class="card fancy-about">
+      <h2>About Me</h2>
+      <p class="about-narrative">Aspiring Electronics and Communication Engineer with a passion for building automation systems and intelligent machines. Seeking opportunities to apply technical knowledge in robotics, embedded systems, chip design, and motion control while driving impactful innovations. Eager to contribute to collaborative projects, optimize real-world solutions, and grow as a tech leader at the intersection of hardware and software.</p>
+    </section>
+    <section id="education" class="card fancy-timeline">
+      <h2>Education</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-icon">🎓</div>
+          <div class="timeline-content">
+            <h3>B.Tech., Electronics and Communication</h3>
+            <span class="timeline-date">2024-27</span>
+            <p>Rajagiri School of Engineering and Technology, Kochi<br><strong>CGPA:</strong> 9.02</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-icon">💻</div>
+          <div class="timeline-content">
+            <h3>CS50 Introduction to Computer Science</h3>
+            <span class="timeline-date">2024</span>
+            <p>HarvardX<br><strong>CGPA:</strong> 10</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-icon">🏫</div>
+          <div class="timeline-content">
+            <h3>Class 12, CBSE</h3>
+            <span class="timeline-date">2020-22</span>
+            <p>Naipunnya Public School, Thrikkakara<br><strong>CGPA:</strong> 8.9</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-icon">🏫</div>
+          <div class="timeline-content">
+            <h3>Class 10, CBSE</h3>
+            <span class="timeline-date">2019-20</span>
+            <p>Rajagiri Public School, Kalamassery<br><strong>CGPA:</strong> 10</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="experience" class="card">
+      <h2>Professional Experience</h2>
+      <div class="exp-list">
+        <div class="exp-item">
+          <h3>Research Intern <span class="exp-place">@ AugsenseLab</span></h3>
+          <span class="exp-date">Aug 2025 – Present</span>
+          <ul>
+            <li>Researching and comparing weather prediction values from NWP to real obtained values.</li>
+          </ul>
+        </div>
+        <div class="exp-item">
+          <h3>Technical Coordinator <span class="exp-place">@ Teamapt Ltd.</span></h3>
+          <span class="exp-date">Aug 2024 – Present</span>
+          <ul>
+            <li>Developed and hosted the company website <a href="https://teamapt.in" target="_blank">teamapt.in</a>.</li>
+            <li>Assisted faculty and students with all technical support.</li>
+          </ul>
+        </div>
+        <div class="exp-item">
+          <h3>Vice President <span class="exp-place">@ SOCIAL - Student Open Collaboration for Innovative Applications</span></h3>
+          <span class="exp-date">Nov 2023 – Jan 2025</span>
+          <ul>
+            <li>Hosted a workshop on social entrepreneurship.</li>
+            <li>Contributed as a part-time content writer for the newsletter, "Chronicles."</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section id="volunteering" class="card">
+      <h2>Volunteering & Leadership</h2>
+      <div class="vol-list">
+        <div class="vol-item">
+          <h3>LINK Representative <span class="exp-place">@ IEEE RSET Student Branch</span></h3>
+          <span class="exp-date">Jan 2025 – Present</span>
+          <ul><li>Bridging the gap between LINK and IEEE RSET SB.</li></ul>
+        </div>
+        <div class="vol-item">
+          <h3>Technical Coordinator <span class="exp-place">@ IEEE RSET Student Branch</span></h3>
+          <span class="exp-date">Mar 2024 – Jan 2025</span>
+          <ul>
+            <li>Redesigned the IEEE Office on Wheels Bus and attached piezoelectric sensors to make it more engaging.</li>
+            <li>Provided certificates for multiple events using AutoCrat.</li>
+            <li>Coordinated multiple events and assisted with technical help.</li>
+          </ul>
+        </div>
+        <div class="vol-item">
+          <h3>Technical & Professional Development Team Lead <span class="exp-place">@ IEEE India Council</span></h3>
+          <span class="exp-date">Feb 2024 – Dec 2024</span>
+          <ul>
+            <li>Coordinated and planned the R10 Codeathon for students in the R10 Region.</li>
+            <li>Coordinated AISWYLC'24.</li>
+          </ul>
+        </div>
+        <div class="vol-item">
+          <h3>Co-Student Representative <span class="exp-place">@ IEEE Kerala Section</span></h3>
+          <span class="exp-date">Jan 2025 – Present</span>
+          <ul><li>Selected to be the Co-SR IEEE LINK.</li></ul>
+        </div>
+        <div class="vol-item">
+          <h3>Future Directions Committee Project Group Coordinator <span class="exp-place">@ IEEE Kerala Section</span></h3>
+          <span class="exp-date">Feb 2024 – Jan 2025</span>
+          <ul><li>Researched multiple Future Directions initiatives and planned events, conferences, and workshops in Kerala.</li></ul>
+        </div>
+        <div class="vol-item">
+          <h3>Millennium Fellowship Round 2 Finalist <span class="exp-place">@ United Nations</span></h3>
+          <span class="exp-date">Jan 2025 – Present</span>
+          <ul><li>Planning a semester-long project, "Haath-se-Haath."</li></ul>
+        </div>
+      </div>
+    </section>
+    <section id="projects" class="card">
+      <h2>Major Projects</h2>
+      <div class="proj-list">
+        <div class="proj-item">
+          <h3>Smart Glass Mount for Visually Impaired</h3>
+          <ul>
+            <li>Developed a Smart Glass mount attachable to user glasses (HackSus 4.0, 36 hours).</li>
+            <li>Obstacle detection and real-time response using ESP32CAM, YOLOv5, and custom algorithms.</li>
+            <li>Recognition: Real World Impact Award at Hacksus 4.0 (55+ teams).</li>
+          </ul>
+        </div>
+        <div class="proj-item">
+          <h3>CNC Plotter Machine for PCB Design</h3>
+          <ul>
+            <li>Designed and developed a compact CNC plotter from scratch using repurposed components.</li>
+            <li>Enabled cost-effective PCB prototyping with custom firmware and G-code integration.</li>
+          </ul>
+        </div>
+        <div class="proj-item">
+          <h3>Autonomous Car Door Assembly Robot</h3>
+          <ul>
+            <li>Simulated a robotic system for automatic car door alignment and assembly using ROS 2 and Gazebo.</li>
+            <li>Designed a 5-DOF robotic arm and built a Gazebo factory environment for real-time debugging.</li>
+          </ul>
+        </div>
+        <div class="proj-item">
+          <h3>Sign Language to English Translator</h3>
+          <ul>
+            <li>Developed an ID card-type prototype that translates Sign Language to English for a college hackathon.</li>
+            <li>Shortlisted in the top 5; only first-year team to make it to the top 5.</li>
+          </ul>
+        </div>
+        <div class="proj-item">
+          <h3>Voting Machine</h3>
+          <ul>
+            <li>Developed an electronic voting machine using ESP32, LCD, SD card, and LEDs for real-time vote recording and result display.</li>
+            <li>Implemented secure vote logging and interactive user interface.</li>
+          </ul>
+        </div>
+        <div class="proj-item">
+          <h3>Dual Op-Amp Signal Generator</h3>
+          <ul>
+            <li>Designed and built a triangle and square wave generator using two IC741 op-amps.</li>
+            <li>Hands-on experience in soldering, breadboarding, and analog circuit debugging.</li>
+          </ul>
+        </div>
+        <div class="proj-item">
+          <h3>IR Communication System</h3>
+          <ul>
+            <li>Developed a simple IR transmitter-receiver system for frequency-based wireless control.</li>
+            <li>Achieved successful wireless communication over 1-2 meters.</li>
+          </ul>
+        </div>
+        <div class="proj-item">
+          <h3>Password Manager</h3>
+          <ul>
+            <li>Developed a password manager website as a final project for CS50.</li>
+            <li>Features: secure login, password generation, update, and deletion with extra security prompts.</li>
+          </ul>
+        </div>
+        <div class="proj-item">
+          <h3>Automatic Street Light Prototype</h3>
+          <ul>
+            <li>Developed a prototype that turns on lights when ambient light is low.</li>
+            <li>Recognition: Third position in a circuit designing competition.</li>
+          </ul>
+        </div>
+        <div class="proj-item">
+          <h3>Hospital Booking Agent/Finder</h3>
+          <ul>
+            <li>Developed a hospital finder/booking assistant for 12th-grade final project using Python and MySQL.</li>
+            <li>Assisted in booking procedures for 5 hospitals with 5 specialists each.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section id="contact" class="card">
+      <h2>Contact</h2>
+      <p>Want to connect? Drop me a message!</p>
+      <form>
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <textarea placeholder="Your Message" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2024 Ryyan Safar. Made with ❤️</p>
+  </footer>
+  <div id="custom-cursor"></div>
+  <canvas id="particle-bg"></canvas>
+  <script src="script.js"></script>
 </body>
-</html>
+</html> 
