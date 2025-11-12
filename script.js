@@ -1,6 +1,16 @@
 // Animated SVG background for hero
 const hero = document.querySelector('.hero');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+const isMobile = isTouch || window.matchMedia('(max-width: 768px)').matches;
+// Base lite heuristic
+const baseLite = reduceMotion || isMobile || new URLSearchParams(location.search).has('lite') || document.documentElement.dataset.lite === '1';
+// Derive effective mode from saved preference
+const savedMode = localStorage.getItem('perfMode');
+let isLite = baseLite;
+if (savedMode === 'lite') isLite = true;
+if (savedMode === 'full') isLite = false;
+if (isLite) { document.body.classList.add('lite'); }
 const svgNS = 'http://www.w3.org/2000/svg';
 const svg = document.createElementNS(svgNS, 'svg');
 svg.classList.add('animated-svg');
@@ -19,59 +29,93 @@ hero.appendChild(svg);
 // Enhanced animated SVG wave with multiple frequencies
 let wave = svg.querySelector('#wave');
 let t = 0;
-function animateWave() {
-  t += 0.015;
-  const amplitude = 25;
-  const freq1 = 0.012;
-  const freq2 = 0.018;
+let lastWaveTs = 0;
+function animateWave(ts = 0) {
+  // throttle to ~30fps
+  if (ts - lastWaveTs < 33) { requestAnimationFrame(animateWave); return; }
+  lastWaveTs = ts;
+  t += 0.010;
+  const amplitude = 10; // even lower amplitude
+  const freq1 = 0.009;
+  const freq2 = 0.013;
   let d = 'M0,160';
-  for (let x = 0; x <= 1440; x += 40) {
-    let y = 160 + Math.sin((x * freq1) + t) * amplitude + 
-            Math.cos((x * freq2) + t * 1.5) * (amplitude * 0.3);
+  for (let x = 0; x <= 1440; x += 56) {
+    let y = 160 + Math.sin((x * freq1) + t) * amplitude +
+            Math.cos((x * freq2) + t * 1.2) * (amplitude * 0.25);
     d += `L${x},${y.toFixed(1)}`;
   }
   d += 'L1440,192L1440,320L0,320Z';
   wave.setAttribute('d', d);
   requestAnimationFrame(animateWave);
 }
-if (!reduceMotion) { animateWave(); }
+if (!isLite) { requestAnimationFrame(animateWave); }
 
-// Enhanced parallax effect for hero content with smooth easing
+// Enhanced parallax effect for hero content with smooth easing (desktop/full only)
 const heroContent = document.querySelector('.hero-content');
-let ticking = false;
+const enableParallax = !isLite && !isMobile;
+let ticking = false; let lastParTs = 0;
 
-function updateParallax() {
+function updateParallax(ts = 0) {
+  if (!enableParallax) return; // disabled on Lite/mobile
+  // throttle to ~30fps
+  if (ts - lastParTs < 33) { ticking = false; return; }
+  lastParTs = ts;
   const scrollY = window.scrollY;
-  const heroHeight = document.querySelector('.hero').offsetHeight;
+  const heroEl = document.querySelector('.hero');
+  if (!heroEl) return;
+  const heroHeight = heroEl.offsetHeight;
   const opacity = Math.max(0, 1 - scrollY / heroHeight);
-  
   if (scrollY < heroHeight) {
-    heroContent.style.transform = `translateY(${scrollY * 0.3}px)`;
+    heroContent.style.transform = `translateY(${(scrollY * 0.22).toFixed(2)}px)`;
     heroContent.style.opacity = opacity;
   }
   ticking = false;
 }
 
-window.addEventListener('scroll', () => {
-  if (!ticking) {
-    requestAnimationFrame(updateParallax);
-    ticking = true;
-  }
-}, { passive: true });
+if (enableParallax) {
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }, { passive: true });
+}
 
-// Scroll-triggered reveal for cards with stagger animation
+// Scroll-triggered reveal for cards with light stagger
 const cards = document.querySelectorAll('.card, .fancy-about, .fancy-timeline, .fancy-volunteering');
 const observer = new window.IntersectionObserver((entries) => {
   entries.forEach((entry, index) => {
     if (entry.isIntersecting) {
-      setTimeout(() => {
-      entry.target.classList.add('visible');
-      }, index * 100);
+      const delay = Math.min(index * 40, 160); // shorter stagger
+      setTimeout(() => { entry.target.classList.add('visible'); }, delay);
       observer.unobserve(entry.target);
     }
   });
 }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 cards.forEach(card => observer.observe(card));
+
+// Performance toggle button
+const perfBtn = document.getElementById('perf-toggle');
+if (perfBtn) {
+  const applyLabel = () => {
+    const lite = document.body.classList.contains('lite');
+    perfBtn.textContent = lite ? 'Lite' : 'Full';
+    perfBtn.setAttribute('aria-pressed', lite ? 'true' : 'false');
+  };
+  applyLabel();
+  perfBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const nextLite = !document.body.classList.contains('lite');
+    document.body.classList.toggle('lite', nextLite);
+    localStorage.setItem('perfMode', nextLite ? 'lite' : 'full');
+    applyLabel();
+    // Force a tiny URL param change so GitHub Pages/cache applies the new mode reliably
+    const url = new URL(location.href);
+    url.searchParams.set('mode', nextLite ? 'lite' : 'full');
+    location.href = url.toString();
+  }, { passive: false });
+}
+
 
 // Enhanced smooth scroll for nav links with offset
 const navLinks = document.querySelectorAll('nav a');
@@ -152,7 +196,7 @@ function animateCursor() {
   cursor.style.top = cursorY + 'px';
   requestAnimationFrame(animateCursor);
 }
-if (!reduceMotion) { animateCursor(); } else { cursor.style.display = 'none'; }
+if (!isLite) { animateCursor(); } else { cursor.style.display = 'none'; }
 
 document.querySelectorAll('a, button, .cta-btn, .exp-item, .vol-item, .proj-item, .timeline-item').forEach(el => {
   el.addEventListener('mouseenter', () => cursor.classList.add('active'));
@@ -161,7 +205,7 @@ document.querySelectorAll('a, button, .cta-btn, .exp-item, .vol-item, .proj-item
 
 // Enhanced 3D tilt effect on cards with perspective
 const tiltCards = document.querySelectorAll('.card, .exp-item, .vol-item, .proj-item');
-if (!reduceMotion) {
+if (!isLite) {
   tiltCards.forEach(card => {
     card.addEventListener('mousemove', e => {
       const rect = card.getBoundingClientRect();
@@ -169,37 +213,50 @@ if (!reduceMotion) {
       const y = e.clientY - rect.top;
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
-      const rotateX = ((y - centerY) / centerY) * -10;
-      const rotateY = ((x - centerX) / centerX) * 10;
-      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+      const intensity = card.classList.contains('proj-item') ? 2 : 5; // even gentler tilt for projects
+      const rotateX = ((y - centerY) / centerY) * -intensity;
+      const rotateY = ((x - centerX) / centerX) * intensity;
+      
+      card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(6px)`;
     }, { passive: true });
     card.addEventListener('mouseleave', () => {
       card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
     });
   });
+} else {
+  tiltCards.forEach(card => { card.style.transform = 'none'; });
 }
 
 // Particle background for hero
 const canvas = document.getElementById('particle-bg');
 const ctx = canvas.getContext('2d');
 let particles = [];
+let isScrolling = false; let scrollTimer = null;
+window.addEventListener('scroll', () => {
+  isScrolling = true;
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(() => { isScrolling = false; }, 120);
+}, { passive: true });
+const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
 function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = Math.floor(window.innerWidth * DPR);
+  canvas.height = Math.floor(window.innerHeight * DPR);
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 }
 window.addEventListener('resize', resizeCanvas, { passive: true });
 resizeCanvas();
 
 function createParticles() {
   particles = [];
-  const count = Math.floor(window.innerWidth / 10);
+  const density = 18;
+  const count = Math.max(40, Math.floor((window.innerWidth / density) / DPR));
   for (let i = 0; i < count; i++) {
     particles.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height * 0.6,
-      r: Math.random() * 3 + 1.5,
-      dx: (Math.random() - 0.5) * 0.8,
-      dy: (Math.random() - 0.5) * 0.8,
+      r: Math.random() * 2 + 1,
+      dx: (Math.random() - 0.5) * 0.7,
+      dy: (Math.random() - 0.5) * 0.7,
       alpha: Math.random() * 0.6 + 0.4,
       baseX: Math.random() * canvas.width,
       baseY: Math.random() * canvas.height * 0.6,
@@ -207,34 +264,21 @@ function createParticles() {
     });
   }
 }
-if (!reduceMotion) {
+if (!isLite) {
   createParticles();
   window.addEventListener('resize', createParticles, { passive: true });
 }
 
+let particleFrame = 0;
 function drawParticles() {
+  if (isScrolling) { if (!document.hidden) requestAnimationFrame(drawParticles); return; }
+  // skip every other frame for smoother perceived motion with less work
+  if ((particleFrame++ & 1) === 1) { if (!document.hidden) requestAnimationFrame(drawParticles); return; }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-  // Draw connections between nearby particles
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      const dx = particles[i].x - particles[j].x;
-      const dy = particles[i].y - particles[j].y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      
-      if (distance < 120) {
-        ctx.save();
-        ctx.globalAlpha = (1 - distance / 120) * 0.2;
-        ctx.strokeStyle = '#f59e42';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(particles[i].x, particles[i].y);
-        ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.stroke();
-        ctx.restore();
-      }
-    }
-  }
+  // Connections disabled for performance
+  // (kept simple particles only to eliminate jitter)
+
   
   // Draw particles
   for (let p of particles) {
@@ -265,9 +309,9 @@ function drawParticles() {
     if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
     if (p.y < 0 || p.y > canvas.height * 0.7) p.dy *= -1;
   }
-  requestAnimationFrame(drawParticles);
+  if (!document.hidden) { requestAnimationFrame(drawParticles); }
 }
-if (!reduceMotion) { drawParticles(); }
+if (!isLite) { drawParticles(); }
 
 // Animate skill bars when About section is in view
 const skillBars = document.querySelectorAll('.skill-bar');
@@ -387,18 +431,21 @@ setTimeout(() => {
 
 // Click explosion effect
 let clickParticles = [];
-const clickCanvas = document.createElement('canvas');
-clickCanvas.id = 'click-canvas';
-clickCanvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
-document.body.appendChild(clickCanvas);
-const clickCtx = clickCanvas.getContext('2d');
-clickCanvas.width = window.innerWidth;
-clickCanvas.height = window.innerHeight;
-
-window.addEventListener('resize', () => {
+let clickCanvas, clickCtx;
+if (!isLite) {
+  clickCanvas = document.createElement('canvas');
+  clickCanvas.id = 'click-canvas';
+  clickCanvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
+  document.body.appendChild(clickCanvas);
+  clickCtx = clickCanvas.getContext('2d');
   clickCanvas.width = window.innerWidth;
   clickCanvas.height = window.innerHeight;
-}, { passive: true });
+
+  window.addEventListener('resize', () => {
+    clickCanvas.width = window.innerWidth;
+    clickCanvas.height = window.innerHeight;
+  }, { passive: true });
+}
 
 function createClickExplosion(x, y, color = '#f59e42') {
   const particleCount = 30;
@@ -446,13 +493,14 @@ function animateClickParticles() {
   
   requestAnimationFrame(animateClickParticles);
 }
-if (!reduceMotion) { animateClickParticles(); }
+if (!reduceMotion && !isMobile) { animateClickParticles(); }
 
 // Click anywhere to create explosion
 let clickCount = 0;
 let lastClickTime = 0;
 
 document.addEventListener('click', (e) => {
+  if (isLite) return; // disable explosions in lite mode
   const currentTime = Date.now();
   const timeSinceLastClick = currentTime - lastClickTime;
   
@@ -510,7 +558,7 @@ let trail = [];
 const trailCanvas = document.createElement('canvas');
 trailCanvas.id = 'trail-canvas';
 trailCanvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998;';
-if (!reduceMotion) { document.body.appendChild(trailCanvas); }
+if (!reduceMotion && !isMobile) { document.body.appendChild(trailCanvas); }
 const trailCtx = trailCanvas.getContext('2d');
 trailCanvas.width = window.innerWidth;
 trailCanvas.height = window.innerHeight;
@@ -522,6 +570,7 @@ window.addEventListener('resize', () => {
 
 let lastMouseX = 0, lastMouseY = 0;
 document.addEventListener('mousemove', (e) => {
+  if (isMobile) return;
   if (reduceMotion) return;
   trail.push({
     x: e.clientX,
@@ -558,7 +607,7 @@ function animateTrail() {
   trail = trail.filter(t => t.life > 0);
   requestAnimationFrame(animateTrail);
 }
-if (!reduceMotion) { animateTrail(); }
+if (!reduceMotion && !isMobile) { animateTrail(); }
 
 // Konami Code Easter Egg
 const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
@@ -980,9 +1029,45 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+// ==========================
+// Mobile-only easter eggs
+// ==========================
+if (isMobile) {
+  // Triple-tap on hero to show a quick toast
+  let tapTimes = [];
+  const showToast = (msg) => {
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    requestAnimationFrame(() => t.classList.add('visible'));
+    setTimeout(() => { t.classList.remove('visible'); t.addEventListener('transitionend', ()=> t.remove(), { once: true }); }, 1500);
+  };
+  const heroArea = document.querySelector('.hero-content') || document.body;
+  heroArea.addEventListener('touchstart', () => {
+    const now = Date.now();
+    tapTimes.push(now);
+    tapTimes = tapTimes.filter(t => now - t < 600);
+    if (tapTimes.length >= 3) {
+      showToast('🎉 Hello from mobile!');
+      tapTimes = [];
+    }
+  }, { passive: true });
+
+  // Long-press anywhere to show help hint
+  let lpTimer = null;
+  document.addEventListener('touchstart', () => {
+    if (lpTimer) clearTimeout(lpTimer);
+    lpTimer = setTimeout(() => showToast('Tip: Use the nav to jump sections'), 700);
+  }, { passive: true });
+  document.addEventListener('touchend', () => { if (lpTimer) clearTimeout(lpTimer); }, { passive: true });
+  document.addEventListener('touchmove', () => { if (lpTimer) clearTimeout(lpTimer); }, { passive: true });
+}
+
 // Add floating emoji easter egg - click tech icons 5 times
 let techIconClicks = {};
 document.querySelectorAll('.tech-icons img').forEach((icon, index) => {
+  if (isMobile) return; // skip heavy icon click effects on mobile
   techIconClicks[index] = 0;
   icon.addEventListener('click', (e) => {
     e.stopPropagation();

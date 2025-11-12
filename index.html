@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@900,700,600,500,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
   <a class="skip-link" href="#about">Skip to content</a>
@@ -45,7 +45,7 @@
         <img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3" />
       </div>
       <a href="#about" class="cta-btn">Explore My Work</a>
-      <a href="../Ryyan_Safar_Resume-24.pdf" class="cta-btn" target="_blank" rel="noopener noreferrer" download>Download Resume</a>
+      <a href="Ryyan_Safar_Resume-24.pdf" class="cta-btn" target="_blank" rel="noopener noreferrer" download>Download Resume</a>
     </div>
     <svg class="hero-blob" viewBox="0 0 600 600"><g transform="translate(300,300)"><path d="M120,-144.6C154.2,-120.2,179.2,-77.2,181.2,-36.2C183.2,4.8,162.2,43.8,137.2,80.2C112.2,116.6,83.2,150.4,45.2,168.2C7.2,186,-39.8,187.8,-77.2,170.2C-114.6,152.6,-142.4,115.6,-154.2,75.2C-166,34.8,-161.8,-9,-146.2,-47.2C-130.6,-85.4,-103.6,-118,-68.2,-142.2C-32.8,-166.4,11,-182.2,52.2,-172.2C93.4,-162.2,131.8,-126.2,120,-144.6Z" fill="#f59e42" fill-opacity="0.18"></path></g></svg>
   </header>
@@ -59,8 +59,17 @@
       <li><a href="#volunteering">Volunteering</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <button id="perf-toggle" class="perf-toggle" aria-pressed="true" aria-label="Toggle performance mode">Lite</button>
   </nav>
-  <div class="shortcut-hint">Tip: press Shift + ? to reveal hidden interactions.</div>
+  <div class="shortcut-hint">Tip: use the Lite/Full button above to switch performance. Press Shift + ? for more.</div>
+  <section class="card highlights" aria-label="Key Highlights">
+    <ul>
+      <li><strong>5+</strong> Major Projects</li>
+      <li><strong>5+</strong> Leadership & Fellowships</li>
+      <li><strong>UN</strong> Millennium Fellow</li>
+      <li><strong>CS50x</strong> Verified (HarvardX)</li>
+    </ul>
+  </section>
   <main>
     <section id="about" class="card fancy-about">
       <h2>About Me</h2>
@@ -83,24 +92,28 @@
           <div class="skill-bar" data-width="80"></div>
         </div>
         <div class="skill">
+          <span>MATLAB</span>
+          <div class="skill-bar" data-width="75"></div>
+        </div>
+        <div class="skill">
           <span>C/C++</span>
           <div class="skill-bar" data-width="80"></div>
         </div>
         <div class="skill">
           <span>ROS 2</span>
-          <div class="skill-bar" data-width="70"></div>
+          <div class="skill-bar" data-width="50"></div>
         </div>
         <div class="skill">
           <span>Verilog HDL</span>
-          <div class="skill-bar" data-width="70"></div>
+          <div class="skill-bar" data-width="85"></div>
+        </div>
+        <div class="skill">
+          <span>System Verilog</span>
+          <div class="skill-bar" data-width="80"></div>
         </div>
         <div class="skill">
           <span>Flask / MySQL</span>
           <div class="skill-bar" data-width="70"></div>
-        </div>
-        <div class="skill">
-          <span>MATLAB</span>
-          <div class="skill-bar" data-width="75"></div>
         </div>
         <div class="skill">
           <span>JavaScript / HTML / CSS</span>
@@ -224,6 +237,29 @@
         </div>
       </div>
     </section>
+    <section id="tech" class="card tech-stack" aria-label="Tech Stack">
+      <h2>Tech Stack</h2>
+      <div class="tech-grid">
+        <a class="tech-item" href="#" aria-label="Python"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"/><span>Python</span></a>
+        <a class="tech-item" href="#" aria-label="C++"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" alt="C++"/><span>C++</span></a>
+        <a class="tech-item" href="#" aria-label="Verilog"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="Verilog"/><span>Verilog</span></a>
+        <a class="tech-item" href="#" aria-label="ROS 2"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ros/ros-original.svg" alt="ROS 2"/><span>ROS 2</span></a>
+        <a class="tech-item" href="#" aria-label="MATLAB"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/matlab/matlab-original.svg" alt="MATLAB"/><span>MATLAB</span></a>
+        <a class="tech-item" href="#" aria-label="Embedded C"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="Embedded C"/><span>Embedded C</span></a>
+        <a class="tech-item" href="#" aria-label="Flask"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" alt="Flask"/><span>Flask</span></a>
+        <a class="tech-item" href="#" aria-label="MySQL"><img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL"/><span>MySQL</span></a>
+      </div>
+      <div class="tech-row" aria-hidden="true">
+        <div class="tech-pill"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt=""/><span>Python</span></div>
+        <div class="tech-pill"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" alt=""/><span>C++</span></div>
+        <div class="tech-pill"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ros/ros-original.svg" alt=""/><span>ROS 2</span></div>
+        <div class="tech-pill"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/matlab/matlab-original.svg" alt=""/><span>MATLAB</span></div>
+        <div class="tech-pill"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" alt=""/><span>Flask</span></div>
+        <div class="tech-pill"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt=""/><span>MySQL</span></div>
+        <div class="tech-pill"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt=""/><span>Embedded C</span></div>
+      </div>
+    </section>
+
     <section id="projects" class="card">
       <h2>Major Projects</h2>
       <div class="proj-list">
@@ -410,6 +446,6 @@
       <path d="M18 15l-6-6-6 6"/>
     </svg>
   </button>
-  <script src="script.js"></script>
+  <script defer src="script.js?v=4"></script>
 </body>
 </html> 
