@@ -1171,6 +1171,19 @@ html {
   transform: translate(-50%, 0);
 }
 
+/* Anti-jitter while scrolling (both modes) */
+/* Keep animations/tilt/particles running. Only disable backdrop blur to avoid GPU blur artifacts. */
+.scrolling nav,
+.scrolling .card,
+.scrolling .fancy-about,
+.scrolling .fancy-timeline,
+.scrolling .fancy-volunteering,
+.scrolling .hero-links img,
+.scrolling .timeline-content {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 .hero-links {
   display: flex;
   justify-content: center;
@@ -1454,3 +1467,35 @@ button:focus-visible,
 }
 .lite #custom-cursor { display: none !important; }
 .lite .tech-icons img:hover, .lite .cta-btn:hover, .lite .exp-item:hover, .lite .vol-item:hover, .lite .proj-item:hover { transform: none !important; }
+
+/* Disable backdrop blur/filter during scroll in Full mode only */
+.scrolling-blurfix nav,
+.scrolling-blurfix .card,
+.scrolling-blurfix .fancy-about,
+.scrolling-blurfix .fancy-timeline,
+.scrolling-blurfix .fancy-volunteering,
+.scrolling-blurfix .hero-links img,
+.scrolling-blurfix .timeline-content {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+/* Keep transforms responsive, avoid opacity/transition jank during scroll */
+.scrolling-blurfix .card,
+.scrolling-blurfix .exp-item,
+.scrolling-blurfix .vol-item,
+.scrolling-blurfix .proj-item,
+.scrolling-blurfix .timeline-content {
+  transition-property: transform, box-shadow !important;
+}
+
+
+/*
+  Universal fix for scroll-jank by disabling ALL blurs during scroll.
+  This forces the browser to act like "Lite Mode" while scrolling
+  and prevents it from dropping fixed-position elements.
+*/
+.scrolling * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}

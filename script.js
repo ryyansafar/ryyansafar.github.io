@@ -50,13 +50,16 @@ function animateWave(ts = 0) {
 }
 if (!isLite) { requestAnimationFrame(animateWave); }
 
-// Enhanced parallax effect for hero content with smooth easing (desktop/full only)
+// Enhanced parallax effect (disabled to ensure perfect smoothness)
 const heroContent = document.querySelector('.hero-content');
-const enableParallax = !isLite && !isMobile;
+const PARALLAX = false; // set true if you want parallax back
+const enableParallax = PARALLAX && !isLite && !isMobile;
 let ticking = false; let lastParTs = 0;
 
 function updateParallax(ts = 0) {
   if (!enableParallax) return; // disabled on Lite/mobile
+  // pause parallax while scrolling to avoid blur/jank
+  if (document.body.classList.contains('scrolling')) { ticking = false; return; }
   // throttle to ~30fps
   if (ts - lastParTs < 33) { ticking = false; return; }
   lastParTs = ts;
@@ -64,7 +67,7 @@ function updateParallax(ts = 0) {
   const heroEl = document.querySelector('.hero');
   if (!heroEl) return;
   const heroHeight = heroEl.offsetHeight;
-  const opacity = Math.max(0, 1 - scrollY / heroHeight);
+  const opacity = Math.max(0.85, 1 - scrollY / heroHeight); // keep at least 85% visible to avoid popping
   if (scrollY < heroHeight) {
     heroContent.style.transform = `translateY(${(scrollY * 0.22).toFixed(2)}px)`;
     heroContent.style.opacity = opacity;
@@ -81,18 +84,37 @@ if (enableParallax) {
   }, { passive: true });
 }
 
-// Scroll-triggered reveal for cards with light stagger
+// Scroll-triggered reveal for cards
 const cards = document.querySelectorAll('.card, .fancy-about, .fancy-timeline, .fancy-volunteering');
-const observer = new window.IntersectionObserver((entries) => {
-  entries.forEach((entry, index) => {
-    if (entry.isIntersecting) {
-      const delay = Math.min(index * 40, 160); // shorter stagger
-      setTimeout(() => { entry.target.classList.add('visible'); }, delay);
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-cards.forEach(card => observer.observe(card));
+if (isLite) {
+  // Lite: keep reveal for lower work
+  const observer = new window.IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        const delay = Math.min(index * 40, 160);
+        setTimeout(() => { entry.target.classList.add('visible'); }, delay);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  cards.forEach(card => observer.observe(card));
+} else {
+  // Full: render everything immediately (no IO delays)
+  cards.forEach(card => card.classList.add('visible'));
+}
+
+// Mark scrolling state (Lite only)
+if (isLite) {
+  let __scrollTimer = null;
+  window.addEventListener('scroll', () => {
+    document.body.classList.add('scrolling');
+    clearTimeout(__scrollTimer);
+    __scrollTimer = setTimeout(() => {
+      document.body.classList.remove('scrolling');
+    }, 120);
+  }, { passive: true });
+}
+
 
 // Performance toggle button
 const perfBtn = document.getElementById('perf-toggle');
@@ -220,6 +242,8 @@ if (!isLite) {
       card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(6px)`;
     }, { passive: true });
     card.addEventListener('mouseleave', () => {
+      // avoid snapping during scroll in any mode
+      if (typeof isScrolling !== 'undefined' && isScrolling) return;
       card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
     });
   });
@@ -231,11 +255,19 @@ if (!isLite) {
 const canvas = document.getElementById('particle-bg');
 const ctx = canvas.getContext('2d');
 let particles = [];
-let isScrolling = false; let scrollTimer = null;
+// PASTE THIS new code to replace the block above
+// This is the NEW, "stable" code
+let isScrolling = false; 
+let scrollTimer = null;
 window.addEventListener('scroll', () => {
+  document.body.classList.add('scrolling');
   isScrolling = true;
   clearTimeout(scrollTimer);
-  scrollTimer = setTimeout(() => { isScrolling = false; }, 120);
+
+  scrollTimer = setTimeout(() => {
+    isScrolling = false;
+    document.body.classList.remove('scrolling');
+  }, 400); // <--- Increased timeout to 400ms
 }, { passive: true });
 const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
 function resizeCanvas() {
@@ -271,8 +303,7 @@ if (!isLite) {
 
 let particleFrame = 0;
 function drawParticles() {
-  if (isScrolling) { if (!document.hidden) requestAnimationFrame(drawParticles); return; }
-  // skip every other frame for smoother perceived motion with less work
+  // keep rendering during scroll to avoid disappearance; still skip frames to reduce work
   if ((particleFrame++ & 1) === 1) { if (!document.hidden) requestAnimationFrame(drawParticles); return; }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
@@ -1191,10 +1222,11 @@ window.addEventListener('scroll', () => {
   }
 });
 
+// This is the NEW, CORRECTED code
 const fastScrollStyle = document.createElement('style');
 fastScrollStyle.textContent = `
   .fast-scroll {
-    filter: blur(1px) brightness(1.1);
+    brightness(1.1);
   }
 `;
 document.head.appendChild(fastScrollStyle);
