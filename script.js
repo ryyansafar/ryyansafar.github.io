@@ -1,657 +1,358 @@
-// Animated SVG background for hero
-const hero = document.querySelector('.hero');
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-const isMobile = isTouch || window.matchMedia('(max-width: 768px)').matches;
-// Base lite heuristic
-const baseLite = reduceMotion || isMobile || new URLSearchParams(location.search).has('lite') || document.documentElement.dataset.lite === '1';
-// Derive effective mode from saved preference
-const savedMode = localStorage.getItem('perfMode');
-let isLite = baseLite;
-if (savedMode === 'lite') isLite = true;
-if (savedMode === 'full') isLite = false;
-if (isLite) { document.body.classList.add('lite'); }
-const svgNS = 'http://www.w3.org/2000/svg';
-const svg = document.createElementNS(svgNS, 'svg');
-svg.classList.add('animated-svg');
-svg.setAttribute('viewBox', '0 0 1440 320');
-svg.innerHTML = `
-  <defs>
-    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#f59e42;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  <path id="wave" fill="url(#grad1)" fill-opacity="0.4" d="M0,160L60,170C120,180,240,200,360,197.3C480,195,600,149,720,133.3C840,117,960,139,1080,154.7C1200,171,1320,181,1380,186.7L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
-</svg>`;
-hero.appendChild(svg);
+/**
+ * Ryyan Safar Portfolio - v8.0
+ * "Super Duper Awesome" Edition
+ */
 
-// Enhanced animated SVG wave with multiple frequencies
-let wave = svg.querySelector('#wave');
-let t = 0;
-let lastWaveTs = 0;
-function animateWave(ts = 0) {
-  // throttle to ~30fps
-  if (ts - lastWaveTs < 33) { requestAnimationFrame(animateWave); return; }
-  lastWaveTs = ts;
-  t += 0.010;
-  const amplitude = 10; // even lower amplitude
-  const freq1 = 0.009;
-  const freq2 = 0.013;
-  let d = 'M0,160';
-  for (let x = 0; x <= 1440; x += 56) {
-    let y = 160 + Math.sin((x * freq1) + t) * amplitude +
-            Math.cos((x * freq2) + t * 1.2) * (amplitude * 0.25);
-    d += `L${x},${y.toFixed(1)}`;
-  }
-  d += 'L1440,192L1440,320L0,320Z';
-  wave.setAttribute('d', d);
-  requestAnimationFrame(animateWave);
-}
-if (!isLite) { requestAnimationFrame(animateWave); }
+// --- Preloader Logic ---
+const preloader = document.getElementById('preloader');
+const counter = document.querySelector('.counter');
 
-// Enhanced parallax effect (disabled to ensure perfect smoothness)
-const heroContent = document.querySelector('.hero-content');
-const PARALLAX = false; // set true if you want parallax back
-const enableParallax = PARALLAX && !isLite && !isMobile;
-let ticking = false; let lastParTs = 0;
+if (preloader) {
+  let count = 0;
+  const updateCounter = () => {
+    count += Math.floor(Math.random() * 10) + 1;
+    if (count > 100) count = 100;
 
-function updateParallax(ts = 0) {
-  if (!enableParallax) return; // disabled on Lite/mobile
-  // pause parallax while scrolling to avoid blur/jank
-  if (document.body.classList.contains('scrolling')) { ticking = false; return; }
-  // throttle to ~30fps
-  if (ts - lastParTs < 33) { ticking = false; return; }
-  lastParTs = ts;
-  const scrollY = window.scrollY;
-  const heroEl = document.querySelector('.hero');
-  if (!heroEl) return;
-  const heroHeight = heroEl.offsetHeight;
-  const opacity = Math.max(0.85, 1 - scrollY / heroHeight); // keep at least 85% visible to avoid popping
-  if (scrollY < heroHeight) {
-    heroContent.style.transform = `translateY(${(scrollY * 0.22).toFixed(2)}px)`;
-    heroContent.style.opacity = opacity;
-  }
-  ticking = false;
-}
+    counter.textContent = count + '%';
 
-if (enableParallax) {
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(updateParallax);
-      ticking = true;
+    if (count < 100) {
+      setTimeout(updateCounter, Math.random() * 200);
+    } else {
+      // Animation complete
+      setTimeout(() => {
+        counter.style.opacity = '0';
+        counter.style.transition = 'opacity 0.5s ease';
+
+        preloader.querySelector('.curtain').style.transform = 'scaleY(0)';
+        preloader.querySelector('.curtain').style.transition = 'transform 0.8s cubic-bezier(0.76, 0, 0.24, 1)';
+
+        setTimeout(() => {
+          preloader.style.display = 'none';
+          // Trigger hero animations here if needed
+        }, 800);
+      }, 500);
     }
-  }, { passive: true });
-}
-
-// Scroll-triggered reveal for cards
-const cards = document.querySelectorAll('.card, .fancy-about, .fancy-timeline, .fancy-volunteering');
-if (isLite) {
-  // Lite: keep reveal for lower work
-  const observer = new window.IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
-      if (entry.isIntersecting) {
-        const delay = Math.min(index * 40, 160);
-        setTimeout(() => { entry.target.classList.add('visible'); }, delay);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-  cards.forEach(card => observer.observe(card));
-} else {
-  // Full: render everything immediately (no IO delays)
-  cards.forEach(card => card.classList.add('visible'));
-}
-
-// Mark scrolling state (Lite only)
-if (isLite) {
-  let __scrollTimer = null;
-  window.addEventListener('scroll', () => {
-    document.body.classList.add('scrolling');
-    clearTimeout(__scrollTimer);
-    __scrollTimer = setTimeout(() => {
-      document.body.classList.remove('scrolling');
-    }, 120);
-  }, { passive: true });
-}
-
-
-// Performance toggle button
-const perfBtn = document.getElementById('perf-toggle');
-if (perfBtn) {
-  const applyLabel = () => {
-    const lite = document.body.classList.contains('lite');
-    perfBtn.textContent = lite ? 'Lite' : 'Full';
-    perfBtn.setAttribute('aria-pressed', lite ? 'true' : 'false');
   };
-  applyLabel();
-  perfBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    const nextLite = !document.body.classList.contains('lite');
-    document.body.classList.toggle('lite', nextLite);
-    localStorage.setItem('perfMode', nextLite ? 'lite' : 'full');
-    applyLabel();
-    // Force a tiny URL param change so GitHub Pages/cache applies the new mode reliably
-    const url = new URL(location.href);
-    url.searchParams.set('mode', nextLite ? 'lite' : 'full');
-    location.href = url.toString();
-  }, { passive: false });
+
+  updateCounter();
 }
 
+// --- Core State & Config ---
+const config = {
+  liteMode: localStorage.getItem('perfMode') === 'lite',
+  reduceMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  isMobile: window.matchMedia('(max-width: 768px)').matches
+};
 
-// Enhanced smooth scroll for nav links with offset
-const navLinks = document.querySelectorAll('nav a');
-navLinks.forEach(link => {
-  link.addEventListener('click', e => {
+// Toggle Lite Mode
+const toggleLiteMode = () => {
+  config.liteMode = !config.liteMode;
+  localStorage.setItem('perfMode', config.liteMode ? 'lite' : 'full');
+  document.body.classList.toggle('lite-mode', config.liteMode);
+  updatePerfButton();
+
+  // Reload if needed to stop/start heavy canvas loops cleanly
+  if (confirm('Reload page to apply performance changes?')) {
+    window.location.reload();
+  }
+};
+
+const updatePerfButton = () => {
+  const btn = document.getElementById('theme-toggle'); // Using theme-toggle as perf toggle for now or separate
+  // If we had a specific button for this:
+  // btn.textContent = config.liteMode ? '⚡ Lite' : '🚀 Full';
+};
+
+// Apply initial state
+if (config.liteMode) document.body.classList.add('lite-mode');
+
+// --- Email Copy Functionality ---
+const emailBtn = document.getElementById('email-copy-btn');
+if (emailBtn) {
+  emailBtn.addEventListener('click', () => {
+    const email = 'safarryyan@gmail.com';
+
+    // Try using the Clipboard API
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(email).then(() => {
+        showCopyFeedback();
+      }).catch(err => {
+        console.error('Clipboard API failed: ', err);
+        fallbackCopyTextToClipboard(email);
+      });
+    } else {
+      // Fallback for non-secure contexts or older browsers
+      fallbackCopyTextToClipboard(email);
+    }
+  });
+
+  function showCopyFeedback() {
+    emailBtn.classList.add('copied');
+    setTimeout(() => {
+      emailBtn.classList.remove('copied');
+    }, 2000);
+  }
+
+  function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        showCopyFeedback();
+      } else {
+        console.error('Fallback copy failed.');
+      }
+    } catch (err) {
+      console.error('Fallback copy error: ', err);
+    }
+
+    document.body.removeChild(textArea);
+  }
+}
+
+// --- Navigation & Scroll ---
+const nav = document.querySelector('.glass-nav');
+const navLinks = document.querySelectorAll('.nav-links a');
+const sections = document.querySelectorAll('section');
+
+// Sticky Nav & Active Link
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+
+  // Nav transparency toggle
+  if (scrollY > 50) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+
+  // Active Link Highlighting
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    const sectionHeight = section.clientHeight;
+    if (scrollY >= (sectionTop - 200)) {
+      current = section.getAttribute('id');
+    }
+  });
+
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href').includes(current)) {
+      link.classList.add('active');
+    }
+  });
+}, { passive: true });
+
+// Smooth Scroll
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
     e.preventDefault();
-    const href = link.getAttribute('href');
-    
-    // Only handle hash links
-    if (href.startsWith('#')) {
-      const targetId = href.substring(1);
-      const target = document.getElementById(targetId);
-      
+    const targetId = this.getAttribute('href');
+    const target = document.querySelector(targetId);
     if (target) {
-        const navHeight = document.querySelector('nav').offsetHeight;
-        const targetPosition = target.offsetTop - navHeight - 20;
-        
       window.scrollTo({
-          top: Math.max(0, targetPosition),
+        top: target.offsetTop - 100,
         behavior: 'smooth'
       });
-        
-        // Add active state to nav link
-        navLinks.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
-        
-        // Update URL without triggering scroll
-        history.pushState(null, null, href);
+    }
+  });
+});
+
+// --- Hero Glitch Effect (Scramble) ---
+const scrambleElements = document.querySelectorAll('.scramble-text');
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+scrambleElements.forEach(element => {
+  element.dataset.value = element.innerText;
+
+  element.onmouseover = event => {
+    let iterations = 0;
+    const interval = setInterval(() => {
+      event.target.innerText = event.target.innerText
+        .split("")
+        .map((letter, index) => {
+          if (index < iterations) {
+            return event.target.dataset.value[index];
+          }
+          return letters[Math.floor(Math.random() * 26)];
+        })
+        .join("");
+
+      if (iterations >= event.target.dataset.value.length) {
+        clearInterval(interval);
       }
-    }
-  });
+
+      iterations += 1 / 3;
+    }, 30);
+  };
 });
 
-// Highlight active nav link on scroll
-const sections = document.querySelectorAll('section[id]');
-let scrollTimeout;
+// --- Reveal Animations ---
+const revealElements = document.querySelectorAll('.reveal-up, .reveal-text');
 
-function updateActiveNav() {
-  const scrollY = window.pageYOffset;
-  const navHeight = document.querySelector('nav').offsetHeight;
-  
-  sections.forEach(section => {
-    const sectionHeight = section.offsetHeight;
-    const sectionTop = section.offsetTop - navHeight - 100;
-    const sectionId = section.getAttribute('id');
-    
-    if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-      navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${sectionId}`) {
-          link.classList.add('active');
-        }
-      });
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target); // Only animate once
     }
   });
-}
-
-window.addEventListener('scroll', () => {
-  clearTimeout(scrollTimeout);
-  scrollTimeout = setTimeout(updateActiveNav, 10);
-}, { passive: true });
-updateActiveNav(); // Initial call
-
-// Enhanced custom animated cursor with smooth following
-const cursor = document.getElementById('custom-cursor');
-let mouseX = 0, mouseY = 0;
-let cursorX = 0, cursorY = 0;
-
-document.addEventListener('mousemove', e => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-}, { passive: true });
-
-function animateCursor() {
-  cursorX += (mouseX - cursorX) * 0.1;
-  cursorY += (mouseY - cursorY) * 0.1;
-  cursor.style.left = cursorX + 'px';
-  cursor.style.top = cursorY + 'px';
-  requestAnimationFrame(animateCursor);
-}
-if (!isLite) { animateCursor(); } else { cursor.style.display = 'none'; }
-
-document.querySelectorAll('a, button, .cta-btn, .exp-item, .vol-item, .proj-item, .timeline-item').forEach(el => {
-  el.addEventListener('mouseenter', () => cursor.classList.add('active'));
-  el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+}, {
+  threshold: 0.15,
+  rootMargin: '0px 0px -50px 0px'
 });
 
-// Enhanced 3D tilt effect on cards with perspective
-const tiltCards = document.querySelectorAll('.card, .exp-item, .vol-item, .proj-item');
-if (!isLite) {
-  tiltCards.forEach(card => {
-    card.addEventListener('mousemove', e => {
+revealElements.forEach(el => revealObserver.observe(el));
+
+// --- Fluid Custom Cursor & Click Effect ---
+if (!config.isMobile) {
+  const cursor = document.getElementById('custom-cursor');
+
+  // Cursor State
+  let mouseX = 0;
+  let mouseY = 0;
+  let cursorX = 0;
+  let cursorY = 0;
+
+  // Lerp factor (0.1 = slow/smooth, 0.5 = fast)
+  const lerp = 0.15;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  // Click Ripple
+  document.addEventListener('click', (e) => {
+    const ripple = document.createElement('div');
+    ripple.className = 'click-ripple';
+    ripple.style.left = `${e.clientX}px`;
+    ripple.style.top = `${e.clientY}px`;
+    document.body.appendChild(ripple);
+
+    setTimeout(() => ripple.remove(), 1000);
+  });
+
+  // Hover States
+  const interactables = document.querySelectorAll('a, button, .project-card, .timeline-item');
+  interactables.forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+
+  // Animation Loop
+  const animateCursor = () => {
+    // Smooth follow
+    cursorX += (mouseX - cursorX) * lerp;
+    cursorY += (mouseY - cursorY) * lerp;
+
+    cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+
+    requestAnimationFrame(animateCursor);
+  };
+
+  animateCursor();
+}
+
+// --- Tilt Effect for Cards ---
+if (!config.isMobile && !config.liteMode && !config.reduceMotion) {
+  const cards = document.querySelectorAll('.project-card, .stat-card');
+
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
+
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
-      const intensity = card.classList.contains('proj-item') ? 2 : 5; // even gentler tilt for projects
-      const rotateX = ((y - centerY) / centerY) * -intensity;
-      const rotateY = ((x - centerX) / centerX) * intensity;
-      
-      card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(6px)`;
-    }, { passive: true });
+
+      const rotateX = ((y - centerY) / centerY) * -5; // Max 5deg rotation
+      const rotateY = ((x - centerX) / centerX) * 5;
+
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    });
+
     card.addEventListener('mouseleave', () => {
-      // avoid snapping during scroll in any mode
-      if (typeof isScrolling !== 'undefined' && isScrolling) return;
-      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
     });
   });
-} else {
-  tiltCards.forEach(card => { card.style.transform = 'none'; });
 }
 
-// Particle background for hero
-const canvas = document.getElementById('particle-bg');
-const ctx = canvas.getContext('2d');
-let particles = [];
-// PASTE THIS new code to replace the block above
-// This is the NEW, "stable" code
-let isScrolling = false; 
-let scrollTimer = null;
-window.addEventListener('scroll', () => {
-  document.body.classList.add('scrolling');
-  isScrolling = true;
-  clearTimeout(scrollTimer);
+// --- Typewriter Effect for Bio ---
+const typewriterElement = document.getElementById('typewriter');
+if (typewriterElement) {
+  const phrases = [
+    "Electronics & Communication Engineer",
+    "Creative Developer",
+    "Tech Enthusiast"
+  ];
+  let phraseIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  let typeSpeed = 100;
 
-  scrollTimer = setTimeout(() => {
-    isScrolling = false;
-    document.body.classList.remove('scrolling');
-  }, 400); // <--- Increased timeout to 400ms
-}, { passive: true });
-const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
-function resizeCanvas() {
-  canvas.width = Math.floor(window.innerWidth * DPR);
-  canvas.height = Math.floor(window.innerHeight * DPR);
-  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-}
-window.addEventListener('resize', resizeCanvas, { passive: true });
-resizeCanvas();
+  function type() {
+    const currentPhrase = phrases[phraseIndex];
 
-function createParticles() {
-  particles = [];
-  const density = 18;
-  const count = Math.max(40, Math.floor((window.innerWidth / density) / DPR));
-  for (let i = 0; i < count; i++) {
-    particles.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height * 0.6,
-      r: Math.random() * 2 + 1,
-      dx: (Math.random() - 0.5) * 0.7,
-      dy: (Math.random() - 0.5) * 0.7,
-      alpha: Math.random() * 0.6 + 0.4,
-      baseX: Math.random() * canvas.width,
-      baseY: Math.random() * canvas.height * 0.6,
-      oscillation: Math.random() * Math.PI * 2
-    });
-  }
-}
-if (!isLite) {
-  createParticles();
-  window.addEventListener('resize', createParticles, { passive: true });
-}
-
-let particleFrame = 0;
-function drawParticles() {
-  // keep rendering during scroll to avoid disappearance; still skip frames to reduce work
-  if ((particleFrame++ & 1) === 1) { if (!document.hidden) requestAnimationFrame(drawParticles); return; }
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Connections disabled for performance
-  // (kept simple particles only to eliminate jitter)
-
-  
-  // Draw particles
-  for (let p of particles) {
-    ctx.save();
-    ctx.globalAlpha = p.alpha;
-    
-    // Glow effect
-    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 2);
-    gradient.addColorStop(0, 'rgba(245, 158, 66, 0.8)');
-    gradient.addColorStop(1, 'rgba(245, 158, 66, 0)');
-    
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r * 2, 0, 2 * Math.PI);
-    ctx.fillStyle = gradient;
-    ctx.fill();
-    
-    // Particle core
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
-    ctx.fillStyle = '#f59e42';
-    ctx.shadowColor = '#f59e42';
-    ctx.shadowBlur = 8;
-    ctx.fill();
-    ctx.restore();
-    
-    p.x += p.dx;
-    p.y += p.dy;
-    if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-    if (p.y < 0 || p.y > canvas.height * 0.7) p.dy *= -1;
-  }
-  if (!document.hidden) { requestAnimationFrame(drawParticles); }
-}
-if (!isLite) { drawParticles(); }
-
-// Animate skill bars when About section is in view
-const skillBars = document.querySelectorAll('.skill-bar');
-const animateSkills = (entries, observer) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      skillBars.forEach(bar => {
-        const width = bar.getAttribute('data-width');
-        bar.classList.add('animated');
-        bar.style.setProperty('--bar-width', width + '%');
-        bar.style.setProperty('width', width + '%');
-        bar.querySelector && bar.querySelector('::after');
-        bar.style.setProperty('transition', 'width 1.2s cubic-bezier(.77,0,.18,1)');
-        bar.style.width = width + '%';
-        bar.style.background = 'linear-gradient(90deg, #f59e42, #1e3a8a)';
-      });
-      observer.disconnect();
-    }
-  });
-};
-const aboutSection = document.querySelector('.fancy-about');
-if (aboutSection) {
-  const skillsObserver = new IntersectionObserver(animateSkills, { threshold: 0.3 });
-  skillsObserver.observe(aboutSection);
-}
-
-// Enhanced typewriter effect with cursor blink
-const typewriterPhrases = [
-  'Electronics & Communication Engineer',
-  'Builder. Tinkerer. Leader.',
-  'IEEE Volunteer & Tinkerhub Ambassador',
-  'Creating with Curiosity & Impact.'
-];
-let twIndex = 0, twChar = 0, twDeleting = false;
-const typewriter = document.getElementById('typewriter');
-
-function typeWriterLoop() {
-  if (!typewriter) return;
-  const phrase = typewriterPhrases[twIndex];
-  if (!twDeleting) {
-    typewriter.textContent = phrase.substring(0, twChar + 1) + '|';
-    twChar++;
-    if (twChar === phrase.length) {
-      twDeleting = true;
-      setTimeout(() => {
-        typewriter.textContent = phrase + '|';
-        setTimeout(typeWriterLoop, 1500);
-      }, 500);
-      return;
-    }
-  } else {
-    typewriter.textContent = phrase.substring(0, twChar - 1) + '|';
-    twChar--;
-    if (twChar === 0) {
-      twDeleting = false;
-      twIndex = (twIndex + 1) % typewriterPhrases.length;
-      setTimeout(typeWriterLoop, 300);
-      return;
-    }
-  }
-  setTimeout(typeWriterLoop, twDeleting ? 30 : 60);
-}
-
-// Start typewriter after a short delay
-setTimeout(typeWriterLoop, 800);
-
-// Enhanced animated counters for hero stats with easing
-function animateCounter(id, end, duration) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  
-  let start = 0;
-  const startTime = Date.now();
-  
-  function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
-  }
-  
-  function update() {
-    const elapsed = Date.now() - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = easeOutCubic(progress);
-    const current = Math.floor(start + (end - start) * eased);
-    
-    el.textContent = current;
-    
-    if (progress < 1) {
-      requestAnimationFrame(update);
+    if (isDeleting) {
+      typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
+      charIndex--;
+      typeSpeed = 50;
     } else {
-      el.textContent = end;
+      typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
+      charIndex++;
+      typeSpeed = 100;
     }
+
+    if (!isDeleting && charIndex === currentPhrase.length) {
+      isDeleting = true;
+      typeSpeed = 2000; // Pause at end
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+      typeSpeed = 500; // Pause before new phrase
+    }
+
+    setTimeout(type, typeSpeed);
   }
-  
-  // Start animation when element is visible
-  const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-  update();
-        statsObserver.disconnect();
-      }
-    });
-  }, { threshold: 0.5 });
-  
-  statsObserver.observe(el.closest('.hero-stats') || document.body);
+
+  // Start typing
+  setTimeout(type, 1000);
 }
 
-// Initialize counters
-setTimeout(() => {
-  animateCounter('exp-count', 3, 1500);
-  animateCounter('proj-count', 12, 1500);
-  animateCounter('lead-count', 5, 1500);
-}, 500);
-
-// ============================================
-// 🎮 EASTER EGGS & INTERACTIVE FEATURES 🎮
-// ============================================
-
-// Click explosion effect
-let clickParticles = [];
-let clickCanvas, clickCtx;
-if (!isLite) {
-  clickCanvas = document.createElement('canvas');
-  clickCanvas.id = 'click-canvas';
-  clickCanvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
-  document.body.appendChild(clickCanvas);
-  clickCtx = clickCanvas.getContext('2d');
-  clickCanvas.width = window.innerWidth;
-  clickCanvas.height = window.innerHeight;
-
-  window.addEventListener('resize', () => {
-    clickCanvas.width = window.innerWidth;
-    clickCanvas.height = window.innerHeight;
-  }, { passive: true });
-}
-
-function createClickExplosion(x, y, color = '#f59e42') {
-  const particleCount = 30;
-  for (let i = 0; i < particleCount; i++) {
-    const angle = (Math.PI * 2 * i) / particleCount;
-    const speed = Math.random() * 8 + 2;
-    clickParticles.push({
-      x, y,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      life: 1,
-      decay: Math.random() * 0.02 + 0.02,
-      size: Math.random() * 6 + 3,
-      color: color
-    });
-  }
-}
-
-function animateClickParticles() {
-  clickCtx.clearRect(0, 0, clickCanvas.width, clickCanvas.height);
-  
-  for (let i = clickParticles.length - 1; i >= 0; i--) {
-    const p = clickParticles[i];
-    p.x += p.vx;
-    p.y += p.vy;
-    p.vx *= 0.98;
-    p.vy *= 0.98;
-    p.life -= p.decay;
-    p.size *= 0.98;
-    
-    if (p.life > 0) {
-      clickCtx.save();
-      clickCtx.globalAlpha = p.life;
-      clickCtx.fillStyle = p.color;
-      clickCtx.shadowBlur = 10;
-      clickCtx.shadowColor = p.color;
-      clickCtx.beginPath();
-      clickCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      clickCtx.fill();
-      clickCtx.restore();
-    } else {
-      clickParticles.splice(i, 1);
-    }
-  }
-  
-  requestAnimationFrame(animateClickParticles);
-}
-if (!reduceMotion && !isMobile) { animateClickParticles(); }
-
-// Click anywhere to create explosion
-let clickCount = 0;
-let lastClickTime = 0;
-
-document.addEventListener('click', (e) => {
-  if (isLite) return; // disable explosions in lite mode
-  const currentTime = Date.now();
-  const timeSinceLastClick = currentTime - lastClickTime;
-  
-  // Check for double click
-  if (timeSinceLastClick < 300 && timeSinceLastClick > 0) {
-    // Double click detected!
-    for (let i = 0; i < 50; i++) {
-      setTimeout(() => {
-        createClickExplosion(
-          e.clientX + (Math.random() - 0.5) * 200,
-          e.clientY + (Math.random() - 0.5) * 200,
-          `hsl(${Math.random() * 360}, 70%, 60%)`
-        );
-      }, i * 10);
-    }
-    showEasterEgg('💥 MEGA EXPLOSION! 💥', 2000);
-    lastClickTime = 0; // Reset to prevent triple clicks
-    return;
-  }
-  
-  lastClickTime = currentTime;
-  
-  const colors = ['#f59e42', '#1e3a8a', '#fb923c', '#3b5bdb', '#fff'];
-  const color = colors[Math.floor(Math.random() * colors.length)];
-  createClickExplosion(e.clientX, e.clientY, color);
-  clickCount++;
-  
-  // Special effect every 10 clicks
-  if (clickCount % 10 === 0) {
-    for (let i = 0; i < 5; i++) {
-      setTimeout(() => {
-        createClickExplosion(
-          Math.random() * window.innerWidth,
-          Math.random() * window.innerHeight,
-          colors[Math.floor(Math.random() * colors.length)]
-        );
-      }, i * 100);
-    }
-  }
-  
-  // Special effect every 50 clicks
-  if (clickCount === 50) {
-    showEasterEgg('🎉 50 Clicks! You\'re persistent! 🎉');
-  }
-  
-  // Special effect every 100 clicks
-  if (clickCount === 100) {
-    showEasterEgg('🔥 100 Clicks! You\'re on fire! 🔥');
-    createConfetti();
-  }
-});
-
-// Mouse trail effect
-let trail = [];
-const trailCanvas = document.createElement('canvas');
-trailCanvas.id = 'trail-canvas';
-trailCanvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998;';
-if (!reduceMotion && !isMobile) { document.body.appendChild(trailCanvas); }
-const trailCtx = trailCanvas.getContext('2d');
-trailCanvas.width = window.innerWidth;
-trailCanvas.height = window.innerHeight;
-
-window.addEventListener('resize', () => {
-  trailCanvas.width = window.innerWidth;
-  trailCanvas.height = window.innerHeight;
-}, { passive: true });
-
-let lastMouseX = 0, lastMouseY = 0;
-document.addEventListener('mousemove', (e) => {
-  if (isMobile) return;
-  if (reduceMotion) return;
-  trail.push({
-    x: e.clientX,
-    y: e.clientY,
-    life: 1,
-    size: Math.random() * 4 + 2
-  });
-  if (trail.length > 20) trail.shift();
-  lastMouseX = e.clientX;
-  lastMouseY = e.clientY;
-}, { passive: true });
-
-function animateTrail() {
-  trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
-  
-  for (let i = 0; i < trail.length; i++) {
-    const t = trail[i];
-    t.life -= 0.05;
-    
-    if (t.life > 0) {
-      trailCtx.save();
-      trailCtx.globalAlpha = t.life * 0.5;
-      const gradient = trailCtx.createRadialGradient(t.x, t.y, 0, t.x, t.y, t.size);
-      gradient.addColorStop(0, 'rgba(245, 158, 66, 0.8)');
-      gradient.addColorStop(1, 'rgba(245, 158, 66, 0)');
-      trailCtx.fillStyle = gradient;
-      trailCtx.beginPath();
-      trailCtx.arc(t.x, t.y, t.size, 0, Math.PI * 2);
-      trailCtx.fill();
-      trailCtx.restore();
-    }
-  }
-  
-  trail = trail.filter(t => t.life > 0);
-  requestAnimationFrame(animateTrail);
-}
-if (!reduceMotion && !isMobile) { animateTrail(); }
-
-// Konami Code Easter Egg
-const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
+// --- Konami Code & Mini Game ---
+// --- Konami Code & Mini Game ---
+const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 let konamiIndex = 0;
-let konamiActivated = false;
+let lastKeyTime = 0;
 
 document.addEventListener('keydown', (e) => {
-  if (konamiActivated) return;
-  
-  if (e.code === konamiCode[konamiIndex]) {
+  const currentTime = Date.now();
+
+  // Reset if too much time has passed (2 seconds)
+  if (currentTime - lastKeyTime > 2000) {
+    konamiIndex = 0;
+  }
+
+  lastKeyTime = currentTime;
+
+  if (e.key === konamiCode[konamiIndex]) {
     konamiIndex++;
     if (konamiIndex === konamiCode.length) {
-      activateKonamiCode();
+      activateMiniGame();
       konamiIndex = 0;
     }
   } else {
@@ -659,152 +360,235 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-function activateKonamiCode() {
-  konamiActivated = true;
-  showEasterEgg('🎮 KONAMI CODE ACTIVATED! 🎮', 5000);
-  
-  // Rainbow mode!
-  document.body.classList.add('rainbow-mode');
-  
-  // Create massive particle explosion
-  for (let i = 0; i < 100; i++) {
+function activateMiniGame() {
+  const navItem = document.getElementById('minigame-nav-item');
+  const navbar = document.querySelector('.navbar');
+
+  if (navItem && navbar) {
+    // Play sound or visual effect
+    createExplosion(window.innerWidth / 2, window.innerHeight / 2);
+
+    // Expand Navbar
+    navbar.classList.add('nav-expanded');
+
+    // Reveal Link
+    navItem.style.display = 'block';
     setTimeout(() => {
-      createClickExplosion(
-        Math.random() * window.innerWidth,
-        Math.random() * window.innerHeight,
-        `hsl(${Math.random() * 360}, 70%, 60%)`
-      );
-    }, i * 20);
-  }
-  
-  // Make particles rainbow
-  setInterval(() => {
-    particles.forEach(p => {
-      p.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
+      navItem.style.opacity = '1';
+      navItem.style.transform = 'translateX(0)';
+    }, 100);
+
+    // Add click listener
+    document.getElementById('minigame-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      openGameModal();
     });
-  }, 100);
-  
-  // Add confetti effect
-  createConfetti();
-}
-
-// Confetti effect
-function createConfetti() {
-  const confettiCount = 150;
-  for (let i = 0; i < confettiCount; i++) {
-    setTimeout(() => {
-      const confetti = document.createElement('div');
-      confetti.style.cssText = `
-        position: fixed;
-        width: 10px;
-        height: 10px;
-        background: hsl(${Math.random() * 360}, 70%, 60%);
-        left: ${Math.random() * 100}%;
-        top: -10px;
-        z-index: 10000;
-        pointer-events: none;
-        border-radius: 2px;
-        box-shadow: 0 0 10px currentColor;
-      `;
-      document.body.appendChild(confetti);
-      
-      const duration = Math.random() * 3000 + 2000;
-      const x = (Math.random() - 0.5) * 200;
-      
-      confetti.animate([
-        { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
-        { transform: `translate(${x}px, ${window.innerHeight + 100}px) rotate(720deg)`, opacity: 0 }
-      ], {
-        duration: duration,
-        easing: 'cubic-bezier(0.5, 0, 0.5, 1)'
-      }).onfinish = () => confetti.remove();
-    }, i * 20);
   }
 }
 
-// Easter egg notification system
-function showEasterEgg(message, duration = 3000) {
-  const notification = document.createElement('div');
-  notification.className = 'easter-egg-notification';
-  notification.textContent = message;
-  notification.style.cssText = `
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    background: linear-gradient(135deg, #f59e42, #fb923c);
-    color: white;
-    padding: 2rem 3rem;
-    border-radius: 20px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    z-index: 10001;
-    box-shadow: 0 10px 40px rgba(245, 158, 66, 0.5);
-    text-align: center;
-    pointer-events: none;
-    font-family: 'Clash Display', sans-serif;
+// --- Neon Snake Game ---
+const gameModal = document.getElementById('game-modal');
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas ? canvas.getContext('2d') : null;
+const scoreElement = document.getElementById('game-score');
+const startBtn = document.getElementById('start-game-btn');
+const closeGameBtn = gameModal ? gameModal.querySelector('.close-modal') : null;
+
+let gameInterval;
+let snake = [];
+let food = {};
+let direction = 'right';
+let score = 0;
+const gridSize = 20;
+const tileCount = 20; // 400px / 20px
+
+function openGameModal() {
+  if (!gameModal) return;
+  gameModal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  resetGame();
+}
+
+function closeGame() {
+  if (!gameModal) return;
+  gameModal.classList.remove('active');
+  document.body.style.overflow = '';
+  clearInterval(gameInterval);
+}
+
+if (closeGameBtn) closeGameBtn.addEventListener('click', closeGame);
+if (startBtn) startBtn.addEventListener('click', startGame);
+
+function resetGame() {
+  snake = [{ x: 10, y: 10 }];
+  food = { x: 15, y: 15 };
+  direction = 'right';
+  score = 0;
+  if (scoreElement) scoreElement.innerText = score;
+  if (ctx) {
+    ctx.fillStyle = '#050505';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    drawSnake();
+    drawFood();
+  }
+}
+
+function startGame() {
+  if (gameInterval) clearInterval(gameInterval);
+  resetGame();
+  gameInterval = setInterval(gameLoop, 100);
+  window.addEventListener('keydown', changeDirection);
+  startBtn.style.display = 'none';
+}
+
+function changeDirection(e) {
+  // Prevent scrolling if game is active
+  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+    e.preventDefault();
+  }
+
+  switch (e.key) {
+    case 'ArrowUp': if (direction !== 'down') direction = 'up'; break;
+    case 'ArrowDown': if (direction !== 'up') direction = 'down'; break;
+    case 'ArrowLeft': if (direction !== 'right') direction = 'left'; break;
+    case 'ArrowRight': if (direction !== 'left') direction = 'right'; break;
+  }
+}
+
+function gameLoop() {
+  let head = { ...snake[0] };
+
+  switch (direction) {
+    case 'up': head.y--; break;
+    case 'down': head.y++; break;
+    case 'left': head.x--; break;
+    case 'right': head.x++; break;
+  }
+
+  // Wrap walls
+  if (head.x < 0) head.x = tileCount - 1;
+  if (head.x >= tileCount) head.x = 0;
+  if (head.y < 0) head.y = tileCount - 1;
+  if (head.y >= tileCount) head.y = 0;
+
+  // Self collision
+  if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+    gameOver();
+    return;
+  }
+
+  snake.unshift(head);
+
+  // Eat food
+  if (head.x === food.x && head.y === food.y) {
+    score += 10;
+    scoreElement.innerText = score;
+    placeFood();
+    createExplosion(head.x * gridSize + canvas.getBoundingClientRect().left, head.y * gridSize + canvas.getBoundingClientRect().top);
+  } else {
+    snake.pop();
+  }
+
+  draw();
+}
+
+function draw() {
+  // Clear with slight fade for trail effect
+  ctx.fillStyle = 'rgba(5, 5, 5, 0.4)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  drawSnake();
+  drawFood();
+}
+
+function drawSnake() {
+  snake.forEach((segment, index) => {
+    // Head is white, body is accent color
+    ctx.fillStyle = index === 0 ? '#fff' : 'var(--accent-color)';
+    if (index !== 0) ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+
+    // Neon Glow
+    ctx.shadowBlur = index === 0 ? 20 : 10;
+    ctx.shadowColor = ctx.fillStyle;
+
+    // Rounded segments
+    const x = segment.x * gridSize;
+    const y = segment.y * gridSize;
+    const size = gridSize - 2;
+    const radius = 4;
+
+    ctx.beginPath();
+    ctx.roundRect(x, y, size, size, radius);
+    ctx.fill();
+
+    ctx.shadowBlur = 0; // Reset
+  });
+}
+
+function drawFood() {
+  ctx.fillStyle = '#ff0055';
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = '#ff0055';
+  ctx.beginPath();
+  ctx.arc(food.x * gridSize + gridSize / 2, food.y * gridSize + gridSize / 2, gridSize / 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+}
+
+function placeFood() {
+  food = {
+    x: Math.floor(Math.random() * tileCount),
+    y: Math.floor(Math.random() * tileCount)
+  };
+  // Don't place on snake
+  if (snake.some(segment => segment.x === food.x && segment.y === food.y)) {
+    placeFood();
+  }
+}
+
+function gameOver() {
+  clearInterval(gameInterval);
+  alert(`Game Over! Score: ${score}`);
+  startBtn.style.display = 'block';
+  startBtn.innerText = 'Play Again';
+}
+
+function activatePartyMode() {
+  alert('🎉 KONAMI CODE ACTIVATED! Party Mode ON! 🎉');
+  document.body.style.animation = 'rainbow 5s infinite';
+
+  const style = document.createElement('style');
+  style.innerHTML = `
+    @keyframes rainbow {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
   `;
-  document.body.appendChild(notification);
-  
-  notification.animate([
-    { transform: 'translate(-50%, -50%) scale(0) rotate(0deg)', opacity: 0 },
-    { transform: 'translate(-50%, -50%) scale(1.1) rotate(5deg)', opacity: 1, offset: 0.3 },
-    { transform: 'translate(-50%, -50%) scale(1) rotate(0deg)', opacity: 1, offset: 0.7 },
-    { transform: 'translate(-50%, -50%) scale(0.8) rotate(-5deg)', opacity: 0 }
-  ], {
-    duration: duration,
-    easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)'
-  }).onfinish = () => notification.remove();
+  document.head.appendChild(style);
 }
 
-// Keyboard shortcuts
-document.addEventListener('keydown', (e) => {
-  // Press 'D' for disco mode
-  if (e.key.toLowerCase() === 'd' && e.ctrlKey) {
-    e.preventDefault();
-    document.body.classList.toggle('disco-mode');
-    showEasterEgg(document.body.classList.contains('disco-mode') ? '🕺 DISCO MODE ON! 🕺' : 'Disco mode off', 2000);
-  }
-  
-  // Press 'P' to pause/resume particles
-  if (e.key.toLowerCase() === 'p' && e.ctrlKey) {
-    e.preventDefault();
-    const paused = canvas.style.animationPlayState === 'paused';
-    canvas.style.animationPlayState = paused ? 'running' : 'paused';
-    showEasterEgg(paused ? 'Particles resumed!' : 'Particles paused!', 2000);
-  }
-  
-  // Press 'R' for rainbow text
-  if (e.key.toLowerCase() === 'r' && e.ctrlKey) {
-    e.preventDefault();
-    document.body.classList.toggle('rainbow-text');
-    showEasterEgg(document.body.classList.contains('rainbow-text') ? '🌈 Rainbow text ON! 🌈' : 'Rainbow text off', 2000);
-  }
-  
-  // Press 'Space' to create explosion at center
-  if (e.key === ' ' && !e.target.matches('input, textarea')) {
-    e.preventDefault();
-    createClickExplosion(window.innerWidth / 2, window.innerHeight / 2, '#f59e42');
-  }
-  
-  // Press '?' for help
-  if (e.key === '?' && e.shiftKey) {
-    showHelp();
-  }
-});
+// --- Theme/Lite Toggle Handler ---
+const themeToggleBtn = document.getElementById('theme-toggle'); // Assuming this ID from HTML
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener('click', () => {
+    // For now, this just toggles Lite mode as per previous design, 
+    // or we could make it a light/dark toggle. 
+    // Given the "Dark Premium" goal, let's make it a Lite Mode toggle for performance.
+    toggleLiteMode();
+  });
+}
 
 // Help modal - prevent multiple modals
 let helpModalOpen = false;
 let closeOnEscapeHandler = null;
 
 function showHelp() {
-  // Prevent multiple modals
   if (helpModalOpen) return;
-  
+
   helpModalOpen = true;
   const help = document.createElement('div');
   help.className = 'help-modal';
-  
+
   const closeModal = () => {
     help.remove();
     helpModalOpen = false;
@@ -813,7 +597,7 @@ function showHelp() {
       closeOnEscapeHandler = null;
     }
   };
-  
+
   help.innerHTML = `
     <div style="background: rgba(10, 14, 39, 0.95); backdrop-filter: blur(20px); padding: 2rem; border-radius: 20px; max-width: 500px; border: 2px solid #f59e42;">
       <h2 style="color: #f59e42; margin-bottom: 1rem;">🎮 Keyboard Shortcuts</h2>
@@ -829,6 +613,7 @@ function showHelp() {
       <button id="help-close-btn" style="margin-top: 1rem; padding: 0.5rem 1.5rem; background: #f59e42; border: none; border-radius: 10px; color: white; cursor: pointer; font-weight: bold;">Close</button>
     </div>
   `;
+
   help.style.cssText = `
     position: fixed;
     top: 0;
@@ -842,21 +627,22 @@ function showHelp() {
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(5px);
   `;
+
   document.body.appendChild(help);
-  
+
   // Close button
   const closeBtn = help.querySelector('#help-close-btn');
   if (closeBtn) {
     closeBtn.addEventListener('click', closeModal);
   }
-  
+
   // Close on background click
   help.addEventListener('click', (e) => {
     if (e.target === help) {
       closeModal();
     }
   });
-  
+
   // Close on Escape key
   closeOnEscapeHandler = (e) => {
     if (e.key === 'Escape') {
@@ -866,431 +652,251 @@ function showHelp() {
   document.addEventListener('keydown', closeOnEscapeHandler);
 }
 
-// Interactive particle attraction on mouse
-let mouseAttraction = false;
-document.addEventListener('mousedown', () => mouseAttraction = true);
-document.addEventListener('mouseup', () => mouseAttraction = false);
-
-// Make particles react to mouse
-function updateParticleAttraction() {
-  if (mouseAttraction && particles.length > 0) {
-    particles.forEach(p => {
-      const dx = mouseX - p.x;
-      const dy = mouseY - p.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      
-      if (distance < 150 && distance > 0) {
-        const force = (150 - distance) / 150;
-        p.dx += (dx / distance) * force * 0.5;
-        p.dy += (dy / distance) * force * 0.5;
-      }
-    });
-  }
-  requestAnimationFrame(updateParticleAttraction);
-}
-updateParticleAttraction();
-
-// Add more interactive features - shake on scroll
-let lastScrollY = window.scrollY;
-window.addEventListener('scroll', () => {
-  const scrollDelta = Math.abs(window.scrollY - lastScrollY);
-  if (scrollDelta > 50) {
-    document.body.style.animation = 'none';
-    setTimeout(() => {
-      document.body.style.animation = 'shake 0.3s ease-in-out';
-    }, 10);
-  }
-  lastScrollY = window.scrollY;
-});
-
-// Secret word easter eggs
-let typedWord = '';
+// --- Global Keyboard Shortcuts ---
 document.addEventListener('keydown', (e) => {
-  if (e.key.length === 1) {
-    typedWord += e.key.toLowerCase();
-    if (typedWord.length > 20) typedWord = typedWord.slice(-20);
-    
-    // Check for secret words
-    if (typedWord.includes('hello')) {
-      showEasterEgg('👋 Hello there! 👋', 2000);
-      typedWord = '';
-    }
-    if (typedWord.includes('awesome')) {
-      showEasterEgg('😎 You\'re awesome too! 😎', 2000);
-      typedWord = '';
-    }
-    if (typedWord.includes('secret')) {
-      showEasterEgg('🔐 Secret unlocked! 🔐', 2000);
-      createConfetti();
-      typedWord = '';
-    }
-    if (typedWord.includes('matrix')) {
-      showEasterEgg('🟢 Welcome to the Matrix 🟢', 3000);
-      document.body.classList.add('matrix-mode');
-      typedWord = '';
-    }
-  }
-});
-
-// Add interactive hover effects to name
-const bigTitle = document.querySelector('.big-title');
-if (bigTitle) {
-  bigTitle.addEventListener('mouseenter', () => {
-    bigTitle.style.animation = 'none';
-    setTimeout(() => {
-      bigTitle.style.animation = 'pulse 0.5s ease-in-out';
-    }, 10);
-  });
-  
-  bigTitle.addEventListener('click', () => {
-    createClickExplosion(
-      bigTitle.getBoundingClientRect().left + bigTitle.offsetWidth / 2,
-      bigTitle.getBoundingClientRect().top + bigTitle.offsetHeight / 2,
-      '#f59e42'
-    );
-    showEasterEgg('👋 Hi! Thanks for clicking! 👋', 2000);
-  });
-}
-
-// Add shake animation on title hover
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-  }
-  
-  .rainbow-mode {
-    animation: rainbow 3s linear infinite;
-  }
-  
-  @keyframes rainbow {
-    0% { filter: hue-rotate(0deg); }
-    100% { filter: hue-rotate(360deg); }
-  }
-  
-  .disco-mode {
-    animation: disco 0.3s linear infinite !important;
-  }
-  
-  .disco-mode * {
-    animation: disco-colors 0.3s linear infinite !important;
-  }
-  
-  @keyframes disco {
-    0% { filter: hue-rotate(0deg) brightness(1.3) saturate(1.5); }
-    25% { filter: hue-rotate(90deg) brightness(1.4) saturate(1.6); }
-    50% { filter: hue-rotate(180deg) brightness(1.3) saturate(1.5); }
-    75% { filter: hue-rotate(270deg) brightness(1.4) saturate(1.6); }
-    100% { filter: hue-rotate(360deg) brightness(1.3) saturate(1.5); }
-  }
-  
-  @keyframes disco-colors {
-    0% { 
-      filter: hue-rotate(0deg);
-      transform: scale(1);
-    }
-    25% { 
-      filter: hue-rotate(90deg);
-      transform: scale(1.01);
-    }
-    50% { 
-      filter: hue-rotate(180deg);
-      transform: scale(1);
-    }
-    75% { 
-      filter: hue-rotate(270deg);
-      transform: scale(1.01);
-    }
-    100% { 
-      filter: hue-rotate(360deg);
-      transform: scale(1);
-    }
-  }
-  
-  .rainbow-text h1, .rainbow-text h2, .rainbow-text h3 {
-    background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: rainbow-text 3s linear infinite;
-    background-size: 200% 100%;
-  }
-  
-  @keyframes rainbow-text {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
-  }
-  
-  .matrix-mode {
-    filter: hue-rotate(120deg) contrast(1.5);
-  }
-  
-  .matrix-mode::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-      0deg,
-      rgba(0, 255, 0, 0.03) 0px,
-      transparent 2px,
-      transparent 4px
-    );
-    pointer-events: none;
-    z-index: 9999;
-  }
-  
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-  }
-  
-  .big-title:hover {
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  
-  .big-title:active {
-    transform: scale(0.95);
-  }
-`;
-document.head.appendChild(style);
-
-// ==========================
-// Mobile-only easter eggs
-// ==========================
-if (isMobile) {
-  // Triple-tap on hero to show a quick toast
-  let tapTimes = [];
-  const showToast = (msg) => {
-    const t = document.createElement('div');
-    t.className = 'toast';
-    t.textContent = msg;
-    document.body.appendChild(t);
-    requestAnimationFrame(() => t.classList.add('visible'));
-    setTimeout(() => { t.classList.remove('visible'); t.addEventListener('transitionend', ()=> t.remove(), { once: true }); }, 1500);
-  };
-  const heroArea = document.querySelector('.hero-content') || document.body;
-  heroArea.addEventListener('touchstart', () => {
-    const now = Date.now();
-    tapTimes.push(now);
-    tapTimes = tapTimes.filter(t => now - t < 600);
-    if (tapTimes.length >= 3) {
-      showToast('🎉 Hello from mobile!');
-      tapTimes = [];
-    }
-  }, { passive: true });
-
-  // Long-press anywhere to show help hint
-  let lpTimer = null;
-  document.addEventListener('touchstart', () => {
-    if (lpTimer) clearTimeout(lpTimer);
-    lpTimer = setTimeout(() => showToast('Tip: Use the nav to jump sections'), 700);
-  }, { passive: true });
-  document.addEventListener('touchend', () => { if (lpTimer) clearTimeout(lpTimer); }, { passive: true });
-  document.addEventListener('touchmove', () => { if (lpTimer) clearTimeout(lpTimer); }, { passive: true });
-}
-
-// Add floating emoji easter egg - click tech icons 5 times
-let techIconClicks = {};
-document.querySelectorAll('.tech-icons img').forEach((icon, index) => {
-  if (isMobile) return; // skip heavy icon click effects on mobile
-  techIconClicks[index] = 0;
-  icon.addEventListener('click', (e) => {
-    e.stopPropagation();
-    techIconClicks[index]++;
-    
-    // Create explosion at icon
-    const rect = icon.getBoundingClientRect();
-    createClickExplosion(
-      rect.left + rect.width / 2,
-      rect.top + rect.height / 2,
-      '#f59e42'
-    );
-    
-    // After 5 clicks on same icon
-    if (techIconClicks[index] === 5) {
-      showEasterEgg(`🎯 You really like ${icon.alt}! 🎯`, 2000);
-      techIconClicks[index] = 0;
-      
-      // Make icon spin
-      icon.style.animation = 'spin 1s ease-in-out';
-      setTimeout(() => {
-        icon.style.animation = '';
-      }, 1000);
-    }
-  });
-});
-
-// Add spin animation
-const spinStyle = document.createElement('style');
-spinStyle.textContent = `
-  @keyframes spin {
-    from { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(180deg) scale(1.3); }
-    to { transform: rotate(360deg) scale(1); }
-  }
-  
-  .tech-icons img {
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  
-  .tech-icons img:active {
-    transform: scale(0.9);
-  }
-`;
-document.head.appendChild(spinStyle);
-
-// Add secret click pattern easter egg (click corners)
-let cornerClicks = [];
-function getCorners() {
-  return [
-    { x: 0, y: 0, name: 'top-left' },
-    { x: window.innerWidth, y: 0, name: 'top-right' },
-    { x: 0, y: window.innerHeight, name: 'bottom-left' },
-    { x: window.innerWidth, y: window.innerHeight, name: 'bottom-right' }
-  ];
-}
-
-document.addEventListener('click', (e) => {
-  const clickX = e.clientX;
-  const clickY = e.clientY;
-  const corners = getCorners();
-  
-  corners.forEach((corner, index) => {
-    const distance = Math.sqrt(
-      Math.pow(clickX - corner.x, 2) + Math.pow(clickY - corner.y, 2)
-    );
-    
-    if (distance < 50) {
-      if (!cornerClicks.includes(index)) {
-        cornerClicks.push(index);
-        createClickExplosion(corner.x, corner.y, '#fff');
-      }
-      
-      if (cornerClicks.length === 4) {
-        showEasterEgg('🎊 All corners clicked! Secret unlocked! 🎊', 3000);
-        createConfetti();
-        cornerClicks = [];
-      }
-    }
-  });
-  
-  // Reset if clicking elsewhere
-  if (cornerClicks.length > 0) {
-    let nearCorner = false;
-    corners.forEach(corner => {
-      const distance = Math.sqrt(
-        Math.pow(clickX - corner.x, 2) + Math.pow(clickY - corner.y, 2)
-      );
-      if (distance < 50) nearCorner = true;
-    });
-    if (!nearCorner) {
-      setTimeout(() => {
-        if (cornerClicks.length < 4) cornerClicks = [];
-      }, 2000);
-    }
-  }
-});
-
-window.addEventListener('resize', () => {
-  cornerClicks = []; // Reset on resize
-});
-
-// Add scroll speed easter egg (separate from shake effect)
-let scrollSpeedLastY = window.scrollY;
-let scrollSpeedLastTime = Date.now();
-window.addEventListener('scroll', () => {
-  const now = Date.now();
-  const timeDelta = now - scrollSpeedLastTime;
-  if (timeDelta > 0) {
-    const scrollSpeed = Math.abs(window.scrollY - scrollSpeedLastY) / timeDelta * 100;
-    scrollSpeedLastTime = now;
-    scrollSpeedLastY = window.scrollY;
-    
-    if (scrollSpeed > 5) {
-      document.body.classList.add('fast-scroll');
-      setTimeout(() => {
-        document.body.classList.remove('fast-scroll');
-      }, 500);
-    }
-  }
-});
-
-// This is the NEW, CORRECTED code
-const fastScrollStyle = document.createElement('style');
-fastScrollStyle.textContent = `
-  .fast-scroll {
-    brightness(1.1);
-  }
-`;
-document.head.appendChild(fastScrollStyle);
-
-// Contact form handling
-const contactForm = document.getElementById('contact-form');
-if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
+  // Press 'Space' to create explosion at center
+  if (e.key === ' ' && !e.target.matches('input, textarea')) {
     e.preventDefault();
-    
-    const formData = new FormData(contactForm);
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const message = formData.get('message');
-    
-    // Create mailto link (since we don't have a backend)
-    const subject = encodeURIComponent(`Portfolio Contact: Message from ${name}`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-    const mailtoLink = `mailto:safarryyan@gmail.com?subject=${subject}&body=${body}`;
-    
-    // Open email client
-    window.location.href = mailtoLink;
-    
-    // Show success message
-    showEasterEgg('📧 Opening your email client...', 2000);
-    
-    // Reset form
-    contactForm.reset();
-  });
-}
+    // Assuming createClickExplosion is defined elsewhere or will be added
+    // createClickExplosion(window.innerWidth / 2, window.innerHeight / 2, '#f59e42');
+    console.log("Spacebar pressed - Center explosion (function not defined in this snippet)");
+  }
 
-// Scroll to top button
-const scrollToTopBtn = document.getElementById('scroll-to-top');
-if (scrollToTopBtn) {
-  // Show/hide button based on scroll position
-  window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 300) {
-      scrollToTopBtn.classList.add('visible');
-    } else {
-      scrollToTopBtn.classList.remove('visible');
+  // Press 'V' for Void Mode
+  if (e.key.toLowerCase() === 'v' && !e.target.matches('input, textarea')) {
+    document.body.classList.toggle('void-mode');
+    // Assuming showEasterEgg is defined elsewhere or will be added
+    // showEasterEgg(document.body.classList.contains('void-mode') ? '⚫ ENTERING THE VOID ⚫' : '⚪ Exiting the Void ⚪', 2000);
+    console.log("V key pressed - Toggle Void Mode (function not defined in this snippet)");
+  }
+
+  // Press '?' for help
+  if (e.key === '?' && e.shiftKey) {
+    showHelp();
+  }
+});
+
+// --- Physics Skills Cloud ---
+const initSkillsPhysics = () => {
+  const canvas = document.getElementById('skills-canvas');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  const container = document.getElementById('skills-canvas-container');
+
+  let width, height;
+
+  const resize = () => {
+    width = container.clientWidth;
+    height = container.clientHeight;
+    canvas.width = width;
+    canvas.height = height;
+  };
+
+  window.addEventListener('resize', resize);
+  resize();
+
+  // Skills List
+  const skills = [
+    "ROS 2", "Verilog", "Python", "C++", "Embedded C",
+    "Raspberry Pi", "ESP32", "Arduino", "TensorFlow",
+    "OpenCV", "Flask", "MySQL", "Linux", "PCB Design",
+    "Robotics", "Automation", "Git", "MATLAB"
+  ];
+
+  // Physics Config
+  const bodies = [];
+  const friction = 0.98;
+  const gravity = 0.2;
+  const bounce = 0.7;
+
+  class Body {
+    constructor(text, x, y) {
+      this.text = text;
+      this.x = x;
+      this.y = y;
+      this.vx = (Math.random() - 0.5) * 10;
+      this.vy = (Math.random() - 0.5) * 10;
+      this.radius = 40 + Math.random() * 20; // Varied sizes
+      this.color = '#1a1a1a';
+      this.textColor = '#ffffff';
+      this.isDragging = false;
+    }
+
+    update() {
+      if (this.isDragging) return;
+
+      this.vy += gravity;
+      this.vx *= friction;
+      this.vy *= friction;
+
+      this.x += this.vx;
+      this.y += this.vy;
+
+      // Wall Collisions
+      if (this.x + this.radius > width) {
+        this.x = width - this.radius;
+        this.vx *= -bounce;
+      } else if (this.x - this.radius < 0) {
+        this.x = this.radius;
+        this.vx *= -bounce;
+      }
+
+      if (this.y + this.radius > height) {
+        this.y = height - this.radius;
+        this.vy *= -bounce;
+      } else if (this.y - this.radius < 0) {
+        this.y = this.radius;
+        this.vy *= -bounce;
+      }
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.stroke();
+
+      ctx.fillStyle = this.textColor;
+      ctx.font = '14px "JetBrains Mono"';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(this.text, this.x, this.y);
+    }
+  }
+
+  // Initialize Bodies
+  skills.forEach(skill => {
+    bodies.push(new Body(skill, Math.random() * width, Math.random() * height / 2));
+  });
+
+  // Interaction
+  let draggedBody = null;
+
+  canvas.addEventListener('mousedown', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    bodies.forEach(body => {
+      const dx = mouseX - body.x;
+      const dy = mouseY - body.y;
+      if (Math.sqrt(dx * dx + dy * dy) < body.radius) {
+        draggedBody = body;
+        body.isDragging = true;
+
+        // Custom Cursor Grabbing State
+        const cursor = document.getElementById('custom-cursor');
+        if (cursor) cursor.classList.add('grabbing');
+      }
+    });
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (draggedBody) {
+      const rect = canvas.getBoundingClientRect();
+      draggedBody.x = e.clientX - rect.left;
+      draggedBody.y = e.clientY - rect.top;
+      draggedBody.vx = (e.movementX) * 0.5; // Add throw velocity
+      draggedBody.vy = (e.movementY) * 0.5;
     }
   });
-  
-  // Scroll to top on click
-  scrollToTopBtn.addEventListener('click', () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-    
-    // Create explosion at button
-    const rect = scrollToTopBtn.getBoundingClientRect();
-    createClickExplosion(
-      rect.left + rect.width / 2,
-      rect.top + rect.height / 2,
-      '#f59e42'
-    );
+
+  window.addEventListener('mouseup', () => {
+    if (draggedBody) {
+      draggedBody.isDragging = false;
+      draggedBody = null;
+
+      // Reset Cursor
+      const cursor = document.getElementById('custom-cursor');
+      if (cursor) cursor.classList.remove('grabbing');
+    }
   });
+
+  // Animation Loop
+  const loop = () => {
+    ctx.clearRect(0, 0, width, height);
+
+    // Collision between bodies (Simple)
+    for (let i = 0; i < bodies.length; i++) {
+      for (let j = i + 1; j < bodies.length; j++) {
+        const b1 = bodies[i];
+        const b2 = bodies[j];
+        const dx = b2.x - b1.x;
+        const dy = b2.y - b1.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const minDist = b1.radius + b2.radius;
+
+        if (dist < minDist) {
+          const angle = Math.atan2(dy, dx);
+          const tx = b1.x + Math.cos(angle) * minDist;
+          const ty = b1.y + Math.sin(angle) * minDist;
+
+          const ax = (tx - b2.x) * 0.05; // Spring force
+          const ay = (ty - b2.y) * 0.05;
+
+          b1.vx -= ax;
+          b1.vy -= ay;
+          b2.vx += ax;
+          b2.vy += ay;
+        }
+      }
+    }
+
+    bodies.forEach(body => {
+      body.update();
+      body.draw();
+    });
+
+    requestAnimationFrame(loop);
+  };
+
+  loop();
+};
+
+// Start Physics when DOM is ready
+document.addEventListener('DOMContentLoaded', initSkillsPhysics);
+
+// --- Particle Explosion Effect ---
+function createExplosion(x, y) {
+  const particleCount = 30;
+  const colors = ['#ff0055', '#00eaff', '#ffffff'];
+
+  for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement('div');
+    particle.classList.add('explosion-particle');
+    document.body.appendChild(particle);
+
+    const size = Math.random() * 5 + 2;
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+    particle.style.position = 'fixed';
+    particle.style.left = `${x}px`;
+    particle.style.top = `${y}px`;
+    particle.style.borderRadius = '50%';
+    particle.style.pointerEvents = 'none';
+    particle.style.zIndex = '9999';
+
+    const destinationX = (Math.random() - 0.5) * 200;
+    const destinationY = (Math.random() - 0.5) * 200;
+    const rotation = Math.random() * 520;
+    const delay = Math.random() * 200;
+
+    particle.animate([
+      { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+      { transform: `translate(${destinationX}px, ${destinationY}px) rotate(${rotation}deg)`, opacity: 0 }
+    ], {
+      duration: 1000 + Math.random() * 1000,
+      easing: 'cubic-bezier(0, .9, .57, 1)',
+      delay: delay
+    });
+
+    setTimeout(() => {
+      particle.remove();
+    }, 2000 + delay);
+  }
 }
 
-// Ensure all external links open in new tab
-document.querySelectorAll('a[href^="http"]').forEach(link => {
-  if (!link.hasAttribute('target')) {
-    link.setAttribute('target', '_blank');
-    link.setAttribute('rel', 'noopener noreferrer');
-  }
-}); 
