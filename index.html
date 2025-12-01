@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryyan Safar | Engineer & Innovator</title>
+  <meta name="description"
+    content="Ryyan Safar – Electronics & Communication Engineer. Building the future with robotics, embedded systems, and intelligent automation.">
+  <meta property="og:title" content="Ryyan Safar | Portfolio">
+  <meta property="og:description" content="Projects in robotics, embedded systems, automation, and leadership.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ryyansafar.github.io/">
+  <meta name="theme-color" content="#050505">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script type="module" crossorigin src="/assets/index-C9to0wYv.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BlHbO_OD.css">
+</head>
+
+<body>
+  <div id="preloader">
+    <div class="counter">0%</div>
+    <div class="curtain"></div>
+  </div>
+
+  <div id="noise-overlay"></div>
+  <div id="custom-cursor"></div>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <span class="logo-text">rs<span class="logo-dot">.</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#about" data-magnetic>About</a></li>
+        <li><a href="#work" data-magnetic>Work</a></li>
+        <li><a href="#projects" data-magnetic>Projects</a></li>
+        <li><a href="#skills" data-magnetic>Skills</a></li>
+        <li><a href="#ideathon" data-magnetic>Ideathon</a></li>
+        <li id="minigame-nav-item"
+          style="display: none; opacity: 0; transform: translateX(-20px); transition: all 0.5s ease;"><a href="#"
+            id="minigame-link" data-magnetic
+            style="color: var(--accent-color); text-shadow: 0 0 10px var(--accent-glow);">Mini Game</a></li>
+        <li><a href="#contact" data-magnetic>Contact</a></li>
+      </ul>
+      <button id="theme-toggle" aria-label="Toggle theme" data-magnetic>
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5" />
+          <path
+            d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content Wrapper for Sticky Footer Effect -->
+  <div class="main-wrapper">
+    <header class="hero">
+      <div class="hero-content">
+        <div class="hero-text reveal-text">
+          <h1 class="glitch-text">
+            <span class="scramble-text">Ryyan</span><br>
+            <span class="scramble-text">Safar</span>
+          </h1>
+          <h2 class="subtitle">Electronics & Communication Engineer</h2>
+          <p class="hero-bio">Building intelligent systems at the intersection of hardware and software.</p>
+        </div>
+
+        <div class="hero-actions reveal-up">
+          <a href="#projects" class="btn btn-primary" data-magnetic>View My Work</a>
+          <a href="Ryyan_Safar_Resume-24.pdf" download class="btn btn-outline btn-resume" data-magnetic>
+            <span>Resume</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+            </svg>
+          </a>
+        </div>
+
+        <div class="social-links reveal-up" style="animation-delay: 0.2s;">
+          <a href="https://linkedin.com/in/ryyan-safar-038a82288/" target="_blank" aria-label="LinkedIn"
+            data-magnetic>LinkedIn</a>
+          <span class="separator">/</span>
+          <a href="https://github.com/ryyansafar" target="_blank" aria-label="GitHub" data-magnetic>GitHub</a>
+          <span class="separator">/</span>
+          <a href="mailto:safarryyan@gmail.com" aria-label="Email" data-magnetic>Email</a>
+        </div>
+      </div>
+
+      <div class="scroll-indicator">
+        <span>Scroll</span>
+        <div class="line"></div>
+      </div>
+    </header>
+
+    <main>
+      <section id="about" class="section-padding">
+        <div class="container">
+          <div class="section-header reveal-up">
+            <span class="section-tag">01</span>
+            <h2>About Me</h2>
+          </div>
+
+          <div class="about-grid">
+            <div class="about-text reveal-up">
+              <p class="lead">Aspiring <strong>Electronics & Communication Engineer</strong> with a passion for building
+                <strong>automation systems</strong> and <strong>intelligent machines</strong>.
+              </p>
+              <p>I seek opportunities to apply technical knowledge in robotics, embedded systems, chip design, and
+                motion
+                control while driving impactful innovations. Eager to contribute to collaborative projects, optimize
+                real-world solutions, and grow as a tech leader at the intersection of hardware and software.</p>
+
+              <div class="tech-stack-mini">
+                <h3>Core Technologies</h3>
+                <ul class="tech-list">
+                  <li>ROS 2</li>
+                  <li>Verilog HDL</li>
+                  <li>Embedded C</li>
+                  <li>Python & C++</li>
+                  <li>TensorFlow</li>
+                  <li>OpenCV</li>
+                  <li>PCB Design</li>
+                  <li>Raspberry Pi</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="stats-grid reveal-up" style="animation-delay: 0.2s;">
+              <div class="stat-card">
+                <span class="stat-number">3+</span>
+                <span class="stat-label">Years Experience</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-number">12+</span>
+                <span class="stat-label">Projects Built</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-number">5+</span>
+                <span class="stat-label">Leadership Roles</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="work" class="section-padding">
+        <div class="container">
+          <div class="section-header reveal-up">
+            <span class="section-tag">02</span>
+            <h2>Experience</h2>
+          </div>
+
+          <div class="timeline">
+            <!-- Experience Item 1 -->
+            <div class="timeline-item reveal-up">
+              <div class="timeline-date">May 2025 – June 2025</div>
+              <div class="timeline-content">
+                <h3>Research Intern</h3>
+                <div class="company">AugsenseLab</div>
+                <p>Researched and compared weather prediction values from NWP (Numerical Weather Prediction) models with
+                  real-time observed values for accuracy benchmarking.</p>
+                <p>Implemented sensor fusion algorithms integrating IMU (BNO055) and GNSS (ZED-F9P) data on a Raspberry
+                  Pi platform.</p>
+                <div class="tags">
+                  <span>NWP Models</span>
+                  <span>Sensor Fusion</span>
+                  <span>Raspberry Pi</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Experience Item 2 -->
+            <div class="timeline-item reveal-up">
+              <div class="timeline-date">August 2024 – Present</div>
+              <div class="timeline-content">
+                <h3>Technical Coordinator</h3>
+                <div class="company">TeamApt Ltd.</div>
+                <p>Designed and deployed the company website teamapt.in using Flask and MySQL backend.</p>
+                <p>Provided comprehensive technical support to faculty and students across multiple events.</p>
+                <div class="tags">
+                  <span>Flask</span>
+                  <span>MySQL</span>
+                  <span>Web Dev</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Experience Item 3 -->
+            <div class="timeline-item reveal-up">
+              <div class="timeline-date">November 2023 – January 2025</div>
+              <div class="timeline-content">
+                <h3>Vice President</h3>
+                <div class="company">SOCIAL - Student Open Collaboration for Innovative Applications</div>
+                <p>Organized and hosted a workshop on social entrepreneurship.</p>
+                <p>Contributed as a part-time content writer for the newsletter “Chronicles”.</p>
+                <div class="tags">
+                  <span>Leadership</span>
+                  <span>Event Management</span>
+                  <span>Content Writing</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" class="section-padding">
+        <div class="container">
+          <div class="section-header reveal-up">
+            <span class="section-tag">03</span>
+            <h2>Projects</h2>
+          </div>
+
+          <div class="projects-grid">
+            <!-- Project 1: Mis-Communicationator -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Mis-Communicationator</h3>
+
+                </div>
+                <p>Autonomous AI-to-AI communication system where two LLMs converse continuously. Deployed on Raspberry
+                  Pi 4 with thermal optimization (82.3°C).</p>
+                <ul class="project-tech">
+                  <li>Raspberry Pi 4</li>
+                  <li>StableLM</li>
+                  <li>llama.cpp</li>
+                  <li>Python</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 2: Camera-Only Height Estimation -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Camera-Only Height Est.</h3>
+                  <span class="wip-badge">WIP</span>
+                </div>
+                <p>Unified pipeline generating LiDAR-derived height maps from RGB images. Uses a UNet-style architecture
+                  trained on KITTI/IDD datasets.</p>
+                <ul class="project-tech">
+                  <li>PyTorch</li>
+                  <li>LiDAR Calibration</li>
+                  <li>Docker</li>
+                  <li>OpenCV</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 3: FPGA Kalman Filter -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>FPGA Kalman Filter</h3>
+                  <span class="wip-badge">WIP</span>
+                </div>
+                <p>Hardware-accelerated sensor fusion on FPGA for fusing IMU and GNSS data. Custom Verilog modules for
+                  fixed-point arithmetic.</p>
+                <ul class="project-tech">
+                  <li>Verilog HDL</li>
+                  <li>FPGA</li>
+                  <li>Kalman Filter</li>
+                  <li>UART</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 4: Smart Glass Mount -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Smart Glass Mount</h3>
+
+                </div>
+                <p>Assistive device for the visually impaired using ESP32-CAM and YOLOv5 for real-time obstacle
+                  detection. HackSus 4.0 Winner.</p>
+                <ul class="project-tech">
+                  <li>ESP32</li>
+                  <li>YOLOv5</li>
+                  <li>OpenCV</li>
+                  <li>TinyML</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 5: CNC Plotter -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>CNC Plotter Machine</h3>
+
+                </div>
+                <p>Compact CNC plotter built from repurposed stepper motors for drawing PCB layouts. Engineered frame
+                  and motion system using scrap materials.</p>
+                <ul class="project-tech">
+                  <li>Arduino UNO</li>
+                  <li>GRBL</li>
+                  <li>G-code</li>
+                  <li>Mechanical Design</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 6: Autonomous Robot Arm -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Autonomous Robot Arm</h3>
+
+                </div>
+                <p>5-DOF robotic arm simulation in Gazebo/ROS 2 for car door assembly. Implemented inverse kinematics
+                  and path planning.</p>
+                <ul class="project-tech">
+                  <li>ROS 2</li>
+                  <li>Gazebo</li>
+                  <li>URDF/Xacro</li>
+                  <li>Python</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 7: Sign Language Translator -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Sign Language Translator</h3>
+
+                </div>
+                <p>ID card-type prototype translating Sign Language to English using Teachable Machines. Real-time
+                  display on LCD via ESP32.</p>
+                <ul class="project-tech">
+                  <li>TensorFlow</li>
+                  <li>Arduino</li>
+                  <li>ESP32</li>
+                  <li>Python</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 8: Voting Machine -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Electronic Voting Machine</h3>
+
+                </div>
+                <p>Secure voting machine with SD card logging, LCD interface, and debounce handling. Ensures data
+                  integrity and reliable vote registration.</p>
+                <ul class="project-tech">
+                  <li>C++</li>
+                  <li>ESP32</li>
+                  <li>SPI</li>
+                  <li>SD Card</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 9: Humidity Sensor -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Humidity Alert System</h3>
+
+                </div>
+                <p>Real-time humidity monitoring system using ESP32 and DHT22. Triggers buzzer alerts when thresholds
+                  are exceeded.</p>
+                <ul class="project-tech">
+                  <li>ESP32</li>
+                  <li>DHT22</li>
+                  <li>C++</li>
+                  <li>IoT</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 10: Dual Op-Amp Generator -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Dual Op-Amp Generator</h3>
+
+                </div>
+                <p>Triangle and square wave generator using two IC741 op-amps. Integrated SPDT switch for waveform
+                  toggling.</p>
+                <ul class="project-tech">
+                  <li>IC741</li>
+                  <li>Analog Circuits</li>
+                  <li>Signal Processing</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 11: Digital Stopwatch -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Digital Logic Stopwatch</h3>
+
+                </div>
+                <p>Digital stopwatch built from scratch using 7433 IC, 555 Timer, and logic gates. Features
+                  start/stop/reset functionality.</p>
+                <ul class="project-tech">
+                  <li>Digital Logic</li>
+                  <li>555 Timer</li>
+                  <li>PCB Design</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 12: IR Communication -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>IR Communication System</h3>
+
+                </div>
+                <p>Wireless IR transmitter-receiver system for output control. Achieved 1-2m range using frequency-based
+                  signals.</p>
+                <ul class="project-tech">
+                  <li>Analog Electronics</li>
+                  <li>IR Modules</li>
+                  <li>Circuit Design</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 13: Password Manager -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Secure Password Manager</h3>
+                  <a href="#" class="project-link">↗</a>
+                </div>
+                <p>Web-based password manager with secure login and CRUD operations. Built as final project for CS50.
+                </p>
+                <ul class="project-tech">
+                  <li>Python</li>
+                  <li>Flask</li>
+                  <li>MySQL</li>
+                  <li>Security</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 14: Street Light Prototype -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Auto Street Light</h3>
+                  <a href="#" class="project-link">↗</a>
+                </div>
+                <p>Automatic street light prototype using LDR and 555 Timer. Activates lights based on ambient light
+                  thresholds.</p>
+                <ul class="project-tech">
+                  <li>555 Timer</li>
+                  <li>LDR</li>
+                  <li>Automation</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Project 15: Hospital Finder -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Hospital Booking Agent</h3>
+                  <a href="#" class="project-link">↗</a>
+                </div>
+                <p>Hospital finder and booking assistant using Python and MySQL. Manages details for 5 hospitals and
+                  specialists.</p>
+                <ul class="project-tech">
+                  <li>Python</li>
+                  <li>MySQL</li>
+                  <li>Database Mgmt</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+
+          <div class="more-projects reveal-up">
+            <a href="https://github.com/ryyansafar" target="_blank" class="btn btn-outline">View All Projects on
+              GitHub</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills" class="section-padding">
+        <div class="container">
+          <div class="section-header reveal-up">
+            <span class="section-tag">04</span>
+            <h2>Technical Arsenal</h2>
+          </div>
+
+          <div class="skills-wrapper reveal-up">
+            <div id="skills-canvas-container">
+              <!-- Physics tags will be injected here by JS -->
+              <canvas id="skills-canvas"></canvas>
+            </div>
+            <div class="skills-categories">
+              <div class="skill-category">
+                <h3>Hardware</h3>
+                <p>ESP32, Arduino, Raspberry Pi, 8051, NodeMCU</p>
+              </div>
+              <div class="skill-category">
+                <h3>Languages</h3>
+                <p>C/C++, Python, Verilog, ROS 2, JavaScript, MATLAB</p>
+              </div>
+              <div class="skill-category">
+                <h3>Tools</h3>
+                <p>TensorFlow, OpenCV, Flask, MySQL, Git</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="volunteering" class="section-padding">
+        <div class="container">
+          <div class="section-header reveal-up">
+            <span class="section-tag">05</span>
+            <h2>Positions of Responsibility</h2>
+          </div>
+
+          <div class="timeline">
+            <!-- Item 1 -->
+            <div class="timeline-item reveal-up">
+              <div class="timeline-date">Jan 2025 – Present</div>
+              <div class="timeline-content">
+                <h3>LINK Representative</h3>
+                <div class="company">IEEE RSET Student Branch</div>
+                <p>Facilitating communication and collaboration between LINK and IEEE RSET Student Branch.</p>
+              </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="timeline-item reveal-up">
+              <div class="timeline-date">Mar 2024 – Jan 2025</div>
+              <div class="timeline-content">
+                <h3>Technical Coordinator</h3>
+                <div class="company">IEEE RSET Student Branch</div>
+                <p>Planned the redesign of the IEEE Office on Wheels Bus with integrated piezoelectric sensors to
+                  enhance
+                  engagement. Automated certificate generation for multiple events using AutoCrat. Coordinated technical
+                  events and provided technical assistance.</p>
+              </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="timeline-item reveal-up">
+              <div class="timeline-date">Feb 2024 – Dec 2024</div>
+              <div class="timeline-content">
+                <h3>Tech & Professional Dev Team Lead</h3>
+                <div class="company">IEEE India Council</div>
+                <p>Coordinated and planned the R10 Codeathon for students across the R10 Region. Coordinated AISWYLC’24
+                  (All India Student and Young Professional Congress and Leadership Congress).</p>
+              </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="timeline-item reveal-up">
+              <div class="timeline-date">Jan 2025 – Present</div>
+              <div class="timeline-content">
+                <h3>Co-Student Representative</h3>
+                <div class="company">IEEE Kerala Section</div>
+                <p>Selected as Co-Student Representative for IEEE LINK program.</p>
+              </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="timeline-item reveal-up">
+              <div class="timeline-date">Feb 2024 – Jan 2025</div>
+              <div class="timeline-content">
+                <h3>Project Group Coordinator</h3>
+                <div class="company">IEEE Kerala Section (Future Directions Committee)</div>
+                <p>Researched multiple Future Directions initiatives and planned events, conferences, and workshops in
+                  Kerala.</p>
+              </div>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="timeline-item reveal-up">
+              <div class="timeline-date">Aug 2025 – Nov 2025</div>
+              <div class="timeline-content">
+                <h3>Millennium Fellow</h3>
+                <div class="company">United Nations</div>
+                <p>Developed a plastic disposal smart bin system titled "Overflow ends with us". Hardware project with
+                  our
+                  own custom PCB.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="ideathon" class="section-padding">
+        <div class="container">
+          <div class="section-header reveal-up">
+            <span class="section-tag">06</span>
+            <h2>Ideathon Submissions</h2>
+          </div>
+
+          <div class="projects-grid">
+            <!-- Idea 1 -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Wildfire SAIfety</h3>
+                  <span class="wip-badge">Finalist</span>
+                </div>
+                <p>Early detection system combining computer vision and satellite imagery. Features drone confirmation
+                  and
+                  alert system for nearby networks.</p>
+                <ul class="project-tech">
+                  <li>Computer Vision</li>
+                  <li>Satellite Imagery</li>
+                  <li>Drones</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Idea 2 -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>KSEB Smart Meter</h3>
+                  <span class="wip-badge">Top 10</span>
+                </div>
+                <p>Smart meter alternative using OCR camera modules and Bluetooth to transmit usage data to POS
+                  machines.
+                  Includes GIS mapping for efficient reading.</p>
+                <ul class="project-tech">
+                  <li>OCR</li>
+                  <li>Bluetooth</li>
+                  <li>GIS</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Idea 3 -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Down Syndrome App</h3>
+                  <span class="wip-badge">SlashKey 3.0</span>
+                </div>
+                <p>Social inclusion app featuring emotion detection via Amazon Rekognition and GPT-4o for mood-based
+                  music
+                  and recommendations.</p>
+                <ul class="project-tech">
+                  <li>AWS Rekognition</li>
+                  <li>GPT-4o</li>
+                  <li>App Dev</li>
+                </ul>
+              </div>
+            </article>
+
+            <!-- Idea 4 -->
+            <article class="project-card reveal-up">
+              <div class="project-content">
+                <div class="project-top">
+                  <h3>Safe Sight</h3>
+                  <span class="wip-badge">Safety</span>
+                </div>
+                <p>Women's safety system using real-time CCTV monitoring for suspicious activity. Features priority
+                  alerts
+                  and a feedback loop for law enforcement.</p>
+                <ul class="project-tech">
+                  <li>YOLO</li>
+                  <li>Mediapipe</li>
+                  <li>OpenCV</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="section-padding"
+        style="display: block !important; opacity: 1 !important; visibility: visible !important; min-height: 800px !important;">
+        <div class="container">
+          <!-- Removed Section Title as requested -->
+          <div class="contact-wrapper">
+
+            <!-- Lanyard Container -->
+            <div id="lanyard-container"
+              style="position: relative; width: 100%; height: 800px; min-height: 600px; display: flex;">
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div> <!-- End main-wrapper -->
+
+  <footer class="sticky-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div class="footer-text">
+          <p class="copyright">© 2025 Ryyan Safar. Made with <span class="heart">♥</span> & Google Antigravity (amazing
+            stuff).</p>
+          <p class="copyright">Heavily inspired by the Vercel Ship 2024 Ticket — absolutely loved it.</p>
+        </div>
+        <p class="konami-hint" style="font-size: 0.75rem; opacity: 0.5; margin-top: 0.5rem;">Know the Konami Code? Try
+          it here! 🕹️</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Game Modal -->
+  <div id="game-modal" class="modal">
+    <div class="modal-content game-content">
+      <button class="close-modal" aria-label="Close Game">×</button>
+      <div class="game-header">
+        <h2>Neon Snake</h2>
+        <div class="score-board">Score: <span id="game-score">0</span></div>
+      </div>
+      <canvas id="game-canvas" width="400" height="400"></canvas>
+      <p class="game-instructions">Use Arrow Keys to Move</p>
+      <button id="start-game-btn" class="btn btn-primary">Start Game</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

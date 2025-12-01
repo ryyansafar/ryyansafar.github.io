@@ -1,0 +1,9 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="100" r="100" fill="#050505" />
+  <!-- Left Eye -->
+  <circle cx="74.5" cy="83" r="6" fill="white" />
+  <!-- Right Eye -->
+  <circle cx="125.5" cy="76.2" r="8" fill="white" />
+  <!-- Mouth -->
+  <path d="M 66 125.5 C 83 159.5, 134 142.5, 142.5 117" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" />
+</svg>
