@@ -1,82 +1,189 @@
-# Ryyan Safar — Portfolio
+# ryyansafar.site
 
-A fast, animated portfolio featuring projects, experience, skills, and a performant hero with particles and an SVG wave.
+Personal portfolio for Ryyan Safar — Electronics & Communication Engineer, builder, and designer.
 
-Live site: https://ryyansafar.github.io/
-
-## Features
-- Animated hero: SVG wave and lightweight particle background
-- Smooth navigation with active section highlighting
-- Skills with animated progress bars (driven by CSS variable `--bar-width`)
-- Major Projects, Education, Experience, Volunteering, Certifications, Contact
-- Custom cursor, subtle 3D tilt on cards (gentle in Full mode; off in Lite)
-- Tip pill and Back-to-top button always available
-- Full/Lite performance toggle with persistence
-
-## Performance modes
-- Full (default on desktop): animations on (throttled for smoothness)
-- Lite: animations and heavy effects disabled
-
-Toggle via the button in the navbar. The current choice is saved in `localStorage` under the key `perfMode` and applied on reload. You can also force the choice by clearing localStorage from DevTools.
-
-## Quick start (local)
-1. Clone or download this repository
-2. Open `index.html` in your browser
-3. For best results, use a local web server if you load external assets frequently:
-   - Python 3: `python3 -m http.server 8000`
-   - Node: `npx serve .`
-
-## Deploy to GitHub Pages
-1. Push to the `main` branch
-2. In GitHub → Settings → Pages → Build and deployment: select `GitHub Actions` or `Deploy from a branch` (`main`/`root`)
-3. Your site will be available at `https://<username>.github.io/`
-
-## File structure
-- `index.html` — Markup for sections, nav, tip pill, and buttons
-- `style.css` — Styles, CSS variables, responsive rules
-- `script.js` — Animations, particles, tilt, counters, and performance toggle
-- `Ryyan_Safar_Resume-24.pdf` — Resume (linked from the hero)
-
-## Customization
-- Colors: update CSS variables at the top of `style.css` (e.g., `--primary`, `--accent`)
-- Skills: edit labels in `index.html` and set their values via `data-width` (JS sets `--bar-width`)
-- Project cards: add/remove items under the Projects section in `index.html`
-- Tilt intensity: adjust in `script.js` where `intensity` is computed for `.proj-item`
-
-## Troubleshooting
-- Lite/Full button does nothing
-  - Hard refresh (Cmd/Ctrl+Shift+R); cache-busted assets are referenced via `?v=` query
-  - Check DevTools → Application → Local Storage → `perfMode` (should be `lite` or `full`)
-- Skill bars don’t animate
-  - Scroll the About section into view once (IntersectionObserver triggers the animation)
-  - Ensure `script.js` is loaded and there are no console errors
-- Particles not visible
-  - Lite mode disables heavy visuals; switch to Full
-
-## License
-MIT — feel free to adapt with credit.
-# Ryyan Safar Portfolio Website
-
-A super fancy and unique personal portfolio website for Ryyan Safar, a third-year Electronics and Communication Engineering student at RSET, IEEE volunteer, and Tinkerhub campus ambassador.
-
-## Features
-- Modern, responsive design
-- Hero section with unique visuals
-- About, Experience, Volunteering, and Contact sections
-- Easy to customize with your own details
-+ Downloadable resume button and in-page resume section
-
-## Deploying to GitHub Pages
-1. Fork or clone this repository.
-2. Push your code to a GitHub repository named `<your-username>.github.io`.
-3. Go to your repository settings on GitHub.
-4. Under **Pages**, set the source branch to `main` (or `master`) and the root directory (`/`).
-5. Your site will be live at `https://<your-username>.github.io/`.
-
-## Adding Your Resume
-- Replace `resume.pdf` in the project folder with your own PDF resume.
-- The 'Download Resume' button in the hero section will automatically link to your file.
+**Live → [ryyansafar.site](https://ryyansafar.site)**
 
 ---
 
-Feel free to customize the content and styles to make it truly yours! 
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 16.2.1 (App Router, static export) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 + custom CSS |
+| Animations | GSAP 3 + ScrollTrigger, Framer Motion 12 |
+| Client-side | Vanilla JS (cursor, physics canvas, Konami code, snake game) |
+| Fonts | Space Grotesk, JetBrains Mono, Clash Display, Bebas Neue, Barrio |
+| Analytics | Google Analytics (GA4) |
+| Deployment | GitHub Actions → GitHub Pages |
+
+---
+
+## Project Structure
+
+```
+/
+├── app/
+│   ├── page.tsx               # Main portfolio landing page
+│   ├── layout.tsx             # Root layout: fonts, GA, TransitionProvider
+│   ├── globals.css            # Design tokens, typography, global component styles
+│   ├── template.tsx           # Page transition passthrough
+│   ├── design/
+│   │   ├── page.tsx           # Re-exports archive/gallery — serves /design
+│   │   ├── layout.tsx         # Metadata for /design
+│   │   ├── components/        # /design/components — coming soon
+│   │   └── wallpapers/        # /design/wallpapers — coming soon
+│   ├── archive/
+│   │   └── gallery/
+│   │       └── page.tsx       # /design implementation (horizontal scroll gallery)
+│   └── _design/               # [ARCHIVED] Previous design portfolio iteration
+│
+├── components/
+│   ├── PillNav.tsx            # Sticky pill navigation bar
+│   ├── BubbleMenu.tsx         # Mobile bubble menu overlay
+│   ├── TransitionProvider.tsx # GSAP page wipe + preloader context
+│   └── design/                # Components for archived _design route
+│       ├── DesignNav.tsx
+│       ├── DesignCursor.tsx
+│       ├── FisheyeHero.tsx
+│       ├── HorizontalScroll.tsx
+│       └── ProjectCard.tsx
+│
+├── public/
+│   ├── CNAME                  # Custom domain: ryyansafar.site
+│   ├── script.js              # Cursor, tilt, Konami code, snake game, skills physics
+│   ├── RyyanSafar_Resume.pdf  # Resume (served at /RyyanSafar_Resume.pdf)
+│   ├── tinkerhublogo.png      # TinkerHub Foundation logo
+│   └── assets/
+│       ├── rs-monogram.png
+│       ├── ryyan-safar-poster.png
+│       ├── swiss-grid.png
+│       ├── code-craft.png
+│       └── freelance-strip.png
+│
+├── global.d.ts                # TypeScript: PNG module + requestIdleCallback
+├── next.config.ts             # Static export, unoptimized images, dev origins
+├── .github/
+│   └── workflows/
+│       └── deploy.yml         # CI/CD: build → deploy to gh-pages
+└── .gitignore
+```
+
+---
+
+## Routes
+
+| Route | Description |
+|-------|-------------|
+| `/` | Main portfolio — projects, experience, contact |
+| `/design` | Editorial web design gallery — horizontal scroll on desktop, vertical on mobile |
+| `/design/components` | Component showcase — coming soon |
+| `/design/wallpapers` | Wallpaper collection — coming soon |
+
+---
+
+## Design Systems
+
+### Main Portfolio (`/`)
+
+| Token | Value | Role |
+|-------|-------|------|
+| `--bg-color` | `#050505` | Page background |
+| `--text-primary` | `#ffffff` | Body text |
+| `--text-secondary` | `#888888` | Muted text |
+| `--accent-color` | `#FFDD00` | Primary amber accent |
+| `--accent-alt` | `#FFB800` | Secondary amber |
+| Display font | Bebas Neue / Anton | Large headings |
+| UI font | Space Grotesk | Body, labels, nav |
+| Mono font | JetBrains Mono | Code, terminal text |
+
+### Design Gallery (`/design`)
+
+| Token | Value | Role |
+|-------|-------|------|
+| Background | `#fbf9f4` | Warm paper base |
+| Text | `#1b1c19` | Near-black body |
+| Gold | `#f7c533` | Stamp, highlights |
+| Green | `#a8e060` | Terminal accent |
+| Ember | `#c04b0c` | Warm CTA |
+| Lime | `#b4ff5a` | Obsidian panel accent |
+| Title font | Barrio (cursive) | Panel display titles |
+| Editorial font | Epilogue 900 | Section headings |
+| UI font | Space Grotesk | Labels, tags, meta |
+
+---
+
+## Features
+
+| Feature | Details |
+|---------|---------|
+| **Preloader** | Inline `<script>` in `layout.tsx` fires before React hydration — prevents stuck states on mobile |
+| **Custom cursor** | Smooth lerp follow in `script.js`, hidden on touch devices |
+| **Page transitions** | GSAP 7-strip horizontal wipe via `TransitionProvider.tsx` |
+| **Scroll reveals** | `IntersectionObserver` on `.reveal-up` / `.reveal-text` — no GSAP overhead |
+| **Skills physics** | Matter.js canvas in `script.js` — tag bubbles with gravity and collision |
+| **Card tilt** | `mousemove` → CSS `perspective` / `rotateX` / `rotateY` on project cards |
+| **Design gallery** | `archive/gallery/page.tsx` — lazy iframe loading via `IntersectionObserver`, live site previews |
+| **Konami code** | `↑↑↓↓←→←→BA` — hidden snake mini-game |
+| **Lite mode** | `localStorage` flag — reduces animation overhead |
+| **Mobile support** | Design gallery: portrait (vertical scroll) + landscape (compact) responsive layouts |
+
+---
+
+## Development
+
+```bash
+npm install
+npm run dev
+# → http://localhost:3000
+```
+
+**Test on a phone** (same network):
+
+```bash
+# macOS — get local IP
+ipconfig getifaddr en0
+
+# Then visit http://<your-ip>:3000 on your phone
+```
+
+The dev server allows connections from `192.168.*` and `10.*` (see `next.config.ts`).
+
+---
+
+## Build
+
+```bash
+npm run build
+# Outputs fully static site to out/
+```
+
+Every page is exported as a plain HTML file. No Node.js server is required at runtime.
+
+---
+
+## Deployment
+
+Pushes to `master` automatically trigger `.github/workflows/deploy.yml`:
+
+1. `npm ci` — clean dependency install
+2. `npm run build` — static export to `out/`
+3. `peaceiris/actions-gh-pages@v4` — deploys `out/` to `gh-pages` branch
+
+GitHub Pages serves from `gh-pages`. The custom domain `ryyansafar.site` is preserved by `public/CNAME` (copied into `out/` during build).
+
+> **next.config.ts flags:**
+> - `output: "export"` — enables static export mode
+> - `images.unoptimized: true` — required without an image optimization server
+> - `allowedDevOrigins` — allows phones on the local network to access the dev server
+
+---
+
+## Notes
+
+- `app/_design/` is a fully archived prior iteration of the design portfolio. Excluded from routing by the `_` prefix. Kept for future reference — do not delete.
+- `public/script.js` is loaded `afterInteractive` and handles DOM interactions that belong outside React (cursor, tilt, canvas game, Konami sequence).
+- The `/design` route re-exports `app/archive/gallery/page.tsx` to separate the URL from the implementation cleanly.
+- The design gallery lazy-loads all site iframes via `IntersectionObserver` with `rootMargin: '0px 100% 0px 100%'` — adjacent panels preload before the user scrolls to them.
