@@ -1,738 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ryyan Safar | Engineer & Innovator</title>
-  <meta name="description"
-    content="Ryyan Safar – Electronics & Communication Engineer. Building the future with robotics, embedded systems, and intelligent automation.">
-  <meta property="og:title" content="Ryyan Safar | Portfolio">
-  <meta property="og:description" content="Projects in robotics, embedded systems, automation, and leadership.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ryyansafar.github.io/">
-  <meta name="theme-color" content="#050505">
-  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet">
-
-  <!-- Three.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-  <script type="module" crossorigin src="./assets/index-Bxgr6XWl.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-2JMbTEPI.css">
-</head>
-
-<body>
-  <div id="preloader">
-    <div class="counter">0%</div>
-    <div class="curtain"></div>
-  </div>
-
-  <div id="noise-overlay"></div>
-  <div id="custom-cursor"></div>
-
-  <nav class="navbar">
-    <div class="nav-container">
-      <a href="#" class="logo">
-        <span class="logo-text">rs<span class="logo-dot">.</span></span>
-      </a>
-      <ul class="nav-links">
-        <li><a href="#about" data-magnetic>About</a></li>
-        <li><a href="#work" data-magnetic>Work</a></li>
-        <li><a href="#projects" data-magnetic>Projects</a></li>
-        <li><a href="#skills" data-magnetic>Skills</a></li>
-        <li><a href="#ideathon" data-magnetic>Ideathon</a></li>
-        <li id="minigame-nav-item"
-          style="display: none; opacity: 0; transform: translateX(-20px); transition: all 0.5s ease;"><a href="#"
-            id="minigame-link" data-magnetic
-            style="color: var(--accent-color); text-shadow: 0 0 10px var(--accent-glow);">Mini Game</a></li>
-        <li><a href="#contact" data-magnetic>Contact</a></li>
-      </ul>
-      <button id="theme-toggle" aria-label="Toggle theme" data-magnetic>
-        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="5" />
-          <path
-            d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-        </svg>
-      </button>
-    </div>
-  </nav>
-
-  <!-- Main Content Wrapper for Sticky Footer Effect -->
-  <div class="main-wrapper">
-    <header class="hero">
-      <div class="hero-content">
-        <div class="hero-text reveal-text">
-          <h1 class="glitch-text">
-            <span class="scramble-text">Ryyan</span><br>
-            <span class="scramble-text">Safar</span>
-          </h1>
-          <h2 class="subtitle">Electronics & Communication Engineer</h2>
-          <p class="hero-bio">Building intelligent systems at the intersection of hardware and software.</p>
-        </div>
-
-        <div class="hero-actions reveal-up">
-          <a href="#projects" class="btn btn-primary" data-magnetic>View My Work</a>
-          <a href="Ryyan_Safar_Resume-24.pdf" download class="btn btn-outline btn-resume" data-magnetic>
-            <span>Resume</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-            </svg>
-          </a>
-        </div>
-
-        <div class="social-links reveal-up" style="animation-delay: 0.2s;">
-          <a href="https://linkedin.com/in/ryyan-safar-038a82288/" target="_blank" aria-label="LinkedIn"
-            data-magnetic>LinkedIn</a>
-          <span class="separator">/</span>
-          <a href="https://github.com/ryyansafar" target="_blank" aria-label="GitHub" data-magnetic>GitHub</a>
-          <span class="separator">/</span>
-          <a href="mailto:safarryyan@gmail.com" aria-label="Email" data-magnetic>Email</a>
-        </div>
-      </div>
-
-      <div class="scroll-indicator">
-        <span>Scroll</span>
-        <div class="line"></div>
-      </div>
-    </header>
-
-    <main>
-      <section id="about" class="section-padding">
-        <div class="container">
-          <div class="section-header reveal-up">
-            <span class="section-tag">01</span>
-            <h2>About Me</h2>
-          </div>
-
-          <div class="about-grid">
-            <div class="about-text reveal-up">
-              <p class="lead">Aspiring <strong>Electronics & Communication Engineer</strong> with a passion for building
-                <strong>automation systems</strong> and <strong>intelligent machines</strong>.
-              </p>
-              <p>I seek opportunities to apply technical knowledge in robotics, embedded systems, chip design, and
-                motion
-                control while driving impactful innovations. Eager to contribute to collaborative projects, optimize
-                real-world solutions, and grow as a tech leader at the intersection of hardware and software.</p>
-
-              <div class="tech-stack-mini">
-                <h3>Core Technologies</h3>
-                <ul class="tech-list">
-                  <li>ROS 2</li>
-                  <li>Verilog HDL</li>
-                  <li>Embedded C</li>
-                  <li>Python & C++</li>
-                  <li>TensorFlow</li>
-                  <li>OpenCV</li>
-                  <li>PCB Design</li>
-                  <li>Raspberry Pi</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="stats-grid reveal-up" style="animation-delay: 0.2s;">
-              <div class="stat-card">
-                <span class="stat-number">3+</span>
-                <span class="stat-label">Years Experience</span>
-              </div>
-              <div class="stat-card">
-                <span class="stat-number">12+</span>
-                <span class="stat-label">Projects Built</span>
-              </div>
-              <div class="stat-card">
-                <span class="stat-number">5+</span>
-                <span class="stat-label">Leadership Roles</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="work" class="section-padding">
-        <div class="container">
-          <div class="section-header reveal-up">
-            <span class="section-tag">02</span>
-            <h2>Experience</h2>
-          </div>
-
-          <div class="timeline">
-            <!-- Experience Item 1 -->
-            <div class="timeline-item reveal-up">
-              <div class="timeline-date">May 2025 – June 2025</div>
-              <div class="timeline-content">
-                <h3>Research Intern</h3>
-                <div class="company">AugsenseLab</div>
-                <p>Researched and compared weather prediction values from NWP (Numerical Weather Prediction) models with
-                  real-time observed values for accuracy benchmarking.</p>
-                <p>Implemented sensor fusion algorithms integrating IMU (BNO055) and GNSS (ZED-F9P) data on a Raspberry
-                  Pi platform.</p>
-                <div class="tags">
-                  <span>NWP Models</span>
-                  <span>Sensor Fusion</span>
-                  <span>Raspberry Pi</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Experience Item 2 -->
-            <div class="timeline-item reveal-up">
-              <div class="timeline-date">August 2024 – Present</div>
-              <div class="timeline-content">
-                <h3>Technical Coordinator</h3>
-                <div class="company">TeamApt Ltd.</div>
-                <p>Designed and deployed the company website teamapt.in using Flask and MySQL backend.</p>
-                <p>Provided comprehensive technical support to faculty and students across multiple events.</p>
-                <div class="tags">
-                  <span>Flask</span>
-                  <span>MySQL</span>
-                  <span>Web Dev</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Experience Item 3 -->
-            <div class="timeline-item reveal-up">
-              <div class="timeline-date">November 2023 – January 2025</div>
-              <div class="timeline-content">
-                <h3>Vice President</h3>
-                <div class="company">SOCIAL - Student Open Collaboration for Innovative Applications</div>
-                <p>Organized and hosted a workshop on social entrepreneurship.</p>
-                <p>Contributed as a part-time content writer for the newsletter “Chronicles”.</p>
-                <div class="tags">
-                  <span>Leadership</span>
-                  <span>Event Management</span>
-                  <span>Content Writing</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="projects" class="section-padding">
-        <div class="container">
-          <div class="section-header reveal-up">
-            <span class="section-tag">03</span>
-            <h2>Projects</h2>
-          </div>
-
-          <div class="projects-grid">
-            <!-- Project 1: Mis-Communicationator -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Mis-Communicationator</h3>
-
-                </div>
-                <p>Autonomous AI-to-AI communication system where two LLMs converse continuously. Deployed on Raspberry
-                  Pi 4 with thermal optimization (82.3°C).</p>
-                <ul class="project-tech">
-                  <li>Raspberry Pi 4</li>
-                  <li>StableLM</li>
-                  <li>llama.cpp</li>
-                  <li>Python</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 2: Camera-Only Height Estimation -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Camera-Only Height Est.</h3>
-                  <span class="wip-badge">WIP</span>
-                </div>
-                <p>Unified pipeline generating LiDAR-derived height maps from RGB images. Uses a UNet-style architecture
-                  trained on KITTI/IDD datasets.</p>
-                <ul class="project-tech">
-                  <li>PyTorch</li>
-                  <li>LiDAR Calibration</li>
-                  <li>Docker</li>
-                  <li>OpenCV</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 3: FPGA Kalman Filter -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>FPGA Kalman Filter</h3>
-                  <span class="wip-badge">WIP</span>
-                </div>
-                <p>Hardware-accelerated sensor fusion on FPGA for fusing IMU and GNSS data. Custom Verilog modules for
-                  fixed-point arithmetic.</p>
-                <ul class="project-tech">
-                  <li>Verilog HDL</li>
-                  <li>FPGA</li>
-                  <li>Kalman Filter</li>
-                  <li>UART</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 4: Smart Glass Mount -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Smart Glass Mount</h3>
-
-                </div>
-                <p>Assistive device for the visually impaired using ESP32-CAM and YOLOv5 for real-time obstacle
-                  detection. HackSus 4.0 Winner.</p>
-                <ul class="project-tech">
-                  <li>ESP32</li>
-                  <li>YOLOv5</li>
-                  <li>OpenCV</li>
-                  <li>TinyML</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 5: CNC Plotter -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>CNC Plotter Machine</h3>
-
-                </div>
-                <p>Compact CNC plotter built from repurposed stepper motors for drawing PCB layouts. Engineered frame
-                  and motion system using scrap materials.</p>
-                <ul class="project-tech">
-                  <li>Arduino UNO</li>
-                  <li>GRBL</li>
-                  <li>G-code</li>
-                  <li>Mechanical Design</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 6: Autonomous Robot Arm -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Autonomous Robot Arm</h3>
-
-                </div>
-                <p>5-DOF robotic arm simulation in Gazebo/ROS 2 for car door assembly. Implemented inverse kinematics
-                  and path planning.</p>
-                <ul class="project-tech">
-                  <li>ROS 2</li>
-                  <li>Gazebo</li>
-                  <li>URDF/Xacro</li>
-                  <li>Python</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 7: Sign Language Translator -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Sign Language Translator</h3>
-
-                </div>
-                <p>ID card-type prototype translating Sign Language to English using Teachable Machines. Real-time
-                  display on LCD via ESP32.</p>
-                <ul class="project-tech">
-                  <li>TensorFlow</li>
-                  <li>Arduino</li>
-                  <li>ESP32</li>
-                  <li>Python</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 8: Voting Machine -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Electronic Voting Machine</h3>
-
-                </div>
-                <p>Secure voting machine with SD card logging, LCD interface, and debounce handling. Ensures data
-                  integrity and reliable vote registration.</p>
-                <ul class="project-tech">
-                  <li>C++</li>
-                  <li>ESP32</li>
-                  <li>SPI</li>
-                  <li>SD Card</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 9: Humidity Sensor -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Humidity Alert System</h3>
-
-                </div>
-                <p>Real-time humidity monitoring system using ESP32 and DHT22. Triggers buzzer alerts when thresholds
-                  are exceeded.</p>
-                <ul class="project-tech">
-                  <li>ESP32</li>
-                  <li>DHT22</li>
-                  <li>C++</li>
-                  <li>IoT</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 10: Dual Op-Amp Generator -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Dual Op-Amp Generator</h3>
-
-                </div>
-                <p>Triangle and square wave generator using two IC741 op-amps. Integrated SPDT switch for waveform
-                  toggling.</p>
-                <ul class="project-tech">
-                  <li>IC741</li>
-                  <li>Analog Circuits</li>
-                  <li>Signal Processing</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 11: Digital Stopwatch -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Digital Logic Stopwatch</h3>
-
-                </div>
-                <p>Digital stopwatch built from scratch using 7433 IC, 555 Timer, and logic gates. Features
-                  start/stop/reset functionality.</p>
-                <ul class="project-tech">
-                  <li>Digital Logic</li>
-                  <li>555 Timer</li>
-                  <li>PCB Design</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 12: IR Communication -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>IR Communication System</h3>
-
-                </div>
-                <p>Wireless IR transmitter-receiver system for output control. Achieved 1-2m range using frequency-based
-                  signals.</p>
-                <ul class="project-tech">
-                  <li>Analog Electronics</li>
-                  <li>IR Modules</li>
-                  <li>Circuit Design</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 13: Password Manager -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Secure Password Manager</h3>
-                  <a href="#" class="project-link">↗</a>
-                </div>
-                <p>Web-based password manager with secure login and CRUD operations. Built as final project for CS50.
-                </p>
-                <ul class="project-tech">
-                  <li>Python</li>
-                  <li>Flask</li>
-                  <li>MySQL</li>
-                  <li>Security</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 14: Street Light Prototype -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Auto Street Light</h3>
-                  <a href="#" class="project-link">↗</a>
-                </div>
-                <p>Automatic street light prototype using LDR and 555 Timer. Activates lights based on ambient light
-                  thresholds.</p>
-                <ul class="project-tech">
-                  <li>555 Timer</li>
-                  <li>LDR</li>
-                  <li>Automation</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Project 15: Hospital Finder -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Hospital Booking Agent</h3>
-                  <a href="#" class="project-link">↗</a>
-                </div>
-                <p>Hospital finder and booking assistant using Python and MySQL. Manages details for 5 hospitals and
-                  specialists.</p>
-                <ul class="project-tech">
-                  <li>Python</li>
-                  <li>MySQL</li>
-                  <li>Database Mgmt</li>
-                </ul>
-              </div>
-            </article>
-          </div>
-
-          <div class="more-projects reveal-up">
-            <a href="https://github.com/ryyansafar" target="_blank" class="btn btn-outline">View All Projects on
-              GitHub</a>
-          </div>
-        </div>
-      </section>
-
-      <section id="skills" class="section-padding">
-        <div class="container">
-          <div class="section-header reveal-up">
-            <span class="section-tag">04</span>
-            <h2>Technical Arsenal</h2>
-          </div>
-
-          <div class="skills-wrapper reveal-up">
-            <div id="skills-canvas-container">
-              <!-- Physics tags will be injected here by JS -->
-              <canvas id="skills-canvas"></canvas>
-            </div>
-            <div class="skills-categories">
-              <div class="skill-category">
-                <h3>Hardware</h3>
-                <p>ESP32, Arduino, Raspberry Pi, 8051, NodeMCU</p>
-              </div>
-              <div class="skill-category">
-                <h3>Languages</h3>
-                <p>C/C++, Python, Verilog, ROS 2, JavaScript, MATLAB</p>
-              </div>
-              <div class="skill-category">
-                <h3>Tools</h3>
-                <p>TensorFlow, OpenCV, Flask, MySQL, Git</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="volunteering" class="section-padding">
-        <div class="container">
-          <div class="section-header reveal-up">
-            <span class="section-tag">05</span>
-            <h2>Positions of Responsibility</h2>
-          </div>
-
-          <div class="timeline">
-            <!-- Item 1 -->
-            <div class="timeline-item reveal-up">
-              <div class="timeline-date">Jan 2025 – Present</div>
-              <div class="timeline-content">
-                <h3>LINK Representative</h3>
-                <div class="company">IEEE RSET Student Branch</div>
-                <p>Facilitating communication and collaboration between LINK and IEEE RSET Student Branch.</p>
-              </div>
-            </div>
-
-            <!-- Item 2 -->
-            <div class="timeline-item reveal-up">
-              <div class="timeline-date">Mar 2024 – Jan 2025</div>
-              <div class="timeline-content">
-                <h3>Technical Coordinator</h3>
-                <div class="company">IEEE RSET Student Branch</div>
-                <p>Planned the redesign of the IEEE Office on Wheels Bus with integrated piezoelectric sensors to
-                  enhance
-                  engagement. Automated certificate generation for multiple events using AutoCrat. Coordinated technical
-                  events and provided technical assistance.</p>
-              </div>
-            </div>
-
-            <!-- Item 3 -->
-            <div class="timeline-item reveal-up">
-              <div class="timeline-date">Feb 2024 – Dec 2024</div>
-              <div class="timeline-content">
-                <h3>Tech & Professional Dev Team Lead</h3>
-                <div class="company">IEEE India Council</div>
-                <p>Coordinated and planned the R10 Codeathon for students across the R10 Region. Coordinated AISWYLC’24
-                  (All India Student and Young Professional Congress and Leadership Congress).</p>
-              </div>
-            </div>
-
-            <!-- Item 4 -->
-            <div class="timeline-item reveal-up">
-              <div class="timeline-date">Jan 2025 – Present</div>
-              <div class="timeline-content">
-                <h3>Co-Student Representative</h3>
-                <div class="company">IEEE Kerala Section</div>
-                <p>Selected as Co-Student Representative for IEEE LINK program.</p>
-              </div>
-            </div>
-
-            <!-- Item 5 -->
-            <div class="timeline-item reveal-up">
-              <div class="timeline-date">Feb 2024 – Jan 2025</div>
-              <div class="timeline-content">
-                <h3>Project Group Coordinator</h3>
-                <div class="company">IEEE Kerala Section (Future Directions Committee)</div>
-                <p>Researched multiple Future Directions initiatives and planned events, conferences, and workshops in
-                  Kerala.</p>
-              </div>
-            </div>
-
-            <!-- Item 6 -->
-            <div class="timeline-item reveal-up">
-              <div class="timeline-date">Aug 2025 – Nov 2025</div>
-              <div class="timeline-content">
-                <h3>Millennium Fellow</h3>
-                <div class="company">United Nations</div>
-                <p>Developed a plastic disposal smart bin system titled "Overflow ends with us". Hardware project with
-                  our
-                  own custom PCB.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="ideathon" class="section-padding">
-        <div class="container">
-          <div class="section-header reveal-up">
-            <span class="section-tag">06</span>
-            <h2>Ideathon Submissions</h2>
-          </div>
-
-          <div class="projects-grid">
-            <!-- Idea 1 -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Wildfire SAIfety</h3>
-                  <span class="wip-badge">Finalist</span>
-                </div>
-                <p>Early detection system combining computer vision and satellite imagery. Features drone confirmation
-                  and
-                  alert system for nearby networks.</p>
-                <ul class="project-tech">
-                  <li>Computer Vision</li>
-                  <li>Satellite Imagery</li>
-                  <li>Drones</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Idea 2 -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>KSEB Smart Meter</h3>
-                  <span class="wip-badge">Top 10</span>
-                </div>
-                <p>Smart meter alternative using OCR camera modules and Bluetooth to transmit usage data to POS
-                  machines.
-                  Includes GIS mapping for efficient reading.</p>
-                <ul class="project-tech">
-                  <li>OCR</li>
-                  <li>Bluetooth</li>
-                  <li>GIS</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Idea 3 -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Down Syndrome App</h3>
-                  <span class="wip-badge">SlashKey 3.0</span>
-                </div>
-                <p>Social inclusion app featuring emotion detection via Amazon Rekognition and GPT-4o for mood-based
-                  music
-                  and recommendations.</p>
-                <ul class="project-tech">
-                  <li>AWS Rekognition</li>
-                  <li>GPT-4o</li>
-                  <li>App Dev</li>
-                </ul>
-              </div>
-            </article>
-
-            <!-- Idea 4 -->
-            <article class="project-card reveal-up">
-              <div class="project-content">
-                <div class="project-top">
-                  <h3>Safe Sight</h3>
-                  <span class="wip-badge">Safety</span>
-                </div>
-                <p>Women's safety system using real-time CCTV monitoring for suspicious activity. Features priority
-                  alerts
-                  and a feedback loop for law enforcement.</p>
-                <ul class="project-tech">
-                  <li>YOLO</li>
-                  <li>Mediapipe</li>
-                  <li>OpenCV</li>
-                </ul>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="contact" class="section-padding"
-        style="display: block !important; opacity: 1 !important; visibility: visible !important; min-height: 800px !important;">
-        <div class="container">
-          <!-- Removed Section Title as requested -->
-          <div class="contact-wrapper">
-
-            <!-- Lanyard Container -->
-            <div id="lanyard-container"
-              style="position: relative; width: 100%; height: 800px; min-height: 600px; display: flex;">
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div> <!-- End main-wrapper -->
-
-  <footer class="sticky-footer">
-    <div class="container">
-      <div class="footer-bottom">
-        <div class="footer-text">
-          <p class="copyright">© 2025 Ryyan Safar. Made with <span class="heart">♥</span> & Google Antigravity (amazing
-            stuff).</p>
-          <p class="copyright">Heavily inspired by the Vercel Ship 2024 Ticket — absolutely loved it.</p>
-        </div>
-        <p class="konami-hint" style="font-size: 0.75rem; opacity: 0.5; margin-top: 0.5rem;">Know the Konami Code? Try
-          it here! 🕹️</p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Game Modal -->
-  <div id="game-modal" class="modal">
-    <div class="modal-content game-content">
-      <button class="close-modal" aria-label="Close Game">×</button>
-      <div class="game-header">
-        <h2>Neon Snake</h2>
-        <div class="score-board">Score: <span id="game-score">0</span></div>
-      </div>
-      <canvas id="game-canvas" width="400" height="400"></canvas>
-      <p class="game-instructions">Use Arrow Keys to Move</p>
-      <button id="start-game-btn" class="btn btn-primary">Start Game</button>
-    </div>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-</body>
-
-</html>
+<!DOCTYPE html><html lang="en" data-scroll-behavior="smooth"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="image" href="/tinkerhublogo.png"/><link rel="stylesheet" href="/_next/static/chunks/0tbxv_k5g0142.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/chunks/0eulnwdn_krub.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/0-4oo_oi06i0r.js"/><script src="/_next/static/chunks/15xjc7n-ri.fu.js" async=""></script><script src="/_next/static/chunks/00nvzi6qb_-1r.js" async=""></script><script src="/_next/static/chunks/09l_xom~oi5jm.js" async=""></script><script src="/_next/static/chunks/0pqt~8bl3ukh4.js" async=""></script><script src="/_next/static/chunks/turbopack-07y-2.~iybmsn.js" async=""></script><script src="/_next/static/chunks/04eklj-7j4aqp.js" async=""></script><script src="/_next/static/chunks/0x0b4gzv6a958.js" async=""></script><script src="/_next/static/chunks/0d3shmwh5_nmn.js" async=""></script><script src="/_next/static/chunks/0ka051yepewro.js" async=""></script><script src="/_next/static/chunks/0-zcgwg350122.js" async=""></script><link rel="preload" href="https://fonts.googleapis.com/css2?family=Barrio&amp;family=Bebas+Neue&amp;family=Anton&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&amp;display=swap" as="style"/><link rel="preload" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&amp;display=swap" as="style"/><link rel="preload" href="https://www.googletagmanager.com/gtag/js?id=G-Q20DD4YFJJ" as="script"/><link rel="preload" href="/script.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><meta name="theme-color" content="#050505"/><title>Ryyan Safar | Engineer &amp; Innovator</title><meta name="description" content="Ryyan Safar – Electronics &amp; Communication Engineer. Building the future with robotics, embedded systems, and intelligent automation."/><meta property="og:title" content="Ryyan Safar | Portfolio"/><meta property="og:description" content="Projects in robotics, embedded systems, automation, and leadership."/><meta property="og:url" content="https://ryyansafar.site/"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Ryyan Safar | Portfolio"/><meta name="twitter:description" content="Projects in robotics, embedded systems, automation, and leadership."/><link rel="icon" href="/favicon.ico?favicon.0x3dzn~oxb6tn.ico" sizes="256x256" type="image/x-icon"/><link href="https://fonts.googleapis.com/css2?family=Barrio&amp;family=Bebas+Neue&amp;family=Anton&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&amp;display=swap" rel="stylesheet"/><link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&amp;display=swap" rel="stylesheet"/><script src="/_next/static/chunks/03~yq9q893hmn.js" noModule=""></script></head><body><div hidden=""><!--$--><!--/$--></div><div aria-hidden="true" style="position:fixed;left:0;top:0%;width:100%;height:14.2857%;background-color:#0d0d0d;z-index:9990;will-change:transform"></div><div aria-hidden="true" style="position:fixed;left:0;top:14.285714285714285%;width:100%;height:14.2857%;background-color:#0d0d0d;z-index:9990;will-change:transform"></div><div aria-hidden="true" style="position:fixed;left:0;top:28.57142857142857%;width:100%;height:14.2857%;background-color:#0d0d0d;z-index:9990;will-change:transform"></div><div aria-hidden="true" style="position:fixed;left:0;top:42.857142857142854%;width:100%;height:14.2857%;background-color:#0d0d0d;z-index:9990;will-change:transform"></div><div aria-hidden="true" style="position:fixed;left:0;top:57.14285714285714%;width:100%;height:14.2857%;background-color:#0d0d0d;z-index:9990;will-change:transform"></div><div aria-hidden="true" style="position:fixed;left:0;top:71.42857142857143%;width:100%;height:14.2857%;background-color:#0d0d0d;z-index:9990;will-change:transform"></div><div aria-hidden="true" style="position:fixed;left:0;top:85.71428571428571%;width:100%;height:14.2857%;background-color:#0d0d0d;z-index:9990;will-change:transform"></div><div style="position:fixed;inset:0;z-index:9995;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;gap:1.25rem"><div style="font-family:&#x27;JetBrains Mono&#x27;, monospace;font-size:clamp(5.5rem, 20vw, 11rem);font-weight:700;color:#ccff00;line-height:1;letter-spacing:-0.04em;text-shadow:0 0 80px #ccff0044">0%</div><div style="font-family:&#x27;Space Grotesk&#x27;, sans-serif;font-size:clamp(0.6rem, 1.1vw, 0.8rem);font-weight:500;color:rgba(240,240,240,0.3);letter-spacing:0.28em;text-transform:uppercase">Ryyan Safar — Portfolio</div></div><div><div id="noise-overlay"></div><div id="custom-cursor"></div><div class="pill-nav-container "><nav class="pill-nav" aria-label="Primary" style="--base:rgba(10, 10, 10, 0.8);--pill-bg:#ccff00;--hover-text:#050505;--pill-text:#ffffff"><a class="pill-logo" href="#about" aria-label="Home"><span style="font-family:&#x27;Space Grotesk&#x27;, sans-serif;font-weight:700;font-size:1rem;color:#f0f0f0;letter-spacing:-0.03em">rs<span class="logo-underscore">.</span></span></a><div class="pill-nav-items desktop-only"><ul class="pill-list" role="menubar"><li role="none"><a role="menuitem" href="#about" class="pill" aria-label="About"><span class="hover-circle" aria-hidden="true"></span><span class="label-stack"><span class="pill-label">About</span><span class="pill-label-hover" aria-hidden="true">About</span></span></a></li><li role="none"><a role="menuitem" href="#work" class="pill" aria-label="Work"><span class="hover-circle" aria-hidden="true"></span><span class="label-stack"><span class="pill-label">Work</span><span class="pill-label-hover" aria-hidden="true">Work</span></span></a></li><li role="none"><a role="menuitem" href="#projects" class="pill" aria-label="Projects"><span class="hover-circle" aria-hidden="true"></span><span class="label-stack"><span class="pill-label">Projects</span><span class="pill-label-hover" aria-hidden="true">Projects</span></span></a></li><li role="none"><a role="menuitem" href="#skills" class="pill" aria-label="Skills"><span class="hover-circle" aria-hidden="true"></span><span class="label-stack"><span class="pill-label">Skills</span><span class="pill-label-hover" aria-hidden="true">Skills</span></span></a></li><li role="none"><a role="menuitem" href="#ideathon" class="pill" aria-label="Ideathon"><span class="hover-circle" aria-hidden="true"></span><span class="label-stack"><span class="pill-label">Ideathon</span><span class="pill-label-hover" aria-hidden="true">Ideathon</span></span></a></li><li role="none"><a role="menuitem" href="#contact" class="pill" aria-label="Contact"><span class="hover-circle" aria-hidden="true"></span><span class="label-stack"><span class="pill-label">Contact</span><span class="pill-label-hover" aria-hidden="true">Contact</span></span></a></li><li role="none"><a role="menuitem" class="pill" aria-label="[Design]" href="/design"><span class="hover-circle" aria-hidden="true"></span><span class="label-stack"><span class="pill-label">[Design]</span><span class="pill-label-hover" aria-hidden="true">[Design]</span></span></a></li><li role="none"><a role="menuitem" href="https://buymeacoffee.com/ryyansafar" class="pill" aria-label="Buy me a coffee"><span class="hover-circle" aria-hidden="true"></span><span class="label-stack"><span class="pill-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M17 8h1a4 4 0 1 1 0 8h-1"></path><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path><line x1="6" y1="2" x2="6" y2="4"></line><line x1="10" y1="2" x2="10" y2="4"></line><line x1="14" y1="2" x2="14" y2="4"></line></svg></span><span class="pill-label-hover" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M17 8h1a4 4 0 1 1 0 8h-1"></path><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path><line x1="6" y1="2" x2="6" y2="4"></line><line x1="10" y1="2" x2="10" y2="4"></line><line x1="14" y1="2" x2="14" y2="4"></line></svg></span></span></a></li></ul></div><button class="mobile-menu-button mobile-only" aria-label="Toggle menu"><span class="hamburger-line"></span><span class="hamburger-line"></span></button></nav><div class="mobile-menu-popover mobile-only" style="--base:rgba(10, 10, 10, 0.8);--pill-bg:#ccff00;--hover-text:#050505;--pill-text:#ffffff"><ul class="mobile-menu-list"><li><a href="#about" class="mobile-menu-link" aria-label="About">About</a></li><li><a href="#work" class="mobile-menu-link" aria-label="Work">Work</a></li><li><a href="#projects" class="mobile-menu-link" aria-label="Projects">Projects</a></li><li><a href="#skills" class="mobile-menu-link" aria-label="Skills">Skills</a></li><li><a href="#ideathon" class="mobile-menu-link" aria-label="Ideathon">Ideathon</a></li><li><a href="#contact" class="mobile-menu-link" aria-label="Contact">Contact</a></li><li><a class="mobile-menu-link" aria-label="[Design]" href="/design">[Design]</a></li><li><a href="https://buymeacoffee.com/ryyansafar" class="mobile-menu-link" aria-label="Buy me a coffee"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M17 8h1a4 4 0 1 1 0 8h-1"></path><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path><line x1="6" y1="2" x2="6" y2="4"></line><line x1="10" y1="2" x2="10" y2="4"></line><line x1="14" y1="2" x2="14" y2="4"></line></svg></a></li></ul></div></div><style>
+        .bm-bar {
+          position: fixed;
+          top: calc(1.25rem + env(safe-area-inset-top, 0px));
+          left: 0;
+          right: 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 1.25rem;
+          pointer-events: none;
+          z-index: 1002;
+        }
+        .bm-bubble {
+          pointer-events: auto;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 9999px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+          will-change: transform;
+        }
+        .bm-logo-bubble {
+          height: 46px;
+          padding: 0 1.25rem;
+          gap: 0.5rem;
+          min-width: 70px;
+        }
+        .bm-toggle-bubble {
+          width: 46px;
+          height: 46px;
+          flex-direction: column;
+          gap: 5px;
+          border: none;
+          cursor: pointer;
+          outline: none;
+        }
+        .bm-toggle-bubble:active { transform: scale(0.93); }
+        .bm-line {
+          display: block;
+          width: 20px;
+          height: 2px;
+          border-radius: 1px;
+          transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+          transform-origin: center;
+          pointer-events: none;
+        }
+
+        /* Overlay */
+        .bm-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(5, 5, 5, 0.97);
+          z-index: 1000;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 6rem 1.5rem 3rem;
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          display: none;
+          pointer-events: none;
+        }
+        .bm-overlay.bm-overlay--open {
+          display: flex;
+          pointer-events: auto;
+        }
+
+        /* Pill list */
+        .bm-pill-list {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          max-width: 480px;
+          display: flex;
+          flex-direction: column;
+          gap: 0.6rem;
+        }
+
+        .bm-pill {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          border-radius: 9999px;
+          text-decoration: none;
+          padding: 1.1rem 0;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(1.1rem, 4.5vw, 1.6rem);
+          font-weight: 600;
+          letter-spacing: -0.01em;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+          will-change: transform;
+          transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease;
+        }
+        .bm-pill:active { transform: scale(0.96); }
+
+        .bm-pill-label {
+          display: inline-block;
+          height: 1.2em;
+          line-height: 1.2;
+          will-change: transform, opacity;
+        }
+
+        /* Only show on mobile */
+        .bm-mobile-only {
+          display: flex;
+        }
+        @media (min-width: 769px) {
+          .bm-mobile-only { display: none !important; }
+          .bm-bar { display: none !important; }
+          .bm-overlay { display: none !important; }
+          .bm-overlay.bm-overlay--open { display: none !important; }
+        }
+      </style><nav class="bm-bar bm-mobile-only" aria-label="Mobile navigation"><div class="bm-bubble bm-logo-bubble" style="background:#0d0d0d"><span style="font-family:&#x27;Space Grotesk&#x27;, sans-serif;font-weight:700;font-size:1.1rem;color:#FFDD00;letter-spacing:-0.03em">rs<span style="color:#FFDD00">.</span></span></div><button class="bm-bubble bm-toggle-bubble" aria-label="Toggle menu" aria-expanded="false" style="background:#0d0d0d"><span class="bm-line" style="background:#f0f0f0;transform:none"></span><span class="bm-line" style="background:#f0f0f0;transform:none"></span></button></nav><div class="bm-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Navigation menu"><ul class="bm-pill-list" role="menu"><li role="none"><a href="#about" role="menuitem" aria-label="about" class="bm-pill" style="background:#0d0d0d;color:#f0f0f0"><span class="bm-pill-label">about</span></a></li><li role="none"><a href="#work" role="menuitem" aria-label="work" class="bm-pill" style="background:#0d0d0d;color:#f0f0f0"><span class="bm-pill-label">work</span></a></li><li role="none"><a href="#projects" role="menuitem" aria-label="projects" class="bm-pill" style="background:#0d0d0d;color:#f0f0f0"><span class="bm-pill-label">projects</span></a></li><li role="none"><a href="#skills" role="menuitem" aria-label="skills" class="bm-pill" style="background:#0d0d0d;color:#f0f0f0"><span class="bm-pill-label">skills</span></a></li><li role="none"><a href="#contact" role="menuitem" aria-label="contact" class="bm-pill" style="background:#0d0d0d;color:#f0f0f0"><span class="bm-pill-label">contact</span></a></li><li role="none"><a href="/design" role="menuitem" aria-label="design" class="bm-pill" style="background:#0d0d0d;color:#f0f0f0"><span class="bm-pill-label">design</span></a></li></ul></div><div class="main-wrapper"><header class="hero"><div class="hero-content"><div class="reveal-up" style="font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--poster-yellow);margin-bottom:1.5rem;opacity:0.7">[RS_DESIGN] · Electronics &amp; Communication Engineer</div><div class="hero-text reveal-text"><h1 class="glitch-text" style="display:block"><span class="scramble-text" style="display:block">RYYAN</span><span class="scramble-text" style="display:block;color:#fff;-webkit-text-fill-color:#fff">SAFAR</span></h1><h2 class="subtitle">→ Building at the intersection of hardware &amp; software</h2></div><div class="hero-meta-strip" style="align-items:center;border-top:1px solid rgba(255,221,0,0.2);border-bottom:1px solid rgba(255,221,0,0.2);padding:1.2rem 0;margin:2.5rem 0;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.35)"><span>Electronics · Robotics · Embedded Systems · Web</span><span style="color:var(--poster-yellow);opacity:0.7">2026</span></div><div class="hero-actions reveal-up"><a href="#projects" class="btn btn-primary" data-magnetic="true">View Projects</a><a href="RyyanSafar_Resume.pdf" download="" class="btn btn-outline btn-resume" data-magnetic="true" style="gap:0.6rem"><span>Resume</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg></a></div><div class="social-links reveal-up" style="animation-delay:0.2s;justify-content:flex-start"><a href="https://linkedin.com/in/ryyan-safar-038a82288/" target="_blank" aria-label="LinkedIn" data-magnetic="true">LinkedIn</a><span class="separator">/</span><a href="https://github.com/ryyansafar" target="_blank" aria-label="GitHub" data-magnetic="true">GitHub</a><span class="separator">/</span><a href="mailto:safarryyan@gmail.com" aria-label="Email" data-magnetic="true">Email</a></div></div></header><main><section id="about" class="section-padding"><div class="container"><div class="section-header reveal-up"><span class="section-tag">01</span><h2>About Me</h2></div><div class="about-grid"><div class="about-text reveal-up"><p class="lead">Aspiring <strong>Electronics &amp; Communication Engineer</strong> with a passion for building<strong>automation systems</strong> and <strong>intelligent machines</strong>.</p><p>I seek opportunities to apply technical knowledge in robotics, embedded systems, chip design, and motion control while driving impactful innovations. Eager to contribute to collaborative projects, optimize real-world solutions, and grow as a tech leader at the intersection of hardware and software.</p><div class="tech-stack-mini"><h3>Core Technologies</h3><ul class="tech-list"><li>ROS 2</li><li>Verilog HDL</li><li>Embedded C</li><li>Python &amp; C++</li><li>TensorFlow</li><li>OpenCV</li><li>PCB Design</li><li>Raspberry Pi</li></ul></div></div><div class="stats-grid reveal-up" style="animation-delay:0.2s"><div class="stat-card"><span class="stat-number">3+</span><span class="stat-label">Years Experience</span></div><div class="stat-card"><span class="stat-number">12+</span><span class="stat-label">Projects Built</span></div><div class="stat-card"><span class="stat-number">5+</span><span class="stat-label">Leadership Roles</span></div></div></div></div></section><section id="work" class="section-padding"><div class="container"><div class="section-header reveal-up"><span class="section-tag">02</span><h2>Experience</h2></div><div class="timeline"><div class="timeline-item reveal-up"><div class="timeline-date">May 2025 – Jun 2025</div><div class="timeline-content"><h3>Research Intern</h3><div class="company">AugsenseLab</div><p>Built real-time IMU + GNSS sensor fusion system using Kalman Filter, achieving centimeter-level positioning accuracy.</p><p>Developed Flask-based dashboard for visualizing live sensor streams and weather data using NetCDF models. Designed precipitation prediction tool integrating proprietary sensing data with forecast models.</p><div class="tags"><span>Kalman Filter</span><span>Sensor Fusion</span><span>Flask</span><span>NetCDF</span></div></div></div><div class="timeline-item reveal-up"><div class="timeline-date">Sep 2024 – Present</div><div class="timeline-content"><h3>Technical Coordinator &amp; Social Media Manager</h3><div class="company">TeamApt Academy LLP</div><p>Designed, built, and maintain <a href="https://teamapt.in" target="_blank" rel="noopener noreferrer">teamapt.in</a> using Flask, HTML, CSS, and JavaScript. Built and deployed <a href="https://teachers.teamapt.in" target="_blank" rel="noopener noreferrer">teachers.teamapt.in</a> as a student management portal for attendance and academic records.</p><p>Implemented monthly report downloads and automatic status updates upon completion of fixed class targets. Manages official social media channels, content scheduling, and engagement analytics.</p><div class="tags"><span>Flask</span><span>MySQL</span><span>Web Dev</span><span>Social Media</span></div></div></div><div class="timeline-item reveal-up"><div class="timeline-date">Nov 2023 – Jan 2025</div><div class="timeline-content"><h3>Vice President</h3><div class="company">SOCIAL — Student Open Collaboration for Innovative Applications</div><p>Led technical and outreach initiatives for campus-wide innovation programs. Organized workshops and speaker sessions on social entrepreneurship and tech-for-good.</p><p>Contributed to content creation for student newsletter &quot;Chronicles&quot;, featuring student-led innovations.</p><div class="tags"><span>Leadership</span><span>Event Management</span><span>Content Writing</span></div></div></div><div class="timeline-item reveal-up"><div class="timeline-date">Oct 2025 – Dec 2025</div><div class="timeline-content"><h3>Campus Ambassador</h3><div class="company">Perplexity AI — Comet Program</div><p>Represented Perplexity AI across university networks, promoting responsible AI adoption. Generated verified outreach leads and provided user feedback to improve campus engagement.</p><div class="tags"><span>AI Advocacy</span><span>Community</span><span>Outreach</span></div></div></div></div></div></section><section id="projects" class="section-padding"><div class="container"><div class="section-header reveal-up"><span class="section-tag">03</span><h2>Projects</h2></div><div class="projects-grid"><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Tinkerbluds</h3></div><p>ML-based agricultural farmland verification using Sentinel-1/2, SRTM terrain, and ESA WorldCover feature fusion. Fraud detection using geospatial overlap logic and PASS/REVIEW/FAIL scoring pipeline.</p><ul class="project-tech"><li>Python</li><li>FastAPI</li><li>Google Earth Engine</li><li>XGBoost</li><li>Supabase</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>OpenBreadboard</h3><a href="https://github.com/ryyansafar/openbreadboard" target="_blank" rel="noopener noreferrer" class="project-link">↗</a><span class="wip-badge">WIP</span></div><p>Open-source community platform for uploading IC/component datasheets and collaborative hardware connectivity mapping. Targeting browser-based pre-purchase simulation support for electronics prototyping.</p><ul class="project-tech"><li>TypeScript</li><li>Open Source</li><li>Electronics</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Ouroboros — Snake Bot</h3></div><p>Bio-inspired screw-drive snake robot with counter-rotating helical modules and 3D-printed ball-and-socket joints. Integrated live telemetry dashboard for orientation and human-presence sensing in disaster scenarios.</p><ul class="project-tech"><li>Raspberry Pi Pico 2W</li><li>L298N</li><li>MPU6050</li><li>PIR</li><li>3D Printing</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>NeoPixel Snake Game</h3></div><p>Hardware game for TinkerSpace Space Carnival with falling colored bits on a long LED strip. Custom color-button remote and enclosure using ESP-NOW wireless communication.</p><ul class="project-tech"><li>ESP32</li><li>ESP-NOW</li><li>NeoPixel</li><li>Custom PCB</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Mis-Communicationator</h3></div><p>Autonomous AI-to-AI communication system where two LLMs converse continuously. Deployed on Raspberry Pi 4 with thermal optimization (82.3°C).</p><ul class="project-tech"><li>Raspberry Pi 4</li><li>StableLM</li><li>llama.cpp</li><li>Python</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Camera-Only Height Est.</h3><a href="https://github.com/ryyansafar/LIDAR_to_Cam_only" target="_blank" rel="noopener noreferrer" class="project-link">↗</a><span class="wip-badge">WIP</span></div><p>Unified pipeline generating LiDAR-derived height maps from RGB images. Uses a UNet-style architecture trained on KITTI/IDD datasets.</p><ul class="project-tech"><li>PyTorch</li><li>LiDAR Calibration</li><li>Docker</li><li>OpenCV</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>FPGA Kalman Filter</h3><span class="wip-badge">WIP</span></div><p>Hardware-accelerated sensor fusion on FPGA for fusing IMU and GNSS data. Custom Verilog modules for fixed-point arithmetic.</p><ul class="project-tech"><li>Verilog HDL</li><li>FPGA</li><li>Kalman Filter</li><li>UART</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Smart Glass Mount</h3><a href="https://github.com/ryyansafar/Runtime_terrors_EYRA" target="_blank" rel="noopener noreferrer" class="project-link">↗</a></div><p>Assistive device for the visually impaired using ESP32-CAM and YOLOv5 for real-time obstacle detection. Awarded Real-World Impact Award at HackSus 4.0 among 55+ teams.</p><ul class="project-tech"><li>ESP32</li><li>YOLOv5</li><li>OpenCV</li><li>TinyML</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>CNC Plotter Machine</h3></div><p>Compact CNC plotter built from repurposed stepper motors for drawing PCB layouts. Engineered frame and motion system using scrap materials.</p><ul class="project-tech"><li>Arduino UNO</li><li>GRBL</li><li>G-code</li><li>Mechanical Design</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Autonomous Robot Arm</h3></div><p>5-DOF robotic arm simulation in Gazebo/ROS 2 for car door assembly. Implemented inverse kinematics and path planning.</p><ul class="project-tech"><li>ROS 2</li><li>Gazebo</li><li>URDF/Xacro</li><li>Python</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Sign Language Translator</h3><a href="https://github.com/ryyansafar/the-techtastic-four" target="_blank" rel="noopener noreferrer" class="project-link">↗</a></div><p>ID card type prototype translating Sign Language to English using Teachable Machines. Real-time display on LCD via ESP32.</p><ul class="project-tech"><li>TensorFlow</li><li>Arduino</li><li>ESP32</li><li>Python</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Electronic Voting Machine</h3></div><p>Secure voting machine with SD card logging, LCD interface, and debounce handling. Ensures data integrity and reliable vote registration.</p><ul class="project-tech"><li>C++</li><li>ESP32</li><li>SPI</li><li>SD Card</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Humidity Alert System</h3></div><p>Real-time humidity monitoring system using ESP32 and DHT22. Triggers buzzer alerts when thresholds are exceeded.</p><ul class="project-tech"><li>ESP32</li><li>DHT22</li><li>C++</li><li>IoT</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Dual Op-Amp Generator</h3></div><p>Triangle and square wave generator using two IC741 op-amps. Integrated SPDT switch for waveform toggling.</p><ul class="project-tech"><li>IC741</li><li>Analog Circuits</li><li>Signal Processing</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Digital Logic Stopwatch</h3></div><p>Digital stopwatch built from scratch using 7433 IC, 555 Timer, and logic gates. Features start/stop/reset functionality.</p><ul class="project-tech"><li>Digital Logic</li><li>555 Timer</li><li>PCB Design</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>IR Communication System</h3></div><p>Wireless IR transmitter-receiver system for output control. Achieved 1-2m range using frequency-based signals.</p><ul class="project-tech"><li>Analog Electronics</li><li>IR Modules</li><li>Circuit Design</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Secure Password Manager</h3><a href="https://github.com/me50/ryyansafar" target="_blank" rel="noopener noreferrer" class="project-link">↗</a></div><p>Web-based password manager with secure login and CRUD operations. Built as final project for CS50.</p><ul class="project-tech"><li>Python</li><li>Flask</li><li>MySQL</li><li>Security</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Auto Street Light</h3></div><p>Automatic street light prototype using LDR and 555 Timer. Activates lights based on ambient light thresholds.</p><ul class="project-tech"><li>555 Timer</li><li>LDR</li><li>Automation</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Hospital Booking Agent</h3></div><p>Hospital finder and booking assistant using Python and MySQL. Manages details for 5 hospitals and specialists.</p><ul class="project-tech"><li>Python</li><li>MySQL</li><li>Database Mgmt</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>help-me-survive-college</h3><a href="https://github.com/ryyansafar/help-me-survive-college" target="_blank" rel="noopener noreferrer" class="project-link">↗</a></div><p>Grade calculator that computes the minimum marks needed to pass or hit specific target grades — because sometimes you need the math to be brutal with you.</p><ul class="project-tech"><li>HTML</li><li>JavaScript</li><li>Calculator</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>too-lazy-to-write-homework-inator</h3><a href="https://github.com/ryyansafar/too-lazy-to-write-homework-inator" target="_blank" rel="noopener noreferrer" class="project-link">↗</a></div><p>Python automation tool for the perpetually time-challenged student. Does what it says on the tin.</p><ul class="project-tech"><li>Python</li><li>Automation</li></ul></div></article></div><div class="mend-card-wrapper" style="display:grid;grid-template-columns:repeat(3, 1fr);gap:2rem;margin-top:2rem"><article class="project-card reveal-up" style="grid-column:2"><div class="project-content"><div class="project-top"><h3>mend-your-heart-game</h3><a href="https://github.com/ryyansafar/mend-your-heart-game" target="_blank" rel="noopener noreferrer" class="project-link">↗</a></div><p>A small Valentine&#x27;s Day game to find yourself — built in Lua for maximum indie energy.</p><ul class="project-tech"><li>Lua</li><li>Game Dev</li></ul></div></article></div><div class="more-projects reveal-up"><a href="https://github.com/ryyansafar" target="_blank" class="btn btn-outline">View All Projects on GitHub</a></div></div></section><section id="skills" class="section-padding"><style>
+          .skills-marquee { overflow: hidden; display: flex; flex-direction: column; gap: 0.75rem; }
+          .skills-track { overflow: hidden; display: flex; }
+          .skills-inner {
+            display: flex; gap: 0.75rem; flex-shrink: 0;
+            animation: marquee-right 28s linear infinite;
+          }
+          .skills-track--left .skills-inner { animation-name: marquee-left; }
+          .skills-track--mid .skills-inner { animation-duration: 22s; }
+          @keyframes marquee-right { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+          @keyframes marquee-left  { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+          .skills-marquee:hover .skills-inner { animation-play-state: paused; }
+          .sk {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            padding: 0.35rem 0.9rem;
+            border: 1px solid rgba(255,221,0,0.15);
+            color: rgba(255,255,255,0.55);
+            font-family: var(--font-mono);
+            font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+            white-space: nowrap; flex-shrink: 0;
+            transition: color 0.2s, border-color 0.2s;
+          }
+          .sk:hover { color: #FFDD00; border-color: rgba(255,221,0,0.5); }
+          .sk--accent { color: rgba(232,255,94,0.7); border-color: rgba(232,255,94,0.2); }
+          .sk-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; opacity: 0.6; flex-shrink: 0; }
+        </style><div class="container"><div class="section-header reveal-up"><span class="section-tag">04</span><h2>Technical Arsenal</h2></div><div class="skills-marquee reveal-up" style="margin-top:2.5rem"><div class="skills-track"><div class="skills-inner"><span class="sk sk--accent"><span class="sk-dot"></span>ESP32</span><span class="sk sk--accent"><span class="sk-dot"></span>Arduino</span><span class="sk sk--accent"><span class="sk-dot"></span>Raspberry Pi</span><span class="sk sk--accent"><span class="sk-dot"></span>8051 MCU</span><span class="sk sk--accent"><span class="sk-dot"></span>NodeMCU</span><span class="sk sk--accent"><span class="sk-dot"></span>FPGA</span><span class="sk sk--accent"><span class="sk-dot"></span>PCB Design</span><span class="sk sk--accent"><span class="sk-dot"></span>KiCad</span><span class="sk sk--accent"><span class="sk-dot"></span>Keil uVision</span><span class="sk sk--accent"><span class="sk-dot"></span>555 Timer</span><span class="sk sk--accent"><span class="sk-dot"></span>LDR Sensors</span><span class="sk sk--accent"><span class="sk-dot"></span>PIR Sensors</span><span class="sk sk--accent"><span class="sk-dot"></span>ESP32</span><span class="sk sk--accent"><span class="sk-dot"></span>Arduino</span><span class="sk sk--accent"><span class="sk-dot"></span>Raspberry Pi</span><span class="sk sk--accent"><span class="sk-dot"></span>8051 MCU</span><span class="sk sk--accent"><span class="sk-dot"></span>NodeMCU</span><span class="sk sk--accent"><span class="sk-dot"></span>FPGA</span><span class="sk sk--accent"><span class="sk-dot"></span>PCB Design</span><span class="sk sk--accent"><span class="sk-dot"></span>KiCad</span><span class="sk sk--accent"><span class="sk-dot"></span>Keil uVision</span><span class="sk sk--accent"><span class="sk-dot"></span>555 Timer</span><span class="sk sk--accent"><span class="sk-dot"></span>LDR Sensors</span><span class="sk sk--accent"><span class="sk-dot"></span>PIR Sensors</span></div></div><div class="skills-track skills-track--left"><div class="skills-inner"><span class="sk"><span class="sk-dot"></span>Python</span><span class="sk"><span class="sk-dot"></span>C / C++</span><span class="sk"><span class="sk-dot"></span>JavaScript</span><span class="sk"><span class="sk-dot"></span>TypeScript</span><span class="sk"><span class="sk-dot"></span>Verilog</span><span class="sk"><span class="sk-dot"></span>MATLAB</span><span class="sk"><span class="sk-dot"></span>ROS 2</span><span class="sk"><span class="sk-dot"></span>Assembly</span><span class="sk"><span class="sk-dot"></span>HTML / CSS</span><span class="sk"><span class="sk-dot"></span>Python</span><span class="sk"><span class="sk-dot"></span>C / C++</span><span class="sk"><span class="sk-dot"></span>JavaScript</span><span class="sk"><span class="sk-dot"></span>TypeScript</span><span class="sk"><span class="sk-dot"></span>Verilog</span><span class="sk"><span class="sk-dot"></span>MATLAB</span><span class="sk"><span class="sk-dot"></span>ROS 2</span><span class="sk"><span class="sk-dot"></span>Assembly</span><span class="sk"><span class="sk-dot"></span>HTML / CSS</span></div></div><div class="skills-track skills-track--mid"><div class="skills-inner"><span class="sk sk--accent"><span class="sk-dot"></span>Next.js</span><span class="sk sk--accent"><span class="sk-dot"></span>Three.js</span><span class="sk sk--accent"><span class="sk-dot"></span>GSAP</span><span class="sk sk--accent"><span class="sk-dot"></span>TensorFlow</span><span class="sk sk--accent"><span class="sk-dot"></span>OpenCV</span><span class="sk sk--accent"><span class="sk-dot"></span>Flask</span><span class="sk sk--accent"><span class="sk-dot"></span>MySQL</span><span class="sk sk--accent"><span class="sk-dot"></span>Git</span><span class="sk sk--accent"><span class="sk-dot"></span>Tailwind CSS</span><span class="sk sk--accent"><span class="sk-dot"></span>Framer Motion</span><span class="sk sk--accent"><span class="sk-dot"></span>Shadcn/UI</span><span class="sk sk--accent"><span class="sk-dot"></span>Lenis</span><span class="sk sk--accent"><span class="sk-dot"></span>Next.js</span><span class="sk sk--accent"><span class="sk-dot"></span>Three.js</span><span class="sk sk--accent"><span class="sk-dot"></span>GSAP</span><span class="sk sk--accent"><span class="sk-dot"></span>TensorFlow</span><span class="sk sk--accent"><span class="sk-dot"></span>OpenCV</span><span class="sk sk--accent"><span class="sk-dot"></span>Flask</span><span class="sk sk--accent"><span class="sk-dot"></span>MySQL</span><span class="sk sk--accent"><span class="sk-dot"></span>Git</span><span class="sk sk--accent"><span class="sk-dot"></span>Tailwind CSS</span><span class="sk sk--accent"><span class="sk-dot"></span>Framer Motion</span><span class="sk sk--accent"><span class="sk-dot"></span>Shadcn/UI</span><span class="sk sk--accent"><span class="sk-dot"></span>Lenis</span></div></div></div></div></section><section id="volunteering" class="section-padding"><div class="container"><div class="section-header reveal-up"><span class="section-tag">05</span><h2>Responsibility</h2></div><div class="timeline"><div class="timeline-item reveal-up"><div class="timeline-date">Jan 2026 – Present</div><div class="timeline-content"><h3>3D Printer In-Charge &amp; Mentor</h3><div class="company">TinkerSpace Kochi</div><p>Manage and maintain Bambu Lab P1S and A1 mini printers for community prototyping. Mentor for Tink-Her-Hack 4.0 and regular sessions on CS fundamentals and hardware introduction.</p><p>Built <a href="https://tinkerspace-3d-printing-queue.vercel.app" target="_blank" rel="noopener noreferrer">tinkerspace-3d-printing-queue.vercel.app</a> to streamline print requests.</p></div></div><div class="timeline-item reveal-up"><div class="timeline-date">Aug 2025 – Dec 2025</div><div class="timeline-content"><h3><a href="https://www.millenniumfellows.org/fellow/2025/ktu/ryyan-safar" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,221,0,0.4)">Millennium Fellow, Class of 2025 ↗</a></h3><div class="company">UN Academic Impact &amp; Millennium Campus Network</div><p>Selected from 60,000+ global applicants, representing APJ Abdul Kalam Technological University. Led &quot;Overflow Ends With Us&quot; — semester-long sustainability initiative on smart waste disposal with custom PCB.</p><p>Engaged in leadership webinars to strengthen project management, budgeting, and strategic planning. Earned completion certificate from United Nations Academic Impact and Millennium Campus Network.</p></div></div><div class="timeline-item reveal-up"><div class="timeline-date">Jan 2025 – Present</div><div class="timeline-content"><h3>Co-Section Student Representative</h3><div class="company">IEEE Kerala Section</div><p>Representing over 20,000 IEEE student members across Kerala. Coordinating statewide LINK initiatives and student engagement programs.</p></div></div><div class="timeline-item reveal-up"><div class="timeline-date">Jan 2025 – Present</div><div class="timeline-content"><h3>LINK Representative</h3><div class="company">IEEE RSET Student Branch</div><p>Liaison between IEEE LINK and RSET Student Branch for technical event coordination.</p></div></div><div class="timeline-item reveal-up"><div class="timeline-date">Apr 2024 – Dec 2024</div><div class="timeline-content"><h3>Technical &amp; Professional Development Coordinator</h3><div class="company">IEEE India Council</div><p>Assisted in organizing AISWYLC&#x27;24 and R10 Code-a-thon; contributed to technical content and outreach for students across the R10 Region.</p></div></div><div class="timeline-item reveal-up"><div class="timeline-date">Mar 2024 – Jan 2025</div><div class="timeline-content"><h3>Technical Coordinator</h3><div class="company">IEEE RSET Student Branch</div><p>Provided technical assistance for workshops; automated certificate workflows using Google AutoCrat. Planned redesign of the IEEE Office on Wheels Bus with integrated piezoelectric sensors.</p></div></div><div class="timeline-item reveal-up"><div class="timeline-date">2024 – 2025</div><div class="timeline-content"><h3>Project Group Coordinator</h3><div class="company">IEEE Kerala Section — Future Directions Committee</div><p>Researched multiple Future Directions initiatives and planned events, conferences, and workshops in Kerala.</p></div></div></div></div></section><section id="ideathon" class="section-padding"><div class="container"><div class="section-header reveal-up"><span class="section-tag">06</span><h2>Ideathon</h2></div><div class="projects-grid"><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>KRuizex — Kochi Metro Problathon</h3><span class="wip-badge">1st Prize</span></div><p>Conducted on-ground investigation to identify operational pain points in metro-linked urban workflows. Won First Prize (February 2026) with actionable, evidence-backed intervention proposals.</p><ul class="project-tech"><li>Urban Research</li><li>Problem Solving</li><li>Kochi Metro</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Wildfire SAIfety</h3><span class="wip-badge">Finalist</span></div><p>Early detection system combining computer vision and satellite imagery. Features drone confirmation and alert system for nearby networks.</p><ul class="project-tech"><li>Computer Vision</li><li>Satellite Imagery</li><li>Drones</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>KSEB Smart Meter</h3><span class="wip-badge">Top 10</span></div><p>Smart meter alternative using OCR camera modules and Bluetooth to transmit usage data to POS machines. Includes GIS mapping for efficient reading.</p><ul class="project-tech"><li>OCR</li><li>Bluetooth</li><li>GIS</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Down Syndrome App</h3><span class="wip-badge">SlashKey 3.0</span></div><p>Social inclusion app featuring emotion detection via Amazon Rekognition and GPT-4o for mood-based music and recommendations.</p><ul class="project-tech"><li>AWS Rekognition</li><li>GPT-4o</li><li>App Dev</li></ul></div></article><article class="project-card reveal-up"><div class="project-content"><div class="project-top"><h3>Safe Sight</h3><span class="wip-badge">Safety</span></div><p>Women&#x27;s safety system using real-time CCTV monitoring for suspicious activity. Features priority alerts and a feedback loop for law enforcement.</p><ul class="project-tech"><li>YOLO</li><li>Mediapipe</li><li>OpenCV</li></ul></div></article></div></div></section><section id="contact" class="section-padding"><div class="container"><div class="contact-wrapper reveal-up"><h2 class="contact-heading" style="line-height:1.1;margin-bottom:2.5rem">I turn <span style="font-family:Barrio, cursive;color:#FFDD00;font-size:1.15em">CAFFEINE</span> into <span style="font-family:Barrio, cursive;color:#00F0FF;font-size:1.15em">COMMITS</span><br/>and <span style="font-family:Barrio, cursive;color:#FF7E33;font-size:1.15em">SHORT-CIRCUITS</span> into <span style="font-family:Barrio, cursive;color:#a78bfa;font-size:1.15em">SOLUTIONS</span>.</h2><p class="contact-sub" style="max-width:600px;margin:0 auto 3rem">Electronics student by day, high-stakes debugger by night. <br/>Let&#x27;s build something worth the all-nighters.</p><div class="contact-actions"><button id="email-copy-btn" class="magnetic-btn" data-magnetic="true"><span class="btn-text">safarryyan@gmail.com</span><span class="btn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span><span class="copy-feedback">Copied!</span></button><a href="https://buymeacoffee.com/ryyansafar" target="_blank" rel="noopener noreferrer" class="btn btn-bmc" style="padding:1rem 2rem;border-radius:100px;background:#FFDD00;color:#000;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:0.75rem"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"></path><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path><line x1="6" y1="2" x2="6" y2="4"></line><line x1="10" y1="2" x2="10" y2="4"></line><line x1="14" y1="2" x2="14" y2="4"></line></svg><span>Buy me a coffee</span></a></div><p style="font-family:var(--font-mono);font-size:0.75rem;color:rgba(255,255,255,0.4);letter-spacing:0.12em;text-transform:uppercase;margin-top:1rem;margin-bottom:2rem;font-weight:600">Available for <span style="color:#00F0FF">Freelance</span> &amp; <span style="color:#FFDD00">Collaborations</span></p><div class="footer-socials"><a href="https://github.com/ryyansafar" target="_blank" class="social-link" aria-label="GitHub" data-magnetic="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405 1.02 0 2.04.135 3 .405 2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.285 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg></a><a href="https://linkedin.com/in/ryyansafar" target="_blank" class="social-link" aria-label="LinkedIn" data-magnetic="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path></svg></a><a href="https://tinkerhub.org/@ryyansafar" target="_blank" class="social-link" aria-label="TinkerHub" style="display:flex;align-items:center;justify-content:center" data-magnetic="true"><img src="/tinkerhublogo.png" alt="TinkerHub" style="width:28px;height:auto;filter:brightness(0) invert(1)"/></a></div></div></div></section></main></div><footer class="sticky-footer"><div class="container"><div class="footer-bottom"><p class="copyright">© 2026 Ryyan Safar. Made with <span class="heart">♥</span> &amp; Code.</p><p class="konami-hint" style="font-size:0.75rem;opacity:0.5;margin-top:0.5rem">Know the Konami Code? Try it here! 🕹️</p></div></div></footer><div id="game-modal" class="modal"><div class="modal-content game-content"><div class="window-titlebar"><div class="window-controls"><button class="control-dot red close-modal" aria-label="Close Game"><svg width="6" height="6" viewBox="0 0 6 6" style="opacity:0;transition:opacity 0.1s;pointer-events:none"><path d="M1 1l4 4M5 1L1 5" stroke="#7a0000" stroke-width="1.2" stroke-linecap="round"></path></svg></button><div class="control-dot yellow"></div><div class="control-dot green"></div></div><div class="window-title">SNAKE_OS_v1.0.exe</div><span style="font-family:var(--font-mono);font-size:0.6rem;color:rgba(255,255,255,0.2);letter-spacing:0.08em">ESC</span></div><div class="game-body"><div class="scanline-overlay"></div><div class="game-header"><h2 style="font-family:Barrio, cursive;font-size:2rem;margin:0;color:var(--accent-color);text-shadow:0 0 20px var(--accent-glow)">SNAKΞ_OS</h2><div style="text-align:right"><div style="font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.15em;color:rgba(255,255,255,0.3);margin-bottom:2px">DATA_SYNC</div><div id="game-score" style="font-family:var(--font-mono);font-size:1.4rem;font-weight:700;color:var(--accent-color);line-height:1">0</div></div></div><canvas id="game-canvas" width="400" height="400" style="border-radius:6px;border:1px solid rgba(255,255,255,0.07);box-shadow:0 0 30px rgba(var(--accent-rgb),0.12), inset 0 0 20px rgba(0,0,0,0.6);display:block;margin:0 auto 1rem;max-width:100%"></canvas><div class="game-footer" style="border-top:1px solid rgba(255,255,255,0.07);padding-top:0.875rem"><p style="font-family:var(--font-mono);font-size:0.65rem;color:rgba(255,255,255,0.3);margin:0 0 1rem;line-height:1.7">&gt; ARROW_KEYS — navigate<br/>&gt; AVOID_YOURSELF — obviously<br/>&gt; EAT_NODES — collect energy</p><div style="display:flex;gap:0.75rem"><button id="start-game-btn" class="btn btn-primary" style="flex:1;letter-spacing:0.15em;font-size:0.75rem">▶ BOOT</button><button class="close-modal" style="flex:0 0 auto;padding:0.55rem 1rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;cursor:pointer;border-radius:6px;transition:background 0.15s, color 0.15s">✕ CLOSE</button></div></div></div></div></div><!--$--><!--/$--></div><script src="/_next/static/chunks/0-4oo_oi06i0r.js" id="_R_" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n2:I[79520,[\"/_next/static/chunks/04eklj-7j4aqp.js\",\"/_next/static/chunks/0x0b4gzv6a958.js\",\"/_next/static/chunks/0d3shmwh5_nmn.js\"],\"\"]\n3:I[59487,[\"/_next/static/chunks/04eklj-7j4aqp.js\",\"/_next/static/chunks/0x0b4gzv6a958.js\",\"/_next/static/chunks/0d3shmwh5_nmn.js\"],\"TransitionProvider\"]\n4:I[39756,[\"/_next/static/chunks/04eklj-7j4aqp.js\",\"/_next/static/chunks/0x0b4gzv6a958.js\",\"/_next/static/chunks/0d3shmwh5_nmn.js\"],\"default\"]\n5:I[37457,[\"/_next/static/chunks/04eklj-7j4aqp.js\",\"/_next/static/chunks/0x0b4gzv6a958.js\",\"/_next/static/chunks/0d3shmwh5_nmn.js\"],\"default\"]\n6:I[47257,[\"/_next/static/chunks/04eklj-7j4aqp.js\",\"/_next/static/chunks/0x0b4gzv6a958.js\",\"/_next/static/chunks/0d3shmwh5_nmn.js\"],\"ClientPageRoot\"]\n7:I[31713,[\"/_next/static/chunks/04eklj-7j4aqp.js\",\"/_next/static/chunks/0x0b4gzv6a958.js\",\"/_next/static/chunks/0d3shmwh5_nmn.js\",\"/_next/static/chunks/0ka051yepewro.js\",\"/_next/static/chunks/0-zcgwg350122.js\"],\"default\"]\na:I[97367,[\"/_next/static/chunks/04eklj-7j4aqp.js\",\"/_next/static/chunks/0x0b4gzv6a958.js\",\"/_next/static/chunks/0d3shmwh5_nmn.js\"],\"OutletBoundary\"]\nb:\"$Sreact.suspense\"\nd:I[97367,[\"/_next/static/chunks/04eklj-7j4aqp.js\",\"/_next/static/chunks/0x0b4gzv6a958.js\",\"/_next/static/chunks/0d3shmwh5_nmn.js\"],\"ViewportBoundary\"]\nf:I[97367,[\"/_next/static/chunks/04eklj-7j4aqp.js\",\"/_next/static/chunks/0x0b4gzv6a958.js\",\"/_next/static/chunks/0d3shmwh5_nmn.js\"],\"MetadataBoundary\"]\n11:I[68027,[\"/_next/static/chunks/04eklj-7j4aqp.js\",\"/_next/static/chunks/0x0b4gzv6a958.js\",\"/_next/static/chunks/0d3shmwh5_nmn.js\"],\"default\",1]\n:HL[\"/_next/static/chunks/0tbxv_k5g0142.css\",\"style\"]\n:HL[\"/_next/static/chunks/0eulnwdn_krub.css\",\"style\"]\n:HL[\"https://fonts.googleapis.com/css2?family=Barrio\u0026family=Bebas+Neue\u0026family=Anton\u0026family=Space+Grotesk:wght@300;400;500;600;700\u0026family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400\u0026display=swap\",\"style\"]\n:HL[\"https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700\u0026display=swap\",\"style\"]\n"])</script><script>self.__next_f.push([1,"0:{\"P\":null,\"c\":[\"\",\"\"],\"q\":\"\",\"i\":false,\"f\":[[[\"\",{\"children\":[\"__PAGE__\",{}]},\"$undefined\",\"$undefined\",16],[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0tbxv_k5g0142.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/04eklj-7j4aqp.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-1\",{\"src\":\"/_next/static/chunks/0x0b4gzv6a958.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-2\",{\"src\":\"/_next/static/chunks/0d3shmwh5_nmn.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"en\",\"data-scroll-behavior\":\"smooth\",\"children\":[[\"$\",\"head\",null,{\"children\":[[\"$\",\"link\",null,{\"rel\":\"preconnect\",\"href\":\"https://fonts.googleapis.com\"}],[\"$\",\"link\",null,{\"rel\":\"preconnect\",\"href\":\"https://fonts.gstatic.com\",\"crossOrigin\":\"anonymous\"}],[\"$\",\"link\",null,{\"href\":\"https://fonts.googleapis.com/css2?family=Barrio\u0026family=Bebas+Neue\u0026family=Anton\u0026family=Space+Grotesk:wght@300;400;500;600;700\u0026family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400\u0026display=swap\",\"rel\":\"stylesheet\"}],[\"$\",\"link\",null,{\"href\":\"https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700\u0026display=swap\",\"rel\":\"stylesheet\"}]]}],[\"$\",\"body\",null,{\"children\":[[\"$\",\"$L2\",null,{\"src\":\"https://www.googletagmanager.com/gtag/js?id=G-Q20DD4YFJJ\",\"strategy\":\"afterInteractive\"}],[\"$\",\"$L2\",null,{\"id\":\"google-analytics\",\"strategy\":\"afterInteractive\",\"children\":\"\\n            window.dataLayer = window.dataLayer || [];\\n            function gtag(){dataLayer.push(arguments);}\\n            gtag('js', new Date());\\n            gtag('config', 'G-Q20DD4YFJJ');\\n          \"}],[\"$\",\"$L3\",null,{\"children\":[\"$\",\"$L4\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L5\",null,{}],\"templateStyles\":[],\"templateScripts\":[],\"notFound\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}],[\"$\",\"$L2\",null,{\"src\":\"/script.js\",\"strategy\":\"afterInteractive\"}]]}]]}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[[\"$\",\"$L6\",null,{\"Component\":\"$7\",\"serverProvidedParams\":{\"searchParams\":{},\"params\":{},\"promises\":[\"$@8\",\"$@9\"]}}],[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0eulnwdn_krub.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/0ka051yepewro.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-1\",{\"src\":\"/_next/static/chunks/0-zcgwg350122.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"$La\",null,{\"children\":[\"$\",\"$b\",null,{\"name\":\"Next.MetadataOutlet\",\"children\":\"$@c\"}]}]]}],{},null,false,null]},null,false,null],[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$Ld\",null,{\"children\":\"$Le\"}],[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$Lf\",null,{\"children\":[\"$\",\"$b\",null,{\"name\":\"Next.Metadata\",\"children\":\"$L10\"}]}]}],null]}],false]],\"m\":\"$undefined\",\"G\":[\"$11\",[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0tbxv_k5g0142.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]]],\"S\":true,\"h\":null,\"s\":\"$undefined\",\"l\":\"$undefined\",\"p\":\"$undefined\",\"d\":\"$undefined\",\"b\":\"BA_3-JTGRIqqga46DTsN-\"}\n"])</script><script>self.__next_f.push([1,"8:{}\n9:\"$0:f:0:1:1:children:0:props:children:0:props:serverProvidedParams:params\"\n"])</script><script>self.__next_f.push([1,"e:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}],[\"$\",\"meta\",\"2\",{\"name\":\"theme-color\",\"content\":\"#050505\"}]]\n"])</script><script>self.__next_f.push([1,"12:I[27201,[\"/_next/static/chunks/04eklj-7j4aqp.js\",\"/_next/static/chunks/0x0b4gzv6a958.js\",\"/_next/static/chunks/0d3shmwh5_nmn.js\"],\"IconMark\"]\nc:null\n10:[[\"$\",\"title\",\"0\",{\"children\":\"Ryyan Safar | Engineer \u0026 Innovator\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"Ryyan Safar – Electronics \u0026 Communication Engineer. Building the future with robotics, embedded systems, and intelligent automation.\"}],[\"$\",\"meta\",\"2\",{\"property\":\"og:title\",\"content\":\"Ryyan Safar | Portfolio\"}],[\"$\",\"meta\",\"3\",{\"property\":\"og:description\",\"content\":\"Projects in robotics, embedded systems, automation, and leadership.\"}],[\"$\",\"meta\",\"4\",{\"property\":\"og:url\",\"content\":\"https://ryyansafar.site/\"}],[\"$\",\"meta\",\"5\",{\"property\":\"og:type\",\"content\":\"website\"}],[\"$\",\"meta\",\"6\",{\"name\":\"twitter:card\",\"content\":\"summary\"}],[\"$\",\"meta\",\"7\",{\"name\":\"twitter:title\",\"content\":\"Ryyan Safar | Portfolio\"}],[\"$\",\"meta\",\"8\",{\"name\":\"twitter:description\",\"content\":\"Projects in robotics, embedded systems, automation, and leadership.\"}],[\"$\",\"link\",\"9\",{\"rel\":\"icon\",\"href\":\"/favicon.ico?favicon.0x3dzn~oxb6tn.ico\",\"sizes\":\"256x256\",\"type\":\"image/x-icon\"}],[\"$\",\"$L12\",\"10\",{}]]\n"])</script></body></html>
