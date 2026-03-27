@@ -2,80 +2,64 @@ import admin from 'firebase-admin';
 import fs from 'fs';
 import path from 'path';
 
+/**
+ * Enhanced Firebase Initialization for Vercel + Local Dev.
+ * Prioritizes Environment Variables for production safety.
+ */
 function initializeFirebase() {
-  if (admin.apps.length > 0) {
-    return admin.app();
-  }
+  if (admin.apps.length > 0) return admin.app();
 
-  // 1. Try loading from service account JSON file (Local Desktop Dev)
-  let serviceAccountFilename;
-  try {
-    serviceAccountFilename = fs.readdirSync(process.cwd())
-      .find(f => f.startsWith('rybo-components-firebase-adminsdk') && f.endsWith('.json'))
-      || 'firebase-service-account.json';
-  } catch (e) {
-    serviceAccountFilename = 'firebase-service-account.json';
-  }
-    
-  const serviceAccountPath = path.join(process.cwd(), serviceAccountFilename);
-  
-  if (fs.existsSync(serviceAccountPath)) {
-    try {
-      console.log('[Firebase] Initializing using service account JSON file');
-      const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
-      return admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-      });
-    } catch (error) {
-      console.error('[Firebase] Failed to load JSON file, falling back to ENV:', error);
-    }
-  }
-
-  // 2. Fallback to Environment Variables (Vercel Prod)
   const projectId = process.env.FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
   let privateKey = process.env.FIREBASE_PRIVATE_KEY;
 
-  if (!projectId || !privateKey || !clientEmail) {
-    const missing = [];
-    if (!projectId) missing.push('FIREBASE_PROJECT_ID');
-    if (!clientEmail) missing.push('FIREBASE_CLIENT_EMAIL');
-    if (!privateKey) missing.push('FIREBASE_PRIVATE_KEY');
-    console.error(`[Firebase] Missing Environment Variables: ${missing.join(', ')}. Disabling persistence.`);
-    return null;
-  }
+  // Case 1: ENV variables (Vercel Production)
+  if (projectId && clientEmail && privateKey) {
+    try {
+      // Clean up private key (Vercel can mangle newlines or add extra quotes)
+      if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+        privateKey = privateKey.slice(1, -1);
+      }
+      const formattedKey = privateKey.replace(/\\n/g, '\n');
 
-  try {
-    if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
-      privateKey = privateKey.slice(1, -1);
+      console.log(`[Firebase] Init using ENV: ${projectId}`);
+      return admin.initializeApp({
+        credential: admin.credential.cert({
+          projectId,
+          clientEmail,
+          privateKey: formattedKey,
+        }),
+      });
+    } catch (error: any) {
+      console.error('[Firebase] ENV Init Error:', error.message);
     }
-    const formattedKey = privateKey.replace(/\\n/g, '\n');
-
-    console.log(`[Firebase] Initializing using ENV for: ${projectId}`);
-    
-    return admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId,
-        clientEmail,
-        privateKey: formattedKey,
-      }),
-    });
-  } catch (error) {
-    console.error('[Firebase] Critical Init Error:', error);
-    return null;
   }
+
+  // Case 2: Service Account JSON (Local Dev fallback)
+  const devFile = fs.readdirSync(process.cwd())
+    .find(f => f.startsWith('rybo-components-firebase-adminsdk') && f.endsWith('.json'));
+    
+  if (devFile) {
+    try {
+      const saPath = path.join(process.cwd(), devFile);
+      console.log(`[Firebase] Init using local JSON: ${devFile}`);
+      return admin.initializeApp({
+        credential: admin.credential.cert(JSON.parse(fs.readFileSync(saPath, 'utf8'))),
+      });
+    } catch (error: any) {
+      console.error('[Firebase] JSON Init Error:', error.message);
+    }
+  }
+
+  console.error('[Firebase] No valid credentials found (ENV or JSON).');
+  return null;
 }
 
 let dbInstance: admin.firestore.Firestore | null = null;
 
 export function getDb() {
   if (dbInstance) return dbInstance;
-
-  if (admin.apps.length > 0) {
-    dbInstance = admin.app().firestore();
-    return dbInstance;
-  }
-
+  
   const app = initializeFirebase();
   if (app) {
     dbInstance = app.firestore();
@@ -85,11 +69,5 @@ export function getDb() {
   return null;
 }
 
-export const db = getDb(); // Keep for compatibility, but functions should use getDb()
-export const isFirebaseReady = () => {
-    try {
-        return !!getDb();
-    } catch {
-        return false;
-    }
-};
+export const db = getDb();
+export const isFirebaseReady = () => !!getDb();
