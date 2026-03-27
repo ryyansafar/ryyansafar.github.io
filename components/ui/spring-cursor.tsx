@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { motion, useSpring, useMotionValue } from 'framer-motion';
+import { motion, useSpring, useMotionValue, useTransform } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface SpringCursorProps {
@@ -41,16 +41,16 @@ export default function SpringCursor({
   // Motion values for blur (velocity-based)
   const blurX = useMotionValue(0);
   const blurY = useMotionValue(0);
+  const stdDeviation = useTransform([blurX, blurY], ([x, y]: number[]) => `${x} ${y}`);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handlePointerMove = (e: PointerEvent) => {
       if (!isVisible) setIsVisible(true);
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
       
-      // Calculate velocity for blur
       const vx = mouseX.getVelocity();
       const vy = mouseY.getVelocity();
       const speed = Math.sqrt(vx * vx + vy * vy);
@@ -66,28 +66,26 @@ export default function SpringCursor({
       }
     };
 
-    const handleMouseDown = () => scale.set(0.65);
-    const handleMouseUp = () => scale.set(1);
+    const handlePointerDown = () => scale.set(0.65);
+    const handlePointerUp = () => scale.set(1);
     const handleTouchStart = () => setIsVisible(false);
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('pointermove', handlePointerMove, { capture: true, passive: true });
+    window.addEventListener('pointerdown', handlePointerDown, { capture: true, passive: true });
+    window.addEventListener('pointerup', handlePointerUp, { capture: true, passive: true });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
 
-    // Hide original cursor
-    const style = document.createElement('style');
+    const style = document.head.appendChild(document.createElement('style'));
     style.innerHTML = '@media(hover:hover)and(pointer:fine){body,body *{cursor:none!important}}';
-    document.head.appendChild(style);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('pointermove', handlePointerMove, { capture: true });
+      window.removeEventListener('pointerdown', handlePointerDown, { capture: true });
+      window.removeEventListener('pointerup', handlePointerUp, { capture: true });
       window.removeEventListener('touchstart', handleTouchStart);
       document.head.removeChild(style);
     };
-  }, [isVisible, mouseX, mouseY, scale, blurX, blurY]);
+  }, [mouseX, mouseY, scale, blurX, blurY, isVisible]);
 
   if (!isVisible) return null;
 
@@ -104,11 +102,8 @@ export default function SpringCursor({
         <defs>
           <filter id="cur-mb" x="-150%" y="-150%" width="400%" height="400%">
             <motion.feGaussianBlur 
-              stdDeviation="0 0" 
-              style={{
-                // @ts-ignore - motion values in SVG attributes
-                stdDeviation: `${blurX.get()} ${blurY.get()}`
-              }}
+              // @ts-ignore
+              stdDeviation={stdDeviation}
               in="SourceGraphic" 
               result="blur"
             />

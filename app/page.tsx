@@ -96,6 +96,7 @@ export default function Page() {
           textTransform: 'uppercase',
           color: 'var(--poster-yellow)',
           marginBottom: '1.5rem',
+          marginTop: '6rem', // Prevents overlap with fixed navbar
           opacity: 0.7,
         }}>[RS_DESIGN] · Electronics &amp; Communication Engineer</div>
 
