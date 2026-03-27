@@ -8,9 +8,14 @@ function initializeFirebase() {
   }
 
   // 1. Try loading from service account JSON file (Local Desktop Dev)
-  const serviceAccountFilename = fs.readdirSync(process.cwd())
-    .find(f => f.startsWith('rybo-components-firebase-adminsdk') && f.endsWith('.json'))
-    || 'firebase-service-account.json';
+  let serviceAccountFilename;
+  try {
+    serviceAccountFilename = fs.readdirSync(process.cwd())
+      .find(f => f.startsWith('rybo-components-firebase-adminsdk') && f.endsWith('.json'))
+      || 'firebase-service-account.json';
+  } catch (e) {
+    serviceAccountFilename = 'firebase-service-account.json';
+  }
     
   const serviceAccountPath = path.join(process.cwd(), serviceAccountFilename);
   

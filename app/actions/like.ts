@@ -1,6 +1,7 @@
 'use server';
 
 import { db } from '@/lib/firebase-admin';
+import { revalidatePath } from 'next/cache';
 
 const LIKES_COLLECTION = 'component_likes';
 
@@ -58,6 +59,10 @@ export async function toggleLike(componentId: string, increment: boolean) {
     const updatedDoc = await docRef.get();
     const finalCount = updatedDoc.data()?.count || 0;
     console.log(`[Firebase] Success! New count for ${componentId}: ${finalCount}`);
+    
+    // Clear Next.js cache so the new count is visible immediately
+    revalidatePath('/design/components');
+    
     return finalCount;
   } catch (error) {
     console.error(`[Firebase Error] toggleLike for ${componentId}:`, error);
