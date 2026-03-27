@@ -85,7 +85,7 @@ export default function LikeButton({ componentId }: { componentId: string }) {
           viewBox="0 0 24 24"
           fill={hasLiked ? '#FF3E00' : 'none'}
           stroke={hasLiked ? '#FF3E00' : 'currentColor'}
-          strokeWidth="2.5"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
           style={{ 
