@@ -8,30 +8,28 @@ let keyStatus: any = null;
 export function getLastError() { return lastError; }
 export function getKeyStatus() { return keyStatus; }
 
-/**
- * Surgically reconstructs a PEM key from potentially mangled strings.
- * Handles escaped newlines, literal newlines, and missing headers.
- */
 function formatPEM(key: string): string {
-  // 1. Remove all quotes and whitespace from ends
+  // 1. Aggressive unquoting
   let cleaned = key.trim().replace(/^["']|["']$/g, '');
   
-  // 2. Unescape \n to real newlines
-  cleaned = cleaned.replace(/\\n/g, '\n');
+  // 2. Multi-level unescaping (Vercel can sometimes double-escape)
+  // Replaces \\n with \n repeatedly until no more remain.
+  while (cleaned.includes('\\n')) {
+    cleaned = cleaned.replace(/\\n/g, '\n');
+  }
   
-  // 3. Isolate the base64 body (remove headers and all whitespace)
+  // 3. Isolate the base64 and re-wrap strictly
   const header = '-----BEGIN PRIVATE KEY-----';
   const footer = '-----END PRIVATE KEY-----';
   
   let body = cleaned
     .replace(header, '')
     .replace(footer, '')
-    .replace(/\s/g, ''); // Remove all tabs, spaces, newlines from the body
+    .replace(/\s/g, ''); 
     
-  // 4. Wrap body to 64 chars per line (Standard PEM)
+  // 4. Wrap body strictly at 64 chars
   const wrapped = body.match(/.{1,64}/g)?.join('\n') || body;
   
-  // 5. Reassemble with strict headers and trailing newline
   return `${header}\n${wrapped}\n${footer}\n`;
 }
 
@@ -49,20 +47,19 @@ function initializeFirebase() {
       
       keyStatus = {
         projectId,
-        email: clientEmail,
+        clientEmail,
         rawLength: privateKey.length,
         finalLength: formattedKey.length,
-        prefix: formattedKey.substring(0, 30), // Should be the header
-        hasHeader: formattedKey.includes('-----BEGIN PRIVATE KEY-----'),
+        prefix: formattedKey.substring(0, 30),
       };
 
-      console.log(`[Firebase] Initializing with ENV: ${projectId}`);
+      // Use snake_case to perfectly match the Service Account JSON structure
       return admin.initializeApp({
         credential: admin.credential.cert({
-          projectId,
-          clientEmail,
-          privateKey: formattedKey,
-        }),
+          project_id: projectId,
+          client_email: clientEmail,
+          private_key: formattedKey,
+        } as any),
       });
     } catch (error: any) {
       lastError = `PEM Init Error: ${error.message}`;
@@ -77,7 +74,6 @@ function initializeFirebase() {
     if (devFile) {
       const saPath = path.join(process.cwd(), devFile);
       const sa = JSON.parse(fs.readFileSync(saPath, 'utf8'));
-      console.log(`[Firebase] Initializing with local JSON: ${devFile}`);
       return admin.initializeApp({
         credential: admin.credential.cert(sa),
       });
