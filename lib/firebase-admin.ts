@@ -8,7 +8,11 @@ function initializeFirebase() {
   }
 
   // 1. Try loading from service account JSON file (Local Desktop Dev)
-  const serviceAccountPath = path.join(process.cwd(), 'firebase-service-account.json');
+  const serviceAccountFilename = fs.readdirSync(process.cwd())
+    .find(f => f.startsWith('rybo-components-firebase-adminsdk') && f.endsWith('.json'))
+    || 'firebase-service-account.json';
+    
+  const serviceAccountPath = path.join(process.cwd(), serviceAccountFilename);
   
   if (fs.existsSync(serviceAccountPath)) {
     try {

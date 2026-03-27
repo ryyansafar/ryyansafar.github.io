@@ -20,6 +20,7 @@
 # environment & secrets
 .env*
 firebase-service-account.json
+rybo-components-firebase-adminsdk-*.json
 
 # misc
 .DS_Store
