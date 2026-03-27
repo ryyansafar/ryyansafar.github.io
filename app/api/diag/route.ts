@@ -1,18 +1,18 @@
 import { NextResponse } from 'next/server';
-import { getDb, getLastError, getKeyStatus } from '@/lib/firebase-admin';
+import { getDb } from '@/lib/firebase-admin';
 
 export async function GET() {
   const diagnostics: any = {
     timestamp: new Date().toISOString(),
     env: {
-      projectId: !!process.env.FIREBASE_PROJECT_ID,
-      clientEmail: !!process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: !!process.env.FIREBASE_PRIVATE_KEY,
+      hasServiceAccountJson: !!process.env.FIREBASE_SERVICE_ACCOUNT_JSON,
+      hasProjectId: !!process.env.FIREBASE_PROJECT_ID,
+      hasClientEmail: !!process.env.FIREBASE_CLIENT_EMAIL,
+      hasPrivateKey: !!process.env.FIREBASE_PRIVATE_KEY,
     },
-    keyStatus: getKeyStatus(),
     firebase: {
       initialized: false,
-      error: getLastError(),
+      error: null,
     }
   };
 
@@ -24,7 +24,7 @@ export async function GET() {
       diagnostics.firebase.readSuccess = true;
       diagnostics.firebase.docCount = test.size;
     } else {
-      diagnostics.firebase.error = getLastError() || 'getDb() returned null';
+      diagnostics.firebase.error = 'getDb() returned null — check env vars';
     }
   } catch (err: any) {
     diagnostics.firebase.error = err.message || 'Unknown runtime error';

@@ -63,7 +63,7 @@ export default function Page() {
             <line x1="14" y1="2" x2="14" y2="4" />
           </svg>
         ), 
-        href: 'https://buymeacoffee.com/ryyansafar', 
+        href: 'https://razorpay.me/@ryyansafar',
         ariaLabel: 'Buy me a coffee' 
       }
     ]}

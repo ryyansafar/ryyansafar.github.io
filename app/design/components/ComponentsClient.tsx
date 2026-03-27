@@ -29,7 +29,7 @@ const CURSOR_CODE = `// spring-cursor.js — drop into any project, zero depende
       <path d="M2 2 L2 26 L7.5 20.5 L12.5 29 L15.2 27.5 L10.2 19 L18 19 Z"
         fill="rgba(0,0,0,0.45)" transform="translate(1.5,1.5)"/>
       <path d="M2 2 L2 26 L7.5 20.5 L12.5 29 L15.2 27.5 L10.2 19 L18 19 Z"
-        fill="white"/>
+        fill="white" stroke="rgba(0,0,0,0.55)" stroke-width="1" stroke-linejoin="round"/>
     </g>
   </svg>\`;
   document.body.appendChild(el);
@@ -40,29 +40,39 @@ const CURSOR_CODE = `// spring-cursor.js — drop into any project, zero depende
 
   let mx = 0, my = 0, x = 0, y = 0, vx = 0, vy = 0;
   let sc = 1, st = 1, sv = 0, lt = performance.now();
-  const PS = 240, PD = 27, SS = 330, SD = 30;
+  let hbc = 0, hbt = 0, hbv = 0;
+  const PS = 240, PD = 27, SS = 330, SD = 30, HB_MAX = 1.2, HB_STIFF = 180, HB_DAMP = 22;
 
   window.addEventListener('pointermove', e => {
     el.style.display = 'block'; mx = e.clientX; my = e.clientY;
   }, { capture: true, passive: true });
   window.addEventListener('touchstart', () => el.style.display = 'none', { passive: true });
   document.addEventListener('pointerdown', () => st = 0.65, { capture: true, passive: true });
-  document.addEventListener('pointerup', () => st = 1, { capture: true, passive: true });
+  document.addEventListener('pointerup',   () => st = 1,    { capture: true, passive: true });
+  document.addEventListener('mouseover', e => {
+    if (e.target.closest('a, button')) { st = 1.3; hbt = HB_MAX; }
+  });
+  document.addEventListener('mouseout', e => {
+    if (!e.relatedTarget?.closest('a, button')) { st = 1; hbt = 0; }
+  });
 
   (function tick() {
     const now = performance.now(), dt = Math.min((now - lt) / 1000, 0.033); lt = now;
     vx += ((mx - x) * PS - vx * PD) * dt; vy += ((my - y) * PS - vy * PD) * dt;
     x += vx * dt; y += vy * dt;
     sv += ((st - sc) * SS - sv * SD) * dt; sc += sv * dt;
+    hbv += ((hbt - hbc) * HB_STIFF - hbv * HB_DAMP) * dt;
+    hbc += hbv * dt; if (hbc < 0) hbc = 0;
     el.style.transform = \`translate(\${x}px,\${y}px) scale(\${sc})\`;
     const speed = Math.sqrt(vx*vx+vy*vy);
     const blurEl = el.querySelector('#cur-blur');
     if (blurEl) {
-      if (speed > 20) {
-        const a = Math.atan2(vy,vx), amt = Math.min(speed*0.005,2.8);
-        blurEl.setAttribute('stdDeviation',
-          \`\${(Math.abs(Math.cos(a))*amt).toFixed(2)} \${(Math.abs(Math.sin(a))*amt).toFixed(2)}\`);
-      } else blurEl.setAttribute('stdDeviation','0 0');
+      const motionAmt = speed > 20 ? Math.min(speed*0.005, 2.8) : 0;
+      const a = motionAmt > 0 ? Math.atan2(vy,vx) : 0;
+      const bx = Math.abs(Math.cos(a))*motionAmt + hbc;
+      const by = Math.abs(Math.sin(a))*motionAmt + hbc;
+      blurEl.setAttribute('stdDeviation',
+        bx > 0.05 || by > 0.05 ? \`\${bx.toFixed(2)} \${by.toFixed(2)}\` : '0 0');
     }
     requestAnimationFrame(tick);
   })();
@@ -148,12 +158,13 @@ export default function RootLayout({ children }) {
   },
   params: {
     label: 'Custom Physics',
-    code: `// Edit these 4 constants in spring-cursor.js:
+    code: `// Edit these constants in spring-cursor.js:
 
-const PS = 120;  // position stiffness — lower = more lag
-const PD = 15;   // position damping   — lower = bouncier
-const SS = 200;  // scale stiffness    — click snap speed
-const SD = 20;   // scale damping      — click snap smooth
+const PS = 120;     // position stiffness — lower = more lag
+const PD = 15;      // position damping   — lower = bouncier
+const SS = 200;     // scale stiffness    — click snap speed
+const SD = 20;      // scale damping      — click snap smooth
+const HB_MAX = 1.2; // hover blur max     — on buttons/links
 
 // Presets:
 // Floaty:  PS=80,  PD=12, SS=150, SD=15
@@ -215,7 +226,7 @@ function CursorPreview() {
         .cur-preview-el { animation: cur-preview 5s ease-in-out infinite; transform-origin: 0 0; }
       `}</style>
 
-      {/* Simulated UI elements to hover over */}
+      {/* Simulated UI elements */}
       <div style={{ position: 'absolute', top: 17, left: 88, width: 56, height: 18, background: 'rgba(247,197,51,0.1)', border: '1px solid rgba(247,197,51,0.25)', borderRadius: 4 }} />
       <div style={{ position: 'absolute', top: 76, left: 130, width: 48, height: 18, background: 'rgba(168,224,96,0.08)', border: '1px solid rgba(168,224,96,0.2)', borderRadius: 4 }} />
       <div style={{ position: 'absolute', top: 52, left: 16, width: 64, height: 2, background: 'rgba(255,255,255,0.07)', borderRadius: 1 }} />
@@ -228,7 +239,7 @@ function CursorPreview() {
           <path d="M2 2 L2 22 L6.5 17.5 L11 25.5 L13.5 24 L9 16.5 L16 16.5 Z"
             fill="rgba(0,0,0,0.35)" transform="translate(1.5,1.5)" />
           <path d="M2 2 L2 22 L6.5 17.5 L11 25.5 L13.5 24 L9 16.5 L16 16.5 Z"
-            fill="white" />
+            fill="white" stroke="rgba(0,0,0,0.5)" strokeWidth={1} strokeLinejoin="round" />
         </svg>
       </div>
 
@@ -258,7 +269,7 @@ function Slider({ label, value, min, max, step, onChange, hint }: {
         </span>
         <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.75rem', fontWeight: 600, color: '#1b1c19' }}>{value}</span>
       </div>
-    <input
+      <input
         type="range" min={min} max={max} step={step} value={value ?? 0}
         onChange={e => onChange(Number(e.target.value))}
         style={{
@@ -274,7 +285,7 @@ function Slider({ label, value, min, max, step, onChange, hint }: {
 /* ─────────────────────────────────────────────────────────
    CursorDemoBox — interactive
 ───────────────────────────────────────────────────────── */
-function CursorDemoBox({ physicsRef }: { physicsRef: React.MutableRefObject<typeof DEFAULTS> }) {
+function CursorDemoBox({ physicsRef }: { physicsRef: React.RefObject<typeof DEFAULTS> }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const curRef = useRef<HTMLDivElement>(null);
   const animRef = useRef<number>(0);
@@ -308,7 +319,6 @@ function CursorDemoBox({ physicsRef }: { physicsRef: React.MutableRefObject<type
         s.x = s.mx; s.y = s.my;
         cur.style.display = 'block';
       }
-      // Hover blur target: detect interactibles inside demo box
       const target = e.target as HTMLElement;
       s.hbt = target.closest('a, button') ? physicsRef.current.hoverBlur : 0;
     };
@@ -331,7 +341,6 @@ function CursorDemoBox({ physicsRef }: { physicsRef: React.MutableRefObject<type
       s.x += s.vx * dt; s.y += s.vy * dt;
       s.sv += ((s.st - s.sc) * p.sclStiff - s.sv * p.sclDamp) * dt;
       s.sc += s.sv * dt;
-      // Hover blur spring
       s.hbv += ((s.hbt - s.hbc) * HB_STIFF - s.hbv * HB_DAMP) * dt;
       s.hbc += s.hbv * dt;
       if (s.hbc < 0) s.hbc = 0;
@@ -354,11 +363,11 @@ function CursorDemoBox({ physicsRef }: { physicsRef: React.MutableRefObject<type
 
     return () => {
       cancelAnimationFrame(animRef.current);
-      box.removeEventListener('mouseenter', onEnter);
-      box.removeEventListener('mouseleave', onLeave);
-      box.removeEventListener('mousemove', onMove);
-      box.removeEventListener('mousedown', onDown);
-      box.removeEventListener('mouseup', onUp);
+      box.removeEventListener('pointerenter', onEnter);
+      box.removeEventListener('pointerleave', onLeave);
+      box.removeEventListener('pointermove', onMove);
+      box.removeEventListener('pointerdown', onDown);
+      box.removeEventListener('pointerup', onUp);
       const main = document.getElementById('custom-cursor');
       if (main) main.style.opacity = '1';
     };
@@ -381,7 +390,7 @@ function CursorDemoBox({ physicsRef }: { physicsRef: React.MutableRefObject<type
           </defs>
           <g filter="url(#demo-mb)">
             <path d="M2 2 L2 26 L7.5 20.5 L12.5 29 L15.2 27.5 L10.2 19 L18 19 Z" fill="rgba(0,0,0,0.45)" transform="translate(1.5,1.5)"/>
-            <path d="M2 2 L2 26 L7.5 20.5 L12.5 29 L15.2 27.5 L10.2 19 L18 19 Z" fill="white"/>
+            <path d="M2 2 L2 26 L7.5 20.5 L12.5 29 L15.2 27.5 L10.2 19 L18 19 Z" fill="white" stroke="rgba(0,0,0,0.6)" strokeWidth={1} strokeLinejoin="round"/>
           </g>
         </svg>
       </div>
@@ -502,7 +511,6 @@ function DocTabs({ command }: { command: string }) {
             <p style={{ fontSize: '0.8125rem', color: 'rgba(27,28,25,0.5)', marginBottom: '1rem', lineHeight: 1.6 }}>
               Works in any HTML project. Auto-hides on touch devices. No build step required.
             </p>
-            {/* Framework switcher */}
             <div style={{ display: 'flex', gap: 6, marginBottom: '1rem', flexWrap: 'wrap' }}>
               {(['html', 'nextjs', 'react'] as const).map(f => (
                 <button key={f} onClick={() => setFramework(f)} style={subBtnStyle(framework === f)}>
@@ -517,7 +525,6 @@ function DocTabs({ command }: { command: string }) {
         {/* ── Examples ── */}
         {mainTab === 'examples' && (
           <div>
-            {/* Example switcher */}
             <div style={{ display: 'flex', gap: 6, marginBottom: '1rem', flexWrap: 'wrap' }}>
               {(['basic', 'nextjs', 'params'] as const).map(e => (
                 <button key={e} onClick={() => setExample(e)} style={subBtnStyle(example === e)}>
@@ -534,100 +541,83 @@ function DocTabs({ command }: { command: string }) {
 }
 
 /* ─────────────────────────────────────────────────────────
-   ComponentCard
+   DemoModal — full-screen overlay popup
 ───────────────────────────────────────────────────────── */
-function ComponentCard() {
-  const [expanded, setExpanded] = useState(false);
-  const [params, setParams] = useState(DEFAULTS);
-  const physicsRef = useRef({ ...DEFAULTS });
-
-  const update = useCallback((key: keyof typeof DEFAULTS, val: number) => {
-    setParams(p => ({ ...p, [key]: val }));
-    physicsRef.current[key] = val;
-  }, []);
-
-  const reset = useCallback(() => {
-    setParams(DEFAULTS);
-    physicsRef.current = { ...DEFAULTS };
-  }, []);
+function DemoModal({ onClose, params, physicsRef, update, reset }: {
+  onClose: () => void;
+  params: typeof DEFAULTS;
+  physicsRef: React.RefObject<typeof DEFAULTS>;
+  update: (key: keyof typeof DEFAULTS, val: number) => void;
+  reset: () => void;
+}) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [onClose]);
 
   return (
-    <div style={{ border: '1px solid rgba(27,28,25,0.1)', borderRadius: 14, background: '#fff', overflow: 'hidden', boxShadow: '0 2px 16px rgba(27,28,25,0.05)' }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 9000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+      <style>{`
+        @keyframes modal-bd   { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes modal-panel { from { opacity: 0; transform: scale(0.96) translateY(18px) } to { opacity: 1; transform: scale(1) translateY(0) } }
+        .modal-close:hover { background: rgba(27,28,25,0.1) !important; border-color: rgba(27,28,25,0.25) !important; color: #1b1c19 !important; }
+      `}</style>
 
-      {/* ── Card header — always visible ── */}
-      <div style={{ padding: '1.75rem 2rem', display: 'flex', gap: '1.5rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-        {/* Animated preview */}
-        <CursorPreview />
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
+        style={{ position: 'absolute', inset: 0, background: 'rgba(27,28,25,0.55)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', animation: 'modal-bd 0.22s ease' }}
+      />
 
-        {/* Info */}
-        <div style={{ flex: 1, minWidth: 200 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
-            <h2 style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: '1.0625rem', letterSpacing: '-0.01em', margin: 0 }}>
+      {/* Panel */}
+      <div style={{
+        position: 'relative', background: '#fbf9f4',
+        borderRadius: 18, width: '100%', maxWidth: 920,
+        maxHeight: '90vh', overflow: 'auto',
+        animation: 'modal-panel 0.32s cubic-bezier(0.34,1.28,0.64,1)',
+        boxShadow: '0 32px 80px rgba(27,28,25,0.22), 0 0 0 1px rgba(27,28,25,0.07)',
+      }}>
+
+        {/* Modal header */}
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          padding: '1.1rem 1.75rem', borderBottom: '1px solid rgba(27,28,25,0.08)',
+          position: 'sticky', top: 0, zIndex: 5,
+          background: 'rgba(251,249,244,0.96)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: '0.9375rem', color: '#1b1c19' }}>
               cursor-spring
-            </h2>
+            </span>
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.5625rem', color: 'rgba(27,28,25,0.35)', background: 'rgba(27,28,25,0.05)', border: '1px solid rgba(27,28,25,0.1)', borderRadius: 4, padding: '2px 7px', letterSpacing: '0.05em' }}>
               v1.0.0
             </span>
+            <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5625rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(27,28,25,0.25)', marginLeft: '0.25rem' }}>
+              · interactive demo
+            </span>
           </div>
-
-          <p style={{ fontSize: '0.875rem', color: 'rgba(27,28,25,0.5)', lineHeight: 1.65, maxWidth: 420, margin: '0 0 0.875rem' }}>
-            Spring-physics macOS arrow cursor with velocity-based motion blur. Scales on hover &amp; click. Auto-hides on touch. Drop one script into any project.
-          </p>
-
-          {/* Tags */}
-          <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap', marginBottom: '1.1rem' }}>
-            {TAGS.map(tag => (
-              <span key={tag} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.5rem', letterSpacing: '0.08em', color: 'rgba(27,28,25,0.38)', background: 'rgba(27,28,25,0.04)', border: '1px solid rgba(27,28,25,0.08)', borderRadius: 4, padding: '2px 7px' }}>
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          {/* Actions */}
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-            <button
-              onClick={() => setExpanded(v => !v)}
-              style={{
-                fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-                fontSize: '0.5625rem', letterSpacing: '0.14em', textTransform: 'uppercase',
-                background: expanded ? 'rgba(27,28,25,0.08)' : '#1b1c19',
-                color: expanded ? '#1b1c19' : '#fbf9f4',
-                border: '1px solid transparent', borderRadius: 6,
-                padding: '0.45rem 1rem', cursor: 'none', transition: 'all 0.2s',
-              }}
-            >
-              {expanded ? '↑ close demo' : '→ try it live'}
-            </button>
-
-<a
-              href="https://github.com/ryyansafar/Ryyan-components"
-              target="_blank" rel="noopener noreferrer"
-              style={{
-                fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-                fontSize: '0.5625rem', letterSpacing: '0.14em', textTransform: 'uppercase',
-                color: 'rgba(27,28,25,0.45)', textDecoration: 'none',
-                border: '1px solid rgba(27,28,25,0.14)', borderRadius: 6,
-                padding: '0.45rem 1rem', cursor: 'none', transition: 'all 0.15s',
-                display: 'inline-flex', alignItems: 'center', gap: '0.3em',
-              }}
-            >
-              GitHub ↗
-            </a>
-
-            <div style={{ marginLeft: 'auto' }}>
-              <LikeButton componentId="cursor-spring" />
-            </div>
-          </div>
+          <button
+            className="modal-close"
+            onClick={onClose}
+            style={{
+              fontFamily: "'JetBrains Mono', monospace", fontSize: '1.1rem', lineHeight: 1,
+              color: 'rgba(27,28,25,0.4)', background: 'rgba(27,28,25,0.04)',
+              border: '1px solid rgba(27,28,25,0.1)', borderRadius: 8,
+              width: 34, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'none', transition: 'all 0.15s', flexShrink: 0,
+            }}
+          >×</button>
         </div>
-      </div>
 
-      {/* ── Expanded section ── */}
-      {expanded && (
-        <div style={{ borderTop: '1px solid rgba(27,28,25,0.08)', padding: '1.75rem 2rem 2rem', animation: 'cc-expand 0.25s ease' }}>
-          <style>{`@keyframes cc-expand { from { opacity:0; transform:translateY(-6px) } to { opacity:1; transform:translateY(0) } }`}</style>
-
-          {/* Demo + Parameters grid */}
-          <div className="cc-demo-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.4fr) minmax(200px, 320px)', gap: '1.5rem', alignItems: 'start' }}>
+        {/* Modal body */}
+        <div style={{ padding: '1.75rem 1.75rem 2.5rem' }}>
+          <div className="cc-demo-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.4fr) minmax(200px, 300px)', gap: '1.5rem', alignItems: 'start', marginBottom: '1.75rem' }}>
 
             {/* Interactive preview */}
             <CursorDemoBox physicsRef={physicsRef} />
@@ -663,8 +653,111 @@ function ComponentCard() {
           {/* Documentation tabs */}
           <DocTabs command="npx ryyan-ui add cursor-spring" />
         </div>
-      )}
+      </div>
     </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────
+   ComponentCard
+───────────────────────────────────────────────────────── */
+function ComponentCard() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [params, setParams] = useState(DEFAULTS);
+  const physicsRef = useRef({ ...DEFAULTS });
+
+  const update = useCallback((key: keyof typeof DEFAULTS, val: number) => {
+    setParams(p => ({ ...p, [key]: val }));
+    physicsRef.current[key] = val;
+  }, []);
+
+  const reset = useCallback(() => {
+    setParams(DEFAULTS);
+    physicsRef.current = { ...DEFAULTS };
+  }, []);
+
+  return (
+    <>
+      <div style={{ border: '1px solid rgba(27,28,25,0.1)', borderRadius: 14, background: '#fff', overflow: 'hidden', boxShadow: '0 2px 16px rgba(27,28,25,0.05)' }}>
+
+        {/* ── Card header — always visible ── */}
+        <div style={{ padding: '1.75rem 2rem', display: 'flex', gap: '1.5rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          {/* Animated preview */}
+          <CursorPreview />
+
+          {/* Info */}
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
+              <h2 style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: '1.0625rem', letterSpacing: '-0.01em', margin: 0 }}>
+                cursor-spring
+              </h2>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.5625rem', color: 'rgba(27,28,25,0.35)', background: 'rgba(27,28,25,0.05)', border: '1px solid rgba(27,28,25,0.1)', borderRadius: 4, padding: '2px 7px', letterSpacing: '0.05em' }}>
+                v1.0.0
+              </span>
+            </div>
+
+            <p style={{ fontSize: '0.875rem', color: 'rgba(27,28,25,0.5)', lineHeight: 1.65, maxWidth: 420, margin: '0 0 0.875rem' }}>
+              Spring-physics macOS arrow cursor with velocity-based motion blur. Scales on hover &amp; click. Auto-hides on touch. Drop one script into any project.
+            </p>
+
+            {/* Tags */}
+            <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap', marginBottom: '1.1rem' }}>
+              {TAGS.map(tag => (
+                <span key={tag} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.5rem', letterSpacing: '0.08em', color: 'rgba(27,28,25,0.38)', background: 'rgba(27,28,25,0.04)', border: '1px solid rgba(27,28,25,0.08)', borderRadius: 4, padding: '2px 7px' }}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              <button
+                onClick={() => setModalOpen(true)}
+                style={{
+                  fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
+                  fontSize: '0.5625rem', letterSpacing: '0.14em', textTransform: 'uppercase',
+                  background: '#1b1c19', color: '#fbf9f4',
+                  border: '1px solid transparent', borderRadius: 6,
+                  padding: '0.45rem 1rem', cursor: 'none', transition: 'all 0.2s',
+                }}
+              >
+                → try it live
+              </button>
+
+              <a
+                href="https://github.com/ryyansafar/Ryyan-components"
+                target="_blank" rel="noopener noreferrer"
+                style={{
+                  fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
+                  fontSize: '0.5625rem', letterSpacing: '0.14em', textTransform: 'uppercase',
+                  color: 'rgba(27,28,25,0.45)', textDecoration: 'none',
+                  border: '1px solid rgba(27,28,25,0.14)', borderRadius: 6,
+                  padding: '0.45rem 1rem', cursor: 'none', transition: 'all 0.15s',
+                  display: 'inline-flex', alignItems: 'center', gap: '0.3em',
+                }}
+              >
+                GitHub ↗
+              </a>
+
+              <div style={{ marginLeft: 'auto' }}>
+                <LikeButton componentId="cursor-spring" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal rendered outside the card's overflow:hidden */}
+      {modalOpen && (
+        <DemoModal
+          onClose={() => setModalOpen(false)}
+          params={params}
+          physicsRef={physicsRef}
+          update={update}
+          reset={reset}
+        />
+      )}
+    </>
   );
 }
 
@@ -750,13 +843,29 @@ export function ComponentsClient() {
       </main>
 
       {/* ── FOOTER ── */}
-      <footer style={{ borderTop: '1px solid rgba(27,28,25,0.08)', padding: '1.5rem 2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+      <footer style={{ borderTop: '1px solid rgba(27,28,25,0.08)', padding: '1.5rem 2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
         <span style={{ fontSize: '0.5625rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(27,28,25,0.25)' }}>
           RYYAN SAFAR / COMPONENTS
         </span>
-        <Link href="/" style={{ fontSize: '0.5625rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(27,28,25,0.25)', textDecoration: 'none' }}>
-          MAIN PORTFOLIO ↗
-        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <a
+            href="https://razorpay.me/@ryyansafar"
+            target="_blank" rel="noopener noreferrer"
+            style={{
+              fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5625rem', fontWeight: 700,
+              letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none',
+              display: 'inline-flex', alignItems: 'center', gap: '0.35em',
+              color: '#fbf9f4', background: '#1b1c19',
+              border: '1px solid rgba(27,28,25,0.8)', borderRadius: 6,
+              padding: '0.4rem 0.9rem', cursor: 'none',
+            }}
+          >
+            ☕ support
+          </a>
+          <Link href="/" style={{ fontSize: '0.5625rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(27,28,25,0.25)', textDecoration: 'none' }}>
+            MAIN PORTFOLIO ↗
+          </Link>
+        </div>
       </footer>
     </div>
   );
