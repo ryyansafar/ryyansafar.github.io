@@ -23,32 +23,27 @@ function initializeFirebase() {
   // Case 1: ENV variables (Vercel Production)
   if (projectId && clientEmail && privateKey) {
     try {
-      // 1. Aggressive cleaning of the private key
-      let cleanedKey = privateKey.trim();
-      
-      // Remove surrounding quotes if they exist
-      if (cleanedKey.startsWith('"') && cleanedKey.endsWith('"')) {
-        cleanedKey = cleanedKey.slice(1, -1);
-      }
-      
-      // Handle both literal escaped \n and real newlines
-      // Then ensure every single line ends with a real newline char
-      let formattedKey = cleanedKey.replace(/\\n/g, '\n');
-      
-      // Standardize headers and footers (ensure no missing dashes)
-      if (!formattedKey.includes('-----BEGIN PRIVATE KEY-----')) {
-        formattedKey = `-----BEGIN PRIVATE KEY-----\n${formattedKey}`;
-      }
-      if (!formattedKey.includes('-----END PRIVATE KEY-----')) {
-        formattedKey = `${formattedKey}\n-----END PRIVATE KEY-----`;
-      }
-      
-      // Ensure there is a final newline (PEM requirement)
-      if (!formattedKey.endsWith('\n')) {
-        formattedKey += '\n';
-      }
+      // 1. Aggressive cleaning: Remove all whitespace and headers/footers
+      // We want to isolate just the base64 content
+      let raw = privateKey
+        .replace(/-----BEGIN PRIVATE KEY-----/g, '')
+        .replace(/-----END PRIVATE KEY-----/g, '')
+        .replace(/\\n/g, '') // Remove literal \n
+        .replace(/\n/g, '')   // Remove real newlines
+        .replace(/\r/g, '')   // Remove carriage returns
+        .replace(/\s/g, '')   // Remove all spaces/tabs
+        .trim();
 
-      console.log(`[Firebase] Attempting init for: ${projectId}`);
+      // Remove any leftover quotes
+      if (raw.startsWith('"')) raw = raw.slice(1);
+      if (raw.endsWith('"')) raw = raw.slice(0, -1);
+
+      // 2. Reconstruct the PEM properly
+      // We don't even need internal newlines for firebase-admin, 
+      // but we MUST have the exact Header/Footer and a trailing newline.
+      const formattedKey = `-----BEGIN PRIVATE KEY-----\n${raw}\n-----END PRIVATE KEY-----\n`;
+
+      console.log(`[Firebase] Nuclear Init attempt for: ${projectId} (Key Length: ${raw.length})`);
       return admin.initializeApp({
         credential: admin.credential.cert({
           projectId,
@@ -57,9 +52,8 @@ function initializeFirebase() {
         }),
       });
     } catch (error: any) {
-      lastError = `ENV Init Error: ${error.message}`;
+      lastError = `Nuclear PEM Error: ${error.message}`;
       console.error('[Firebase]', lastError);
-      // Don't return null yet, try JSON fallback just in case
     }
   } else {
     const missing = [];
