@@ -4,6 +4,18 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getLikes, incrementLike } from '@/app/actions/like';
 
+/**
+ * LikeButton Component
+ * 
+ * An interactive, magnetic like button designed for the component gallery.
+ * Features:
+ * - Optimistic UI updates for snappy feedback.
+ * - Per-component independent counting.
+ * - Framer Motion animations (scale, pulse, particles).
+ * - Persistence via Firebase Firestore.
+ * 
+ * @param {string} componentId - Unique identifier for the component being liked.
+ */
 export default function LikeButton({ componentId }: { componentId: string }) {
   const [likes, setLikes] = useState<number | null>(null);
   const [isLiking, setIsLiking] = useState(false);
@@ -58,17 +70,17 @@ export default function LikeButton({ componentId }: { componentId: string }) {
         alignItems: 'center',
         gap: '0.5rem',
         padding: '0.4rem 0.85rem',
-        background: 'rgba(255, 255, 255, 0.03)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        background: hasLiked ? 'rgba(255, 62, 0, 0.08)' : 'rgba(27, 28, 25, 0.06)',
+        border: `1px solid ${hasLiked ? 'rgba(255, 62, 0, 0.3)' : 'rgba(27, 28, 25, 0.18)'}`,
         borderRadius: '6px',
-        color: hasLiked ? '#FF3E00' : 'rgba(255, 255, 255, 0.4)',
+        color: hasLiked ? '#FF3E00' : 'rgba(27, 28, 25, 0.75)', // High contrast on white
         fontFamily: 'var(--font-mono)',
         fontSize: '0.7rem',
         fontWeight: 700,
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
         cursor: 'none',
         position: 'relative',
-        boxShadow: hasLiked ? '0 0 15px rgba(255, 62, 0, 0.2)' : 'none',
+        boxShadow: hasLiked ? '0 0 12px rgba(255, 62, 0, 0.15)' : 'none',
       }}
     >
       <motion.span

@@ -1,30 +1,56 @@
 import admin from 'firebase-admin';
 
-if (!admin.apps.length) {
+function initializeFirebase() {
+  if (admin.apps.length > 0) {
+    return admin.app();
+  }
+
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  let privateKey = process.env.FIREBASE_PRIVATE_KEY;
+
+  if (!projectId || !privateKey || !clientEmail) {
+    console.error('[Firebase] Environment variables not found. Disabling persistence.');
+    return null;
+  }
+
   try {
-    try {
-      if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_PRIVATE_KEY) {
-        throw new Error('Missing Firebase environment variables');
-      }
-      
-      console.log(`[Firebase] Initializing for project: ${process.env.FIREBASE_PROJECT_ID}`);
-      
-      const privateKey = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n');
-      
-      admin.initializeApp({
-        credential: admin.credential.cert({
-          projectId: process.env.FIREBASE_PROJECT_ID,
-          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-          privateKey: privateKey,
-        }),
-      });
-      console.log('[Firebase] Initialization successful');
-    } catch (error) {
-      console.error('[Firebase] Initialization failed:', error);
+    // 1. Unquote if necessary
+    if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+      privateKey = privateKey.slice(1, -1);
     }
+    if (privateKey.startsWith("'") && privateKey.endsWith("'")) {
+      privateKey = privateKey.slice(1, -1);
+    }
+
+    // 2. Normalize newlines: handle both escaped \n and literal newlines
+    const formattedKey = privateKey.replace(/\\n/g, '\n');
+
+    console.log(`[Firebase] Booting for: ${projectId}`);
+    
+    return admin.initializeApp({
+      credential: admin.credential.cert({
+        projectId,
+        clientEmail,
+        privateKey: formattedKey,
+      }),
+    });
   } catch (error) {
-    console.error('Firebase admin initialization error', error);
+    console.error('[Firebase] Critical Init Error:', error);
+    return null;
   }
 }
 
-export const db = admin.firestore();
+// Global instance (may be null if init fails)
+const app = initializeFirebase();
+
+/**
+ * Safe database getter. Use this instead of direct export in case of init failure.
+ */
+export const getDb = () => {
+  if (!app) return null;
+  return admin.firestore();
+};
+
+export const db = getDb();
+export const isFirebaseReady = () => !!app;

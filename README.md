@@ -127,7 +127,7 @@ Personal portfolio for Ryyan Safar — Electronics & Communication Engineer, bui
 | **Scroll reveals** | `IntersectionObserver` on `.reveal-up` / `.reveal-text` — no GSAP overhead |
 | **Skills physics** | Matter.js canvas in `script.js` — tag bubbles with gravity and collision |
 | **Card tilt** | `mousemove` → CSS `perspective` / `rotateX` / `rotateY` on project cards |
-| **Design gallery** | `archive/gallery/page.tsx` — lazy iframe loading via `IntersectionObserver`, live site previews |
+| **Design gallery** | **Technical Primitive Gallery:** A collection of highly-tuned UI components.<br>- **Persistent Likes:** Each component tracks community likes via Firestore.<br>- **Magnetic Interactions:** Every element responds to the mouse with custom physics. |
 | **Konami code** | `↑↑↓↓←→←→BA` — hidden snake mini-game |
 | **Lite mode** | `localStorage` flag — reduces animation overhead |
 | **Mobile support** | Design gallery: portrait (vertical scroll) + landscape (compact) responsive layouts |
