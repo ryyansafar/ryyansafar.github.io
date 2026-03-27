@@ -1,0 +1,7 @@
+[
+  {
+    "name": "cursor-spring",
+    "description": "Magnetic spring-physics cursor with motion blur.",
+    "files": ["cursor-spring.tsx"]
+  }
+]
