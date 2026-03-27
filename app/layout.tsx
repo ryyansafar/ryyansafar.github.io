@@ -31,6 +31,8 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <head>
+        {/* Hide native cursor before any external CSS loads — prevents double-cursor flash */}
+        <style dangerouslySetInnerHTML={{ __html: `@media(hover:hover)and(pointer:fine){html,body,body *{cursor:none!important}}` }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

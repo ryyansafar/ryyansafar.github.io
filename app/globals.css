@@ -64,6 +64,7 @@ body {
 }
 
 @media (hover: hover) and (pointer: fine) {
+  html,
   body,
   body * {
     cursor: none !important;
