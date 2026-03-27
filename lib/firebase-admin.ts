@@ -37,7 +37,11 @@ function initializeFirebase() {
   let privateKey = process.env.FIREBASE_PRIVATE_KEY;
 
   if (!projectId || !privateKey || !clientEmail) {
-    console.error('[Firebase] Environment variables not found. Disabling persistence.');
+    const missing = [];
+    if (!projectId) missing.push('FIREBASE_PROJECT_ID');
+    if (!clientEmail) missing.push('FIREBASE_CLIENT_EMAIL');
+    if (!privateKey) missing.push('FIREBASE_PRIVATE_KEY');
+    console.error(`[Firebase] Missing Environment Variables: ${missing.join(', ')}. Disabling persistence.`);
     return null;
   }
 

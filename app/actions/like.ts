@@ -12,7 +12,7 @@ const LIKES_COLLECTION = 'component_likes';
  */
 export async function getLikes(componentId: string) {
   if (!db) {
-    console.error('[Firebase] Database not initialized. Check your environment variables.');
+    console.error('[Firebase] getLikes: Database not initialized. Check your Vercel Environment Variables: FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY.');
     return 0;
   }
   try {
@@ -37,6 +37,8 @@ export async function getLikes(componentId: string) {
  */
 export async function toggleLike(componentId: string, increment: boolean) {
   if (!db) {
+    const projectId = process.env.FIREBASE_PROJECT_ID;
+    console.error('[Firebase] toggleLike: Database not initialized.');
     throw new Error('Database not initialized');
   }
   try {
@@ -64,8 +66,8 @@ export async function toggleLike(componentId: string, increment: boolean) {
     revalidatePath('/design/components');
     
     return finalCount;
-  } catch (error) {
-    console.error(`[Firebase Error] toggleLike for ${componentId}:`, error);
-    throw new Error('Failed to update likes');
+  } catch (error: any) {
+    console.error(`[Firebase Error] toggleLike for ${componentId}:`, error?.message || error);
+    throw new Error(`Failed to update likes: ${error?.message || 'Unknown error'}`);
   }
 }
