@@ -921,7 +921,7 @@ export default function GalleryPage() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                 <div>
                   <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5rem', letterSpacing: '0.15em', color: 'rgba(27,28,25,0.3)', textTransform: 'uppercase', marginBottom: 2 }}>YEAR</div>
-                  <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '1rem', color: '#1b1c19' }}>EST. 2025</div>
+                  <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '1rem', color: '#1b1c19' }}>{P[0].year}</div>
                 </div>
                 <a href={P[0].url} target="_blank" rel="noopener noreferrer" className="gl-open-btn">OPEN [+]</a>
               </div>
@@ -1206,7 +1206,7 @@ export default function GalleryPage() {
               <div className="gl-bento-card" style={{ flex: '0 0 16%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>
                   <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5rem', letterSpacing: '0.15em', color: 'rgba(27,28,25,0.3)', textTransform: 'uppercase', marginBottom: 4 }}>YEAR</div>
-                  <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '1.25rem', color: '#1b1c19' }}>EST. 2024</div>
+                  <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '1.25rem', color: '#1b1c19' }}>{P[2].year}</div>
                 </div>
                 <a href={P[2].url} target="_blank" rel="noopener noreferrer" className="gl-open-btn">OPEN [+]</a>
               </div>
@@ -1469,7 +1469,7 @@ export default function GalleryPage() {
                 fontWeight: 700, letterSpacing: '0.15em',
                 color: 'rgba(0,0,0,0.4)', textTransform: 'uppercase',
                 marginBottom: '1.5rem', display: 'block',
-              }}>COMMUNITY TOOL / EST. 2024</span>
+              }}>COMMUNITY TOOL / {P[3].year}</span>
 
               <h2 style={{
                 fontFamily: 'Barrio, cursive',

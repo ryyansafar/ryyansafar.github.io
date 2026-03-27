@@ -29,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="en">
       <head>
         {/* Hide native cursor before any external CSS loads — prevents double-cursor flash */}
         <style dangerouslySetInnerHTML={{ __html: `@media(hover:hover)and(pointer:fine){html,body,body *{cursor:none!important}}` }} />

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Anton&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+/* Fonts are loaded via <link> tags in app/layout.tsx — no duplicate @import needed */
 
 :root {
   /* ── Amber Poster Palette ── */

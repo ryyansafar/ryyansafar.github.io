@@ -1,7 +1,15 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/firebase-admin';
 
-export async function GET() {
+export async function GET(request: Request) {
+  // Protect with secret token — set DIAG_SECRET in Vercel env vars
+  const secret = process.env.DIAG_SECRET;
+  if (secret) {
+    const { searchParams } = new URL(request.url);
+    if (searchParams.get('secret') !== secret) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+  }
   const diagnostics: any = {
     timestamp: new Date().toISOString(),
     env: {
