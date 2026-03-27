@@ -4,81 +4,123 @@ import Link from 'next/link';
 import { usePageTransition } from '@/components/TransitionProvider';
 
 function GalleryCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const dot = dotRef.current;
-    const ring = ringRef.current;
-    if (!dot || !ring) return;
+    const el = cursorRef.current;
+    if (!el) return;
 
-    // Skip on touch devices to improve performance and avoid "floating" cursor
-    if (window.matchMedia('(pointer: coarse)').matches) {
-      dot.style.display = 'none';
-      ring.style.display = 'none';
-      return;
-    }
+    // Hide the global script.js cursor — gallery has its own
+    const mainCursor = document.getElementById('custom-cursor');
+    if (mainCursor) mainCursor.style.display = 'none';
+
+    el.style.display = 'none';
 
     let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-    let rx = mx, ry = my;
-    let scale = 1, targetScale = 1;
+    let x = mx, y = my, vx = 0, vy = 0;
+    let scaleCur = 1, scaleTarget = 1, scaleVel = 0;
+    let hbc = 0, hbt = 0, hbv = 0;
+    const HB_MAX = 1.2, HB_STIFF = 180, HB_DAMP = 22;
+    let lastTime = performance.now();
     let raf: number;
 
-    const onMove = (e: MouseEvent) => { mx = e.clientX; my = e.clientY; };
+    const POS_STIFF = 240, POS_DAMP = 27;
+    const SCL_STIFF = 330, SCL_DAMP = 30;
 
+    const onMove = (e: MouseEvent) => {
+      if (el.style.display === 'none') el.style.display = 'block';
+      mx = e.clientX; my = e.clientY;
+    };
+    const onTouch = () => { el.style.display = 'none'; };
     const onOver = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest('a, button')) targetScale = 2.2;
+      if ((e.target as HTMLElement).closest('a, button')) { scaleTarget = 1.3; hbt = HB_MAX; }
     };
     const onOut = (e: MouseEvent) => {
-      if (!(e.target as HTMLElement).closest('a, button')) targetScale = 1;
+      if (!(e.target as HTMLElement).closest('a, button')) { scaleTarget = 1; hbt = 0; }
     };
+    const onDown = () => { scaleTarget = 0.65; };
+    const onUp   = () => { scaleTarget = 1; };
+
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('touchstart', onTouch, { passive: true });
+    document.addEventListener('mouseover', onOver);
+    document.addEventListener('mouseout', onOut);
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('mouseup', onUp);
 
     const tick = () => {
-      rx += (mx - rx) * 0.1;
-      ry += (my - ry) * 0.1;
-      scale += (targetScale - scale) * 0.12;
+      const now = performance.now();
+      const dt = Math.min((now - lastTime) / 1000, 0.033);
+      lastTime = now;
 
-      dot.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
-      dot.style.opacity = scale > 1.5 ? '0' : '1';
-      ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%) scale(${scale})`;
+      const ax = (mx - x) * POS_STIFF - vx * POS_DAMP;
+      const ay = (my - y) * POS_STIFF - vy * POS_DAMP;
+      vx += ax * dt; vy += ay * dt;
+      x  += vx * dt; y  += vy * dt;
+
+      const sa = (scaleTarget - scaleCur) * SCL_STIFF - scaleVel * SCL_DAMP;
+      scaleVel += sa * dt;
+      scaleCur += scaleVel * dt;
+
+      // Hover blur spring
+      hbv += ((hbt - hbc) * HB_STIFF - hbv * HB_DAMP) * dt;
+      hbc += hbv * dt;
+      if (hbc < 0) hbc = 0;
+
+      el.style.transform = `translate(${x}px,${y}px) scale(${scaleCur})`;
+
+      // Motion blur (directional) + hover blur (uniform) combined
+      const speed = Math.sqrt(vx * vx + vy * vy);
+      const blurEl = el.querySelector<SVGFEGaussianBlurElement>('#gl-blur');
+      if (blurEl) {
+        const motionAmt = speed > 20 ? Math.min(speed * 0.005, 2.8) : 0;
+        const angle = motionAmt > 0 ? Math.atan2(vy, vx) : 0;
+        const bx = Math.abs(Math.cos(angle)) * motionAmt + hbc;
+        const by = Math.abs(Math.sin(angle)) * motionAmt + hbc;
+        blurEl.setAttribute('stdDeviation',
+          bx > 0.05 || by > 0.05 ? `${bx.toFixed(2)} ${by.toFixed(2)}` : '0 0');
+      }
 
       raf = requestAnimationFrame(tick);
     };
-
-    window.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseover', onOver);
-    document.addEventListener('mouseout', onOut);
     raf = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('touchstart', onTouch);
       document.removeEventListener('mouseover', onOver);
       document.removeEventListener('mouseout', onOut);
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('mouseup', onUp);
       cancelAnimationFrame(raf);
+      // Restore global cursor when leaving gallery
+      const mc = document.getElementById('custom-cursor');
+      if (mc) mc.style.display = '';
     };
   }, []);
 
   return (
-    <div className="gl-cursor-wrapper">
-      <div ref={dotRef} style={{
-        position: 'fixed', top: 0, left: 0, zIndex: 9999,
-        width: 7, height: 7,
-        background: '#fff',
-        borderRadius: '50%',
-        pointerEvents: 'none',
-        mixBlendMode: 'difference',
-        willChange: 'transform',
-        transition: 'opacity 0.15s',
-      }} />
-      <div ref={ringRef} style={{
-        position: 'fixed', top: 0, left: 0, zIndex: 9998,
-        width: 38, height: 38,
-        border: '1.5px solid #fff',
-        borderRadius: '50%',
-        pointerEvents: 'none',
-        mixBlendMode: 'difference',
-        willChange: 'transform',
-      }} />
+    <div ref={cursorRef} className="gl-cursor-wrapper" style={{
+      position: 'fixed', top: 0, left: 0, zIndex: 9999,
+      pointerEvents: 'none', willChange: 'transform',
+      transformOrigin: '0 0',
+    }}>
+      <svg width="22" height="28" viewBox="0 0 22 28" overflow="visible" fill="none">
+        <defs>
+          <filter id="gl-mb" x="-150%" y="-150%" width="400%" height="400%" colorInterpolationFilters="sRGB">
+            <feGaussianBlur id="gl-blur" stdDeviation="0 0" in="SourceGraphic" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <g filter="url(#gl-mb)">
+          <path d="M1 1 L1 23 L6 18 L10.5 26 L13.5 24.5 L9 17 L16.5 17 Z"
+            fill="#1a1a1a" stroke="#1a1a1a" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+          <path d="M2.5 3.5 L2.5 20.5 L6.2 16.5 L10.8 24.2 L12 23.6 L7.5 16 L14.5 16 Z" fill="white" />
+        </g>
+      </svg>
     </div>
   );
 }
@@ -136,6 +178,16 @@ const P = [
   },
   {
     id: '06',
+    title: 'LITERATURE_CLOCK',
+    category: 'HARDWARE / WEB SIMULATION',
+    description:
+      'Browser simulation of a 191×278 electromagnetic flip-disc display — 53,098 discs showing a literary quote for every minute of the day. Includes ESP32 firmware for the physical installation.',
+    tech: ['Vanilla JS', 'HTML/CSS', 'ESP32', 'GitHub Pages'],
+    url: 'https://litclock.ryyansafar.site',
+    year: 'EST. 2026',
+  },
+  {
+    id: '07',
     title: 'SMOKE_RYYANSAFAR_SITE',
     category: 'RESTAURANT / WEB DESIGN',
     description:
@@ -247,7 +299,7 @@ export default function GalleryPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Barrio&family=Epilogue:wght@700;900&family=Space+Grotesk:wght@300;500;700&family=Work+Sans:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Barrio&family=Epilogue:wght@700;900&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;500;700&family=Work+Sans:wght@400;600&display=swap');
 
         .gl-root, .gl-root * { cursor: none !important; }
 
@@ -264,7 +316,7 @@ export default function GalleryPage() {
 
         .gl-track {
           display: flex;
-          width: 700vw;
+          width: 800vw;
           height: 100vh;
         }
 
@@ -373,9 +425,6 @@ export default function GalleryPage() {
            MOBILE — vertical scroll, stacked columns
            ═══════════════════════════════════════════════════════ */
         @media (max-width: 768px) {
-          /* Touch devices get real cursor */
-          .gl-root, .gl-root * { cursor: auto !important; }
-          .gl-cursor-wrapper { display: none !important; }
 
           /* Switch from horizontal to vertical */
           .gl-root {
@@ -528,6 +577,12 @@ export default function GalleryPage() {
             width: 100% !important;
             padding-bottom: 100% !important;
           }
+
+          /* Panel 6 (LitClock) iframe wrap — taller on mobile */
+          .gl-litclock-iframe-wrap {
+            width: 100% !important;
+            padding-bottom: 90% !important;
+          }
         }
 
         /* ── LANDSCAPE MOBILE ───────────────────────────────────────────
@@ -536,8 +591,6 @@ export default function GalleryPage() {
            panels so they don't need full 100svh to be readable.
         ─────────────────────────────────────────────────────────────── */
         @media (max-height: 500px) and (orientation: landscape) {
-          .gl-root, .gl-root * { cursor: auto !important; }
-          .gl-cursor-wrapper { display: none !important; }
 
           /* Vertical scroll (same as portrait) */
           .gl-root {
@@ -670,6 +723,12 @@ export default function GalleryPage() {
             width: 100% !important;
             padding-bottom: 70% !important;
           }
+
+          /* Panel 6 (LitClock) iframe wrap */
+          .gl-litclock-iframe-wrap {
+            width: 100% !important;
+            padding-bottom: 70% !important;
+          }
         }
       `}</style>
 
@@ -685,7 +744,7 @@ export default function GalleryPage() {
           padding: '1.5rem 2.5rem',
           pointerEvents: 'none',
         }}>
-          <a href="/" style={{
+          <Link href="/archive/gallery" style={{
             fontFamily: 'Barrio, cursive', fontSize: '1.25rem',
             textTransform: 'uppercase', letterSpacing: '-0.02em',
             background: '#715c00', color: '#fff',
@@ -693,7 +752,7 @@ export default function GalleryPage() {
             display: 'inline-block', boxShadow: '2px 2px 0 rgba(0,0,0,0.15)',
             textDecoration: 'none',
             pointerEvents: 'auto',
-          }}>DESIGN</a>
+          }} onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>DESIGN</Link>
 
           <nav style={{ display: 'flex', gap: '0.4rem', alignItems: 'flex-start', pointerEvents: 'auto' }}>
             <Link 
@@ -704,7 +763,7 @@ export default function GalleryPage() {
                 navigateTo('/');
               }}
             >← MAIN</Link>
-            <a href="/design/components" className="gl-nav-chip">COMPONENTS</a>
+            <Link href="/design/components" className="gl-nav-chip" onClick={(e) => { e.preventDefault(); navigateTo('/design/components'); }}>COMPONENTS</Link>
             <a href="https://wallpapers.ryyansafar.site" target="_blank" rel="noopener noreferrer" className="gl-nav-chip">WALLPAPERS ↗</a>
           </nav>
         </header>
@@ -802,7 +861,7 @@ export default function GalleryPage() {
               fontFamily: 'Epilogue, sans-serif', fontWeight: 900,
               fontSize: '6rem', color: 'rgba(27,28,25,0.06)', lineHeight: 1,
               userSelect: 'none',
-            }}>06</div>
+            }}>07</div>
           </section>
 
           {/* ── PANEL 1: RYYAN_SAFAR.SITE — Magazine / Polaroid ────── */}
@@ -934,7 +993,7 @@ export default function GalleryPage() {
               fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5rem',
               fontWeight: 700, letterSpacing: '0.2em',
               color: 'rgba(27,28,25,0.2)', textTransform: 'uppercase',
-            }}>01 / 06</div>
+            }}>01 / 07</div>
           </section>
 
           {/* ── PANEL 2: HELP_ME_SURVIVE_COLLEGE — Terminal Dark ────── */}
@@ -1048,7 +1107,7 @@ export default function GalleryPage() {
               fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5rem',
               fontWeight: 700, letterSpacing: '0.2em',
               color: 'rgba(168,224,96,0.2)', textTransform: 'uppercase',
-            }}>02 / 06</div>
+            }}>02 / 07</div>
           </section>
 
           {/* ── PANEL 3: TEAMAPT.IN — Editorial Bento ───────────────── */}
@@ -1158,7 +1217,7 @@ export default function GalleryPage() {
               fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5rem',
               fontWeight: 700, letterSpacing: '0.2em',
               color: 'rgba(27,28,25,0.2)', textTransform: 'uppercase',
-            }}>03 / 06</div>
+            }}>03 / 07</div>
           </section>
 
           {/* ── PANEL 4: WALLPAPERS.RYYANSAFAR.SITE — Dark Gallery ─── */}
@@ -1216,7 +1275,7 @@ export default function GalleryPage() {
               </div>
             </div>
 
-            <div style={{ position: 'absolute', bottom: '2.5rem', left: '4rem', fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5rem', fontWeight: 700, letterSpacing: '0.2em', color: 'rgba(180,255,90,0.2)', textTransform: 'uppercase' }}>04 / 06</div>
+            <div style={{ position: 'absolute', bottom: '2.5rem', left: '4rem', fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5rem', fontWeight: 700, letterSpacing: '0.2em', color: 'rgba(180,255,90,0.2)', textTransform: 'uppercase' }}>04 / 07</div>
           </section>
 
           {/* ── PANEL 5: SMOKE.RYYANSAFAR.SITE — Warm Ember ─────────── */}
@@ -1240,10 +1299,10 @@ export default function GalleryPage() {
                 THE<br />SMOKE<br />HOUSE
               </h2>
 
-              <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '0.8125rem', color: 'rgba(42,18,6,0.55)', lineHeight: 1.75, marginBottom: '1.5rem' }}>{P[5].description}</p>
+              <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '0.8125rem', color: 'rgba(42,18,6,0.55)', lineHeight: 1.75, marginBottom: '1.5rem' }}>{P[6].description}</p>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', marginBottom: '2.5rem' }}>
-                {P[5].tech.map(t => <Tag key={t} label={t} />)}
+                {P[6].tech.map(t => <Tag key={t} label={t} />)}
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
@@ -1251,7 +1310,7 @@ export default function GalleryPage() {
                   <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5rem', letterSpacing: '0.15em', color: 'rgba(42,18,6,0.3)', textTransform: 'uppercase', marginBottom: 2 }}>YEAR</div>
                   <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '1rem', color: '#2a1206' }}>EST. 2026</div>
                 </div>
-                <a href={P[5].url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#c04b0c', color: '#fff', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.6rem 1.25rem', textDecoration: 'none', transition: 'opacity 0.15s' }}>OPEN [+]</a>
+                <a href={P[6].url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#c04b0c', color: '#fff', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.6rem 1.25rem', textDecoration: 'none', transition: 'opacity 0.15s' }}>OPEN [+]</a>
               </div>
             </div>
 
@@ -1275,17 +1334,116 @@ export default function GalleryPage() {
                   </div>
                   {/* Iframe */}
                   <div className="gl-smoke-iframe-wrap" style={{ position: 'relative', overflow: 'hidden', width: 'clamp(260px, 38vw, 500px)', paddingBottom: '90%' }}>
-                    <LiveIframe url={P[5].url} title={P[5].title} />
+                    <LiveIframe url={P[6].url} title={P[6].title} />
                   </div>
                 </div>
-                <a href={P[5].url} target="_blank" rel="noopener noreferrer" style={{ position: 'absolute', inset: 0, zIndex: 10 }} aria-label="Open smoke.ryyansafar.site" />
+                <a href={P[6].url} target="_blank" rel="noopener noreferrer" style={{ position: 'absolute', inset: 0, zIndex: 10 }} aria-label="Open smoke.ryyansafar.site" />
               </div>
             </div>
 
-            <div style={{ position: 'absolute', bottom: '2.5rem', left: '3rem', fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5rem', fontWeight: 700, letterSpacing: '0.2em', color: 'rgba(42,18,6,0.2)', textTransform: 'uppercase' }}>05 / 06</div>
+            <div style={{ position: 'absolute', bottom: '2.5rem', left: '3rem', fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5rem', fontWeight: 700, letterSpacing: '0.2em', color: 'rgba(42,18,6,0.2)', textTransform: 'uppercase' }}>05 / 07</div>
           </section>
 
-          {/* ── PANEL 6: TINKERSPACE — Gold Bold ────────────────────── */}
+          {/* ── PANEL 6: LITERATURE CLOCK — Dark Phosphor ────────────── */}
+          {/* Style: dark bg, monochrome disc-grid aesthetic, hardware bezel iframe */}
+          <section className="gl-panel gl-panel-split" style={{ background: '#0a0a0a', display: 'flex', flexDirection: 'column' }}>
+
+            <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+
+              {/* Left: content */}
+              <div className="gl-split-left" style={{
+                flex: '0 0 46%', display: 'flex', flexDirection: 'column',
+                justifyContent: 'center', padding: '7rem 3rem 3rem',
+                position: 'relative', zIndex: 10,
+                borderRight: '1px solid rgba(59,130,246,0.12)',
+              }}>
+                {/* Ghost number */}
+                <div style={{
+                  position: 'absolute', bottom: '-2rem', left: '-1rem',
+                  fontFamily: 'Epilogue, sans-serif', fontWeight: 900,
+                  fontSize: '22vw', lineHeight: 1,
+                  color: 'rgba(59,130,246,0.04)', userSelect: 'none', pointerEvents: 'none',
+                }}>06</div>
+
+                {/* Category chip */}
+                <span style={{
+                  fontFamily: "'JetBrains Mono', monospace", fontSize: '0.5rem',
+                  fontWeight: 500, letterSpacing: '0.15em',
+                  color: '#3b82f6', textTransform: 'uppercase',
+                  marginBottom: '1.5rem', display: 'block',
+                }}>HARDWARE / WEB SIMULATION</span>
+
+                {/* Specs line */}
+                <div style={{
+                  fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6rem',
+                  color: 'rgba(255,255,255,0.25)', letterSpacing: '0.08em',
+                  marginBottom: '1.75rem', borderLeft: '2px solid #3b82f6',
+                  paddingLeft: '0.75rem',
+                }}>
+                  191 × 278 DISCS // 53,098 TOTAL
+                </div>
+
+                {/* Title */}
+                <h2 style={{
+                  fontFamily: 'Epilogue, sans-serif', fontWeight: 900,
+                  fontSize: 'clamp(2rem, 4.5vw, 3.8rem)', lineHeight: 0.9,
+                  letterSpacing: '-0.03em', textTransform: 'uppercase',
+                  color: '#fff', marginBottom: '1.25rem',
+                }}>
+                  LITERATURE<br />CLOCK<br /><span style={{ color: '#3b82f6' }}>PRO</span>
+                </h2>
+
+                <p style={{
+                  fontFamily: "'Work Sans', sans-serif", fontSize: '0.8125rem',
+                  color: 'rgba(255,255,255,0.45)', lineHeight: 1.75,
+                  marginBottom: '1.5rem',
+                }}>{P[5].description}</p>
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', marginBottom: '2.5rem' }}>
+                  {P[5].tech.map(t => <Tag key={t} label={t} />)}
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                  <div>
+                    <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.45rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase', marginBottom: 2 }}>YEAR</div>
+                    <div style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 500, fontSize: '0.9rem', color: '#fff' }}>EST. 2026</div>
+                  </div>
+                  <a href={P[5].url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#3b82f6', color: '#fff', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.6rem 1.25rem', textDecoration: 'none', transition: 'opacity 0.15s' }}>OPEN [+]</a>
+                </div>
+              </div>
+
+              {/* Right: iframe in hardware bezel */}
+              <div className="gl-split-right" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3.5rem 2.5rem', background: '#0a0a0a', position: 'relative' }}>
+                {/* Dot grid */}
+                <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle, rgba(59,130,246,0.07) 1px, transparent 1px)', backgroundSize: '18px 18px', pointerEvents: 'none' }} />
+
+                {/* Hardware bezel */}
+                <div style={{ position: 'relative', zIndex: 10, boxShadow: '0 0 40px rgba(59,130,246,0.12), 4px 4px 0 rgba(59,130,246,0.25)' }}>
+                  <div style={{ border: '6px solid #1a1a2e', background: '#1a1a2e' }}>
+                    {/* Address bar */}
+                    <div style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.75rem', gap: '0.4rem', borderBottom: '1px solid rgba(59,130,246,0.15)' }}>
+                      <div style={{ display: 'flex', gap: '0.35rem' }}>
+                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#ff5f57' }} />
+                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#febc2e' }} />
+                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#28c840' }} />
+                      </div>
+                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.45rem', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.05em', flex: 1, textAlign: 'center' }}>litclock.ryyansafar.site</span>
+                      <span style={{ background: '#3b82f6', color: '#fff', fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.45rem', fontWeight: 700, letterSpacing: '0.1em', padding: '1px 6px' }}>● LIVE</span>
+                    </div>
+                    {/* Iframe */}
+                    <div className="gl-litclock-iframe-wrap" style={{ position: 'relative', overflow: 'hidden', width: 'clamp(260px, 38vw, 500px)', paddingBottom: '90%' }}>
+                      <LiveIframe url={P[5].url} title={P[5].title} />
+                    </div>
+                  </div>
+                  <a href={P[5].url} target="_blank" rel="noopener noreferrer" style={{ position: 'absolute', inset: 0, zIndex: 10 }} aria-label="Open litclock.ryyansafar.site" />
+                </div>
+              </div>
+            </div>
+
+            <div style={{ position: 'absolute', bottom: '2.5rem', left: '3rem', fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5rem', fontWeight: 700, letterSpacing: '0.2em', color: 'rgba(59,130,246,0.2)', textTransform: 'uppercase' }}>06 / 07</div>
+          </section>
+
+          {/* ── PANEL 7: TINKERSPACE — Gold Bold ────────────────────── */}
           {/* Style: full gold bg, huge Barrio text left, stamp-framed iframe right */}
           <section className="gl-panel gl-panel-split" style={{ background: '#f7c533', display: 'flex', flexDirection: 'column' }}>
 
@@ -1304,7 +1462,7 @@ export default function GalleryPage() {
                 fontFamily: 'Epilogue, sans-serif', fontWeight: 900,
                 fontSize: '28vw', lineHeight: 1,
                 color: 'rgba(0,0,0,0.05)', userSelect: 'none', pointerEvents: 'none',
-              }}>06</div>
+              }}>07</div>
 
               <span style={{
                 fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.5625rem',
@@ -1351,7 +1509,7 @@ export default function GalleryPage() {
                   fontWeight: 700, fontSize: '0.5rem',
                   letterSpacing: '0.12em', color: '#000',
                   transform: 'rotate(-2deg)',
-                }}>TOOL_06</div>
+                }}>TOOL_07</div>
                 <a href={P[3].url} target="_blank" rel="noopener noreferrer" className="gl-open-btn-gold">OPEN [+]</a>
               </div>
             </div>
@@ -1391,7 +1549,7 @@ export default function GalleryPage() {
                     fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
                     fontSize: '0.5rem', letterSpacing: '0.12em',
                     color: 'rgba(247,197,51,0.5)', textTransform: 'uppercase',
-                  }}>PHY_TOOL_06</span>
+                  }}>PHY_TOOL_07</span>
                   <span style={{
                     background: '#f7c533', color: '#000',
                     fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.45rem',

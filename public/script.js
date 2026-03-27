@@ -53,48 +53,117 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// --- Custom Cursor ---
-if (!config.isTouch) {
-  const cursor = document.getElementById('custom-cursor');
-  let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
-  const lerp = 0.15;
-  let cursorVisible = false;
+// --- Custom Cursor (spring physics + macOS arrow) ---
+(function() {
+  // Create on <body> directly — never inside React's DOM tree so it survives reconciliation
+  let el = document.getElementById('custom-cursor');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'custom-cursor';
+    document.body.appendChild(el);
+  }
+  el.style.cssText = 'position:fixed;top:0;left:0;pointer-events:none;z-index:10001;will-change:transform;transform-origin:0 0;display:none;';
 
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    if (!cursorVisible && cursor) {
-      cursorVisible = true;
-      cursor.style.opacity = '1';
-    }
+  // White arrow — overflow="visible" prevents shadow clipping outside SVG bounds
+  el.innerHTML = `<svg width="24" height="32" viewBox="0 0 24 32" overflow="visible" fill="none">
+    <defs>
+      <filter id="cur-mb" x="-150%" y="-150%" width="400%" height="400%" color-interpolation-filters="sRGB">
+        <feGaussianBlur id="cur-blur" stdDeviation="0 0" in="SourceGraphic" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    <g filter="url(#cur-mb)">
+      <path d="M2 2 L2 26 L7.5 20.5 L12.5 29 L15.2 27.5 L10.2 19 L18 19 Z"
+        fill="rgba(0,0,0,0.45)" transform="translate(1.5,1.5)"/>
+      <path d="M2 2 L2 26 L7.5 20.5 L12.5 29 L15.2 27.5 L10.2 19 L18 19 Z"
+        fill="white" stroke="black" stroke-width="1.2" stroke-linejoin="round"/>
+    </g>
+  </svg>`;
+
+  let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+  let x = mx, y = my, vx = 0, vy = 0;
+  let scaleCur = 1, scaleTarget = 1, scaleVel = 0;
+  // Hover blur spring — springs up when over interactibles, back to 0 otherwise
+  let hbc = 0, hbt = 0, hbv = 0;
+  const HB_MAX = 1.2, HB_STIFF = 180, HB_DAMP = 22;
+  let lastTime = performance.now();
+  let raf;
+
+  const POS_STIFF = 240, POS_DAMP = 27;
+  const SCL_STIFF = 330, SCL_DAMP = 30;
+
+  const onMove = (e) => {
+    if (el.style.display === 'none') el.style.display = 'block';
+    mx = e.clientX; my = e.clientY;
+  };
+  const onTouch = () => { el.style.display = 'none'; };
+
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest('a, button')) { scaleTarget = 1.3; hbt = HB_MAX; }
+  });
+  document.addEventListener('mouseout', (e) => {
+    if (!e.relatedTarget?.closest('a, button')) { scaleTarget = 1; hbt = 0; }
   });
 
+  document.addEventListener('mousedown', () => { scaleTarget = 0.65; });
+  document.addEventListener('mouseup',   () => { scaleTarget = 1; });
+
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('touchstart', onTouch, { passive: true });
+
+  // Click ripple
   document.addEventListener('click', (e) => {
     const ripple = document.createElement('div');
     ripple.className = 'click-ripple';
     ripple.style.left = `${e.clientX}px`;
-    ripple.style.top = `${e.clientY}px`;
+    ripple.style.top  = `${e.clientY}px`;
     document.body.appendChild(ripple);
     setTimeout(() => ripple.remove(), 1000);
   });
 
-  if (cursor) {
-    document.querySelectorAll('a, button, .project-card, .timeline-item').forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
-    });
-  }
+  const tick = () => {
+    const now = performance.now();
+    const dt = Math.min((now - lastTime) / 1000, 0.033);
+    lastTime = now;
 
-  const animateCursor = () => {
-    cursorX += (mouseX - cursorX) * lerp;
-    cursorY += (mouseY - cursorY) * lerp;
-    if (cursor) {
-      cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+    const ax = (mx - x) * POS_STIFF - vx * POS_DAMP;
+    const ay = (my - y) * POS_STIFF - vy * POS_DAMP;
+    vx += ax * dt; vy += ay * dt;
+    x  += vx * dt; y  += vy * dt;
+
+    const sa = (scaleTarget - scaleCur) * SCL_STIFF - scaleVel * SCL_DAMP;
+    scaleVel += sa * dt;
+    scaleCur += scaleVel * dt;
+
+    // Hover blur spring
+    hbv += ((hbt - hbc) * HB_STIFF - hbv * HB_DAMP) * dt;
+    hbc += hbv * dt;
+    if (hbc < 0) hbc = 0;
+
+    el.style.transform = `translate(${x}px,${y}px) scale(${scaleCur})`;
+
+    // Motion blur (velocity-based, directional) + hover blur (uniform) combined
+    const speed = Math.sqrt(vx * vx + vy * vy);
+    const blurEl = el.querySelector('#cur-blur');
+    if (blurEl) {
+      const motionAmt = speed > 20 ? Math.min(speed * 0.005, 2.8) : 0;
+      const angle = motionAmt > 0 ? Math.atan2(vy, vx) : 0;
+      const bx = Math.abs(Math.cos(angle)) * motionAmt + hbc;
+      const by = Math.abs(Math.sin(angle)) * motionAmt + hbc;
+      if (bx > 0.05 || by > 0.05) {
+        blurEl.setAttribute('stdDeviation', `${bx.toFixed(2)} ${by.toFixed(2)}`);
+      } else {
+        blurEl.setAttribute('stdDeviation', '0 0');
+      }
     }
-    requestAnimationFrame(animateCursor);
+
+    raf = requestAnimationFrame(tick);
   };
-  animateCursor();
-}
+  raf = requestAnimationFrame(tick);
+})();
 
 // --- Card Tilt ---
 if (!config.isTouch && !config.liteMode && !config.reduceMotion) {

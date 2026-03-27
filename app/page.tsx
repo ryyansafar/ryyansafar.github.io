@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import PillNav from '@/components/PillNav';
 import BubbleMenu from '@/components/BubbleMenu';
+import LikeButton from '@/components/LikeButton';
 
 function usePageInit() {
   useEffect(() => {
@@ -41,7 +42,6 @@ export default function Page() {
   return (
     <>
   <div id="noise-overlay"></div>
-  <div id="custom-cursor"></div>
 
   <PillNav
     logo={<span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '1rem', color: '#f0f0f0', letterSpacing: '-0.03em' }}>rs<span className="logo-underscore">.</span></span>}
@@ -229,11 +229,9 @@ export default function Page() {
               <div className="timeline-content">
                 <h3>Technical Coordinator & Social Media Manager</h3>
                 <div className="company">TeamApt Academy LLP</div>
-                <p>Designed, built, and maintain <a href="https://teamapt.in" target="_blank" rel="noopener noreferrer">teamapt.in</a> using Flask, HTML, CSS, and JavaScript. Built and deployed <a href="https://teachers.teamapt.in" target="_blank" rel="noopener noreferrer">teachers.teamapt.in</a> as a student management portal for attendance and academic records.</p>
+                <p>Designed, built, and maintain <a href="https://teamapt.in" target="_blank" rel="noopener noreferrer">teamapt.in</a> and <a href="https://teachers.teamapt.in" target="_blank" rel="noopener noreferrer">teachers.teamapt.in</a> — a student management portal for attendance and academic records. Built using HTML, CSS, and JavaScript.</p>
                 <p>Implemented monthly report downloads and automatic status updates upon completion of fixed class targets. Manages official social media channels, content scheduling, and engagement analytics.</p>
                 <div className="tags">
-                  <span>Flask</span>
-                  <span>MySQL</span>
                   <span>Web Dev</span>
                   <span>Social Media</span>
                 </div>
@@ -636,10 +634,24 @@ export default function Page() {
                 </ul>
               </div>
             </article>
-          </div>
 
-          <div className="mend-card-wrapper" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', marginTop: '2rem' }}>
-            <article className="project-card reveal-up" style={{ gridColumn: '2' }}>
+            <article className="project-card reveal-up">
+              <div className="project-content">
+                <div className="project-top">
+                  <h3>literature-clock-pro</h3>
+                  <a href="https://litclock.ryyansafar.site" target="_blank" rel="noopener noreferrer" className="project-link">↗</a>
+                </div>
+                <p>Browser simulation of a 191×278 electromagnetic flip-disc display — 53,098 discs showing a literary quote for every minute of the day. Includes ESP32 firmware for the physical installation.</p>
+                <ul className="project-tech">
+                  <li>Vanilla JS</li>
+                  <li>HTML/CSS</li>
+                  <li>ESP32</li>
+                  <li>Flip Disc</li>
+                </ul>
+              </div>
+            </article>
+
+            <article className="project-card reveal-up">
               <div className="project-content">
                 <div className="project-top">
                   <h3>mend-your-heart-game</h3>
@@ -939,6 +951,8 @@ export default function Page() {
               </svg>
               <span>Buy me a coffee</span>
             </a>
+
+            <LikeButton />
 
 
             </div>

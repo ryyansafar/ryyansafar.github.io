@@ -10,14 +10,14 @@ Personal portfolio for Ryyan Safar — Electronics & Communication Engineer, bui
 
 | Layer | Technology |
 |-------|------------|
-| Framework | Next.js 16.2.1 (App Router, static export) |
+| Framework | Next.js 16.2.1 (App Router, Serverless) |
 | Language | TypeScript |
 | Styling | Tailwind CSS v4 + custom CSS |
 | Animations | GSAP 3 + ScrollTrigger, Framer Motion 12 |
 | Client-side | Vanilla JS (cursor, physics canvas, Konami code, snake game) |
 | Fonts | Space Grotesk, JetBrains Mono, Clash Display, Bebas Neue, Barrio |
 | Analytics | Google Analytics (GA4) |
-| Deployment | GitHub Actions → GitHub Pages |
+| Deployment | Vercel (Git Integration) |
 
 ---
 
@@ -65,9 +65,11 @@ Personal portfolio for Ryyan Safar — Electronics & Communication Engineer, bui
 │
 ├── global.d.ts                # TypeScript: PNG module + requestIdleCallback
 ├── next.config.ts             # Static export, unoptimized images, dev origins
-├── .github/
-│   └── workflows/
-│       └── deploy.yml         # CI/CD: build → deploy to gh-pages
+├── lib/
+│   └── firebase-admin.ts      # Firebase Server-side initialization
+├── app/
+│   └── actions/
+│       └── like.ts              # Like counter Server Action
 └── .gitignore
 ```
 
@@ -164,15 +166,11 @@ Every page is exported as a plain HTML file. No Node.js server is required at ru
 
 ---
 
-## Deployment
+1. Connect GitHub repository to Vercel.
+2. Add Firebase Environment Variables (see `.env.local`).
+3. Vercel automatically builds and deploys on every push.
 
-Pushes to `master` automatically trigger `.github/workflows/deploy.yml`:
-
-1. `npm ci` — clean dependency install
-2. `npm run build` — static export to `out/`
-3. `peaceiris/actions-gh-pages@v4` — deploys `out/` to `gh-pages` branch
-
-GitHub Pages serves from `gh-pages`. The custom domain `ryyansafar.site` is preserved by `public/CNAME` (copied into `out/` during build).
+> **Note:** Static export (`output: "export"`) has been removed to support Server Actions for the Like button.
 
 > **next.config.ts flags:**
 > - `output: "export"` — enables static export mode

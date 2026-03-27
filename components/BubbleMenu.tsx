@@ -250,7 +250,11 @@ export default function BubbleMenu({
                   onClick={(e) => {
                     e.preventDefault();
                     handleLinkClick();
-                    navigateTo(item.href);
+                    if (item.href.startsWith('#') && item.href.length > 1) {
+                      document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                      navigateTo(item.href);
+                    }
                   }}
                   style={{
                     background: menuBg,

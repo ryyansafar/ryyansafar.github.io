@@ -1,0 +1,220 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 650" width="1200" height="650">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Space+Grotesk:wght@300;400;700&amp;family=JetBrains+Mono:wght@600&amp;display=swap');
+    </style>
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFDD00"/>
+      <stop offset="100%" stop-color="#FFB800"/>
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF"/>
+      <stop offset="100%" stop-color="#0080FF"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070707"/>
+      <stop offset="100%" stop-color="#0d0d0d"/>
+    </linearGradient>
+    <filter id="glow-amber" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-subtle" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="clip"><rect width="1200" height="650"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#clip)">
+
+    <!-- Background -->
+    <rect width="1200" height="650" fill="url(#bgGrad)"/>
+
+    <!-- Subtle noise texture via feTurbulence -->
+    <filter id="noise" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feBlend in="SourceGraphic" mode="overlay" result="blend"/>
+      <feComposite in="blend" in2="SourceGraphic" operator="in"/>
+    </filter>
+    <rect width="1200" height="650" fill="white" opacity="0.025" filter="url(#noise)"/>
+
+    <!-- Grid lines -->
+    <g stroke="rgba(255,255,255,0.04)" stroke-width="1">
+      <line x1="0" y1="162" x2="1200" y2="162"/>
+      <line x1="0" y1="325" x2="1200" y2="325"/>
+      <line x1="0" y1="488" x2="1200" y2="488"/>
+      <line x1="300" y1="0" x2="300" y2="650"/>
+      <line x1="600" y1="0" x2="600" y2="650"/>
+      <line x1="900" y1="0" x2="900" y2="650"/>
+    </g>
+
+    <!-- Left accent bar -->
+    <rect x="72" y="100" width="3" height="450" fill="rgba(255,255,255,0.08)" rx="1.5"/>
+
+    <!-- ═══ COFFEE CUP ILLUSTRATION ═══ -->
+    <g transform="translate(100, 130)">
+
+      <!-- Steam wisps -->
+      <g fill="none" stroke-linecap="round" opacity="0.6">
+        <path d="M 55 0 C 50 -18 62 -26 57 -46" stroke="#FFDD00" stroke-width="2.5"/>
+        <path d="M 75 0 C 70 -22 82 -30 77 -52" stroke="#FFDD00" stroke-width="2.5" opacity="0.8"/>
+        <path d="M 95 0 C 90 -18 102 -26 97 -46" stroke="#FFDD00" stroke-width="2.5"/>
+      </g>
+
+      <!-- Cup outer body -->
+      <path d="M 18 10 C 18 8 22 6 30 6 L 120 6 C 128 6 132 8 132 10 L 148 185 C 148 190 144 195 136 195 L 14 195 C 6 195 2 190 2 185 Z"
+        fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.55)" stroke-width="2.5" stroke-linejoin="round"/>
+
+      <!-- Coffee liquid surface -->
+      <ellipse cx="75" cy="16" rx="54" ry="11" fill="url(#amberGrad)" opacity="0.95"/>
+      <ellipse cx="75" cy="14" rx="40" ry="6" fill="rgba(255,255,255,0.15)"/>
+
+      <!-- Cup inner shading -->
+      <path d="M 30 30 L 148 30 L 148 185 C 148 190 144 195 136 195 L 14 195 C 6 195 2 190 2 185 L 18 30 Z"
+        fill="rgba(255,221,0,0.04)"/>
+
+      <!-- Handle -->
+      <path d="M 148 60 C 196 60 196 150 148 150"
+        fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 148 78 C 178 78 178 132 148 132"
+        fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="6" stroke-linecap="round"/>
+
+      <!-- Saucer -->
+      <ellipse cx="75" cy="202" rx="90" ry="14" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+      <ellipse cx="75" cy="200" rx="64" ry="9" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+
+      <!-- Label band on cup -->
+      <path d="M 10 90 L 140 90 L 143 140 L 7 140 Z" fill="rgba(255,221,0,0.06)"/>
+      <line x1="10" y1="90" x2="140" y2="90" stroke="rgba(255,221,0,0.2)" stroke-width="1"/>
+      <line x1="7" y1="140" x2="143" y2="140" stroke="rgba(255,221,0,0.2)" stroke-width="1"/>
+
+      <!-- ☕ emoji-style inside cup -->
+      <text x="75" y="125" text-anchor="middle"
+        font-family="monospace" font-size="22" fill="rgba(255,221,0,0.35)">
+        &gt;_
+      </text>
+
+      <!-- Arrow transform symbol below cup -->
+      <g transform="translate(75, 230)">
+        <!-- Left bracket -->
+        <path d="M -22 -10 L -30 0 L -22 10" fill="none" stroke="rgba(255,221,0,0.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Right bracket -->
+        <path d="M 22 -10 L 30 0 L 22 10" fill="none" stroke="rgba(255,221,0,0.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Center arrow -->
+        <line x1="-12" y1="0" x2="12" y2="0" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+        <path d="M 8 -4 L 14 0 L 8 4" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+
+      <!-- "TRANSFORMS" label -->
+      <text x="75" y="268" text-anchor="middle"
+        font-family="'Space Grotesk', Arial, sans-serif" font-size="9.5" font-weight="700"
+        fill="rgba(255,255,255,0.2)" letter-spacing="4">
+        TRANSFORMS TO
+      </text>
+
+    </g>
+    <!-- END COFFEE CUP -->
+
+    <!-- Vertical divider -->
+    <line x1="330" y1="80" x2="330" y2="570" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+    <!-- ═══ TYPOGRAPHY ═══ -->
+    <g transform="translate(380, 0)">
+
+      <!-- Top label -->
+      <text x="0" y="130"
+        font-family="'Space Grotesk', Arial, sans-serif"
+        font-size="11" font-weight="700" letter-spacing="5"
+        fill="rgba(255,255,255,0.2)">
+        — A PROGRAMMER'S TRUTH
+      </text>
+
+      <!-- "I TURN" -->
+      <text x="0" y="218"
+        font-family="'Space Grotesk', Arial, sans-serif"
+        font-size="52" font-weight="300"
+        fill="rgba(255,255,255,0.65)"
+        letter-spacing="10">
+        I TURN
+      </text>
+
+      <!-- "CAFFEINE" — hero word -->
+      <text x="-4" y="348"
+        font-family="'Bebas Neue', Impact, 'Arial Narrow', sans-serif"
+        font-size="162" font-weight="400"
+        fill="url(#amberGrad)"
+        letter-spacing="2"
+        filter="url(#glow-amber)">
+        CAFFEINE
+      </text>
+
+      <!-- "into" -->
+      <text x="4" y="415"
+        font-family="'Space Grotesk', Arial, sans-serif"
+        font-size="36" font-weight="300"
+        fill="rgba(255,255,255,0.3)"
+        letter-spacing="18">
+        INTO
+      </text>
+
+      <!-- "COMMITS" in monospace with amber brackets -->
+      <text x="0" y="520"
+        font-family="'JetBrains Mono', 'Courier New', monospace"
+        font-size="100" font-weight="600"
+        fill="white"
+        letter-spacing="1">
+        <tspan fill="url(#amberGrad)">{</tspan>
+        <tspan dx="-4">COMMITS</tspan>
+        <tspan fill="url(#amberGrad)" dx="-4">}</tspan>
+      </text>
+
+    </g>
+
+    <!-- ═══ SECONDARY LINE ═══ -->
+    <g transform="translate(380, 0)">
+
+      <!-- Thin rule -->
+      <line x1="0" y1="550" x2="780" y2="550" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+      <!-- "and SHORT-CIRCUITS into SOLUTIONS" -->
+      <text x="0" y="580"
+        font-family="'Space Grotesk', Arial, sans-serif"
+        font-size="16" font-weight="400"
+        fill="rgba(255,255,255,0.22)"
+        letter-spacing="2">
+        and
+        <tspan fill="rgba(255,126,51,0.7)" font-weight="700"> SHORT-CIRCUITS </tspan>
+        into
+        <tspan fill="rgba(167,139,250,0.7)" font-weight="700"> SOLUTIONS</tspan>
+      </text>
+
+      <!-- Site name -->
+      <text x="780" y="580" text-anchor="end"
+        font-family="'Space Grotesk', Arial, sans-serif"
+        font-size="11" font-weight="700"
+        fill="rgba(255,255,255,0.12)"
+        letter-spacing="3">
+        RYYANSAFAR.SITE
+      </text>
+
+    </g>
+
+    <!-- Corner accent dots -->
+    <circle cx="50" cy="50" r="2.5" fill="rgba(255,221,0,0.4)"/>
+    <circle cx="1150" cy="50" r="2.5" fill="rgba(255,221,0,0.4)"/>
+    <circle cx="50" cy="600" r="2.5" fill="rgba(255,221,0,0.4)"/>
+    <circle cx="1150" cy="600" r="2.5" fill="rgba(255,221,0,0.4)"/>
+
+    <!-- Corner bracket - top left -->
+    <path d="M 46 34 L 34 34 L 34 66" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Corner bracket - top right -->
+    <path d="M 1154 34 L 1166 34 L 1166 66" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Corner bracket - bottom left -->
+    <path d="M 46 616 L 34 616 L 34 584" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Corner bracket - bottom right -->
+    <path d="M 1154 616 L 1166 616 L 1166 584" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  </g>
+</svg>

@@ -14,6 +14,7 @@ interface NavItem {
 interface PillNavProps {
   logo?: ReactNode | string;
   logoAlt?: string;
+  logoHref?: string;
   items: NavItem[];
   activeHref?: string;
   className?: string;
@@ -29,6 +30,7 @@ interface PillNavProps {
 const PillNav = ({
   logo,
   logoAlt = 'Logo',
+  logoHref,
   items,
   activeHref,
   className = '',
@@ -288,27 +290,28 @@ const PillNav = ({
   return (
     <div className={`pill-nav-container ${className}`}>
       <nav className="pill-nav" aria-label="Primary" style={cssVars}>
-        {isRouterLink(items?.[0]?.href) ? (
+        {logoHref && isRouterLink(logoHref) ? (
           <Link
             className="pill-logo"
-            href={items[0].href}
+            href={logoHref}
             aria-label="Home"
             onMouseEnter={handleLogoEnter}
             role="menuitem"
-            ref={(el) => {
-              logoRef.current = el as HTMLAnchorElement | null;
-            }}
+            ref={(el) => { logoRef.current = el as HTMLAnchorElement | null; }}
+            onClick={(e) => { e.preventDefault(); navigateTo(logoHref); }}
           >
             {renderLogo()}
           </Link>
         ) : (
           <a
             className="pill-logo"
-            href={items?.[0]?.href || '#'}
+            href={logoHref ?? items?.[0]?.href ?? '#'}
             aria-label="Home"
             onMouseEnter={handleLogoEnter}
-            ref={(el) => {
-              logoRef.current = el as HTMLAnchorElement | null;
+            ref={(el) => { logoRef.current = el as HTMLAnchorElement | null; }}
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           >
             {renderLogo()}
@@ -363,6 +366,11 @@ const PillNav = ({
                       if (typeof item.label === 'string' && item.label === 'Mini Game' && typeof window !== 'undefined' && (window as any).openGameModal) {
                         e.preventDefault();
                         (window as any).openGameModal();
+                        return;
+                      }
+                      if (item.href.startsWith('#') && item.href.length > 1) {
+                        e.preventDefault();
+                        document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' });
                       }
                     }}
                   >
@@ -424,6 +432,11 @@ const PillNav = ({
                     if (typeof item.label === 'string' && item.label === 'Mini Game' && typeof window !== 'undefined' && (window as any).openGameModal) {
                       e.preventDefault();
                       (window as any).openGameModal();
+                      return;
+                    }
+                    if (item.href.startsWith('#') && item.href.length > 1) {
+                      e.preventDefault();
+                      document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
                 >
