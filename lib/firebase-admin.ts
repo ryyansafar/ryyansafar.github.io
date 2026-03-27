@@ -8,29 +8,26 @@ let keyStatus: any = null;
 export function getLastError() { return lastError; }
 export function getKeyStatus() { return keyStatus; }
 
-function formatPEM(key: string): string {
-  // 1. Aggressive unquoting
-  let cleaned = key.trim().replace(/^["']|["']$/g, '');
-  
-  // 2. Multi-level unescaping (Vercel can sometimes double-escape)
-  // Replaces \\n with \n repeatedly until no more remain.
-  while (cleaned.includes('\\n')) {
-    cleaned = cleaned.replace(/\\n/g, '\n');
-  }
-  
-  // 3. Isolate the base64 and re-wrap strictly
+/**
+ * Normalizes a PEM key by stripping everything and rebuilding with strict wrapping.
+ */
+function cleanPEM(key: string, wrap: boolean): string {
   const header = '-----BEGIN PRIVATE KEY-----';
   const footer = '-----END PRIVATE KEY-----';
   
-  let body = cleaned
-    .replace(header, '')
-    .replace(footer, '')
-    .replace(/\s/g, ''); 
+  let body = key
+    .replace(/-----BEGIN PRIVATE KEY-----/g, '')
+    .replace(/-----END PRIVATE KEY-----/g, '')
+    .replace(/\\n/g, '')
+    .replace(/\s/g, '')
+    .trim();
     
-  // 4. Wrap body strictly at 64 chars
-  const wrapped = body.match(/.{1,64}/g)?.join('\n') || body;
+  if (wrap) {
+    const lines = body.match(/.{1,64}/g) || [body];
+    body = lines.join('\n');
+  }
   
-  return `${header}\n${wrapped}\n${footer}\n`;
+  return `${header}\n${body}\n${footer}\n`;
 }
 
 function initializeFirebase() {
@@ -42,47 +39,47 @@ function initializeFirebase() {
   const privateKey = process.env.FIREBASE_PRIVATE_KEY;
 
   if (projectId && clientEmail && privateKey) {
-    try {
-      const formattedKey = formatPEM(privateKey);
-      
-      keyStatus = {
-        projectId,
-        clientEmail,
-        rawLength: privateKey.length,
-        finalLength: formattedKey.length,
-        prefix: formattedKey.substring(0, 30),
-      };
+    // Attempt 1: Strict Wrapping (Standard)
+    const variants = [
+      cleanPEM(privateKey, true),   // Wrapped at 64
+      cleanPEM(privateKey, false),  // Single line
+      privateKey.replace(/\\n/g, '\n'), // Just unescape
+    ];
 
-      // Use snake_case to perfectly match the Service Account JSON structure
-      return admin.initializeApp({
-        credential: admin.credential.cert({
-          project_id: projectId,
-          client_email: clientEmail,
-          private_key: formattedKey,
-        } as any),
-      });
-    } catch (error: any) {
-      lastError = `PEM Init Error: ${error.message}`;
-      console.error('[Firebase]', lastError);
+    for (let i = 0; i < variants.length; i++) {
+        try {
+            console.log(`[Firebase] Attempting Init variant ${i + 1}`);
+            const app = admin.initializeApp({
+                credential: admin.credential.cert({
+                    project_id: projectId,
+                    client_email: clientEmail,
+                    private_key: variants[i],
+                } as any),
+            }, `app-${i}-${Date.now()}`); // Unique name to avoid collisions
+            
+            keyStatus = { 
+                variant: i + 1, 
+                keyLength: variants[i].length,
+                success: true 
+            };
+            return app;
+        } catch (error: any) {
+            lastError = `Variant ${i + 1} Error: ${error.message}`;
+        }
     }
   }
 
   // Local fallback
   try {
-    const devFiles = fs.readdirSync(process.cwd());
-    const devFile = devFiles.find(f => f.startsWith('rybo-components-firebase-adminsdk') && f.endsWith('.json'));
+    const devFile = fs.readdirSync(process.cwd()).find(f => f.startsWith('rybo-components-firebase-adminsdk') && f.endsWith('.json'));
     if (devFile) {
-      const saPath = path.join(process.cwd(), devFile);
-      const sa = JSON.parse(fs.readFileSync(saPath, 'utf8'));
-      return admin.initializeApp({
-        credential: admin.credential.cert(sa),
-      });
+        return admin.initializeApp({
+            credential: admin.credential.cert(JSON.parse(fs.readFileSync(path.join(process.cwd(), devFile), 'utf8'))),
+        });
     }
-  } catch (e: any) {
-    console.warn('[Firebase] JSON fallback skipped:', e.message);
-  }
+  } catch (e: any) {}
 
-  if (!lastError) lastError = 'No credentials found in ENV or JSON.';
+  if (!lastError) lastError = 'No credentials found.';
   return null;
 }
 
