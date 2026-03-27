@@ -19,6 +19,7 @@
 
 # environment & secrets
 .env*
+firebase-service-account.json
 
 # misc
 .DS_Store

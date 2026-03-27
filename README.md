@@ -134,6 +134,43 @@ Personal portfolio for Ryyan Safar — Electronics & Communication Engineer, bui
 
 ---
 
+## 📖 Detailed Page Documentation
+
+### 1. Main Portfolio (`app/page.tsx`)
+**Purpose:** The central immersive experience.
+- **Architecture:** A single-page application (SPA) rig that handles cinematic scroll-based storytelling.
+- **Animations:** Uses GSAP `ScrollTrigger` mixed with Custom CSS `sticky` positioning to create depth.
+- **Key Sections:** 
+    - *Hero:* Kinetic typography and layered backgrounds.
+    - *Work:* Horizontal scroll gallery with project previews.
+    - *Contact:* Magnetic social links and support integrations.
+
+### 2. Components Gallery (`app/design/components/page.tsx`)
+**Purpose:** Technical showcase for UI primitives.
+- **Architecture:** Uses a `ComponentsClient` to handle state for multiple interactive cards.
+- **System:** Every card is a `ComponentCard` containing a demo field, a live code block, and parameter sliders.
+- **Like Integration:** Persistent community engagement tracked per-primitive via the `LikeButton` (Firebase).
+
+### 3. Design Archive (`app/archive/gallery/page.tsx`)
+**Purpose:** Visual history of designs.
+- **Architecture:** Responsive CSS Grid with lazy-loading performance optimization.
+- **Interaction:** One-click live site redirects or high-res preview iframes.
+
+---
+
+## 🏗 Developer Docs & Firebase Setup
+
+For an even deeper dive into the system and **persistence/database setup**, see [DEVELOPER.md](./DEVELOPER.md).
+
+### Quick Fix: Firebase Persistence
+If your like button is not syncing:
+1. Copy the contents of your Service Account JSON.
+2. Create a file named `firebase-service-account.json` in the project root.
+3. Paste the contents and Save. (The `.gitignore` will protect it).
+4. Restart your server.
+
+---
+
 ## Development
 
 ```bash

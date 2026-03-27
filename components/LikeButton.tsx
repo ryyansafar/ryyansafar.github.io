@@ -70,17 +70,17 @@ export default function LikeButton({ componentId }: { componentId: string }) {
         alignItems: 'center',
         gap: '0.5rem',
         padding: '0.4rem 0.85rem',
-        background: hasLiked ? 'rgba(255, 62, 0, 0.08)' : 'rgba(27, 28, 25, 0.06)',
-        border: `1px solid ${hasLiked ? 'rgba(255, 62, 0, 0.3)' : 'rgba(27, 28, 25, 0.18)'}`,
+        background: hasLiked ? 'rgba(255, 62, 0, 0.12)' : 'rgba(27, 28, 25, 0.08)',
+        border: `1px solid ${hasLiked ? 'rgba(255, 62, 0, 0.4)' : 'rgba(27, 28, 25, 0.25)'}`,
         borderRadius: '6px',
-        color: hasLiked ? '#FF3E00' : 'rgba(27, 28, 25, 0.75)', // High contrast on white
+        color: hasLiked ? '#FF3E00' : 'rgba(27, 28, 25, 0.85)', // Maximum contrast on white
         fontFamily: 'var(--font-mono)',
         fontSize: '0.7rem',
-        fontWeight: 700,
+        fontWeight: 800, // Extra bold for visibility
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
         cursor: 'none',
         position: 'relative',
-        boxShadow: hasLiked ? '0 0 12px rgba(255, 62, 0, 0.15)' : 'none',
+        boxShadow: hasLiked ? '0 0 16px rgba(255, 62, 0, 0.2)' : '0 2px 4px rgba(0,0,0,0.02)',
       }}
     >
       <motion.span

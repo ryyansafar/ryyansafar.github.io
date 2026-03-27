@@ -1,10 +1,28 @@
 import admin from 'firebase-admin';
+import fs from 'fs';
+import path from 'path';
 
 function initializeFirebase() {
   if (admin.apps.length > 0) {
     return admin.app();
   }
 
+  // 1. Try loading from service account JSON file (Local Desktop Dev)
+  const serviceAccountPath = path.join(process.cwd(), 'firebase-service-account.json');
+  
+  if (fs.existsSync(serviceAccountPath)) {
+    try {
+      console.log('[Firebase] Initializing using service account JSON file');
+      const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
+      return admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+    } catch (error) {
+      console.error('[Firebase] Failed to load JSON file, falling back to ENV:', error);
+    }
+  }
+
+  // 2. Fallback to Environment Variables (Vercel Prod)
   const projectId = process.env.FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
   let privateKey = process.env.FIREBASE_PRIVATE_KEY;
@@ -15,18 +33,12 @@ function initializeFirebase() {
   }
 
   try {
-    // 1. Unquote if necessary
     if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
       privateKey = privateKey.slice(1, -1);
     }
-    if (privateKey.startsWith("'") && privateKey.endsWith("'")) {
-      privateKey = privateKey.slice(1, -1);
-    }
-
-    // 2. Normalize newlines: handle both escaped \n and literal newlines
     const formattedKey = privateKey.replace(/\\n/g, '\n');
 
-    console.log(`[Firebase] Booting for: ${projectId}`);
+    console.log(`[Firebase] Initializing using ENV for: ${projectId}`);
     
     return admin.initializeApp({
       credential: admin.credential.cert({
@@ -41,16 +53,7 @@ function initializeFirebase() {
   }
 }
 
-// Global instance (may be null if init fails)
 const app = initializeFirebase();
-
-/**
- * Safe database getter. Use this instead of direct export in case of init failure.
- */
-export const getDb = () => {
-  if (!app) return null;
-  return admin.firestore();
-};
-
+export const getDb = () => (app ? admin.firestore() : null);
 export const db = getDb();
 export const isFirebaseReady = () => !!app;
