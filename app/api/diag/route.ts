@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDb } from '@/lib/firebase-admin';
+import { getDb, getLastError } from '@/lib/firebase-admin';
 
 export async function GET() {
   const diagnostics: any = {
@@ -12,7 +12,7 @@ export async function GET() {
     },
     firebase: {
       initialized: false,
-      error: null,
+      error: getLastError(),
     }
   };
 
@@ -25,10 +25,10 @@ export async function GET() {
       diagnostics.firebase.readSuccess = true;
       diagnostics.firebase.docCount = test.size;
     } else {
-      diagnostics.firebase.error = 'getDb() returned null';
+      diagnostics.firebase.error = getLastError() || 'getDb() returned null without error';
     }
   } catch (err: any) {
-    diagnostics.firebase.error = err.message || 'Unknown initialization error';
+    diagnostics.firebase.error = err.message || 'Unknown runtime error';
   }
 
   return NextResponse.json(diagnostics);

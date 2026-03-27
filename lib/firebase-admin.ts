@@ -2,11 +2,18 @@ import admin from 'firebase-admin';
 import fs from 'fs';
 import path from 'path';
 
+let lastError: string | null = null;
+
+export function getLastError() {
+  return lastError;
+}
+
 /**
  * Enhanced Firebase Initialization for Vercel + Local Dev.
  * Prioritizes Environment Variables for production safety.
  */
 function initializeFirebase() {
+  lastError = null;
   if (admin.apps.length > 0) return admin.app();
 
   const projectId = process.env.FIREBASE_PROJECT_ID;
@@ -17,12 +24,15 @@ function initializeFirebase() {
   if (projectId && clientEmail && privateKey) {
     try {
       // Clean up private key (Vercel can mangle newlines or add extra quotes)
-      if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
-        privateKey = privateKey.slice(1, -1);
+      let cleanedKey = privateKey;
+      if (cleanedKey.startsWith('"') && cleanedKey.endsWith('"')) {
+        cleanedKey = cleanedKey.slice(1, -1);
       }
-      const formattedKey = privateKey.replace(/\\n/g, '\n');
+      
+      // Crucial: Handle both literal newlines and escaped \n
+      const formattedKey = cleanedKey.replace(/\\n/g, '\n');
 
-      console.log(`[Firebase] Init using ENV: ${projectId}`);
+      console.log(`[Firebase] Init attempt for: ${projectId}`);
       return admin.initializeApp({
         credential: admin.credential.cert({
           projectId,
@@ -31,27 +41,36 @@ function initializeFirebase() {
         }),
       });
     } catch (error: any) {
-      console.error('[Firebase] ENV Init Error:', error.message);
+      lastError = `ENV Init Error: ${error.message}`;
+      console.error('[Firebase]', lastError);
+      // Don't return null yet, try JSON fallback just in case
     }
+  } else {
+    const missing = [];
+    if (!projectId) missing.push('PROJECT_ID');
+    if (!clientEmail) missing.push('CLIENT_EMAIL');
+    if (!privateKey) missing.push('PRIVATE_KEY');
+    if (missing.length > 0) lastError = `Missing ENV: ${missing.join(', ')}`;
   }
 
   // Case 2: Service Account JSON (Local Dev fallback)
-  const devFile = fs.readdirSync(process.cwd())
-    .find(f => f.startsWith('rybo-components-firebase-adminsdk') && f.endsWith('.json'));
-    
-  if (devFile) {
-    try {
+  try {
+    const devFile = fs.readdirSync(process.cwd())
+      .find(f => f.startsWith('rybo-components-firebase-adminsdk') && f.endsWith('.json'));
+      
+    if (devFile) {
       const saPath = path.join(process.cwd(), devFile);
       console.log(`[Firebase] Init using local JSON: ${devFile}`);
       return admin.initializeApp({
         credential: admin.credential.cert(JSON.parse(fs.readFileSync(saPath, 'utf8'))),
       });
-    } catch (error: any) {
-      console.error('[Firebase] JSON Init Error:', error.message);
     }
+  } catch (error: any) {
+    // fs.readdirSync might fail on Vercel, which is fine if we have ENV
+    console.warn('[Firebase] JSON check skipped or failed:', error.message);
   }
 
-  console.error('[Firebase] No valid credentials found (ENV or JSON).');
+  if (!lastError) lastError = 'No valid credentials found (ENV or JSON).';
   return null;
 }
 
