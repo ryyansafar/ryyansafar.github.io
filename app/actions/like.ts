@@ -28,25 +28,29 @@ export async function getLikes(componentId: string) {
 }
 
 /**
- * Atomically increments the like count for a component in Firestore.
- * Uses a transaction to ensure data consistency.
- * @param {string} componentId - The ID of the component to like.
+ * Toggles a like for a component in Firestore (increment or decrement).
+ * Uses a transaction to ensure data consistency and prevents the count from dropping below 0.
+ * @param {string} componentId - The ID of the component to toggle.
+ * @param {boolean} increment - True to add a like, false to remove one.
  * @returns {Promise<number>} - The updated total like count.
  */
-export async function incrementLike(componentId: string) {
+export async function toggleLike(componentId: string, increment: boolean) {
   if (!db) {
     throw new Error('Database not initialized');
   }
   try {
-    console.log(`[Firebase] Incrementing like for: ${componentId}`);
+    const delta = increment ? 1 : -1;
+    console.log(`[Firebase] Toggling like for: ${componentId} (Delta: ${delta})`);
     const docRef = db.collection(LIKES_COLLECTION).doc(componentId);
     
     await db.runTransaction(async (transaction) => {
       const doc = await transaction.get(docRef);
       if (!doc.exists) {
-        transaction.set(docRef, { count: 1 });
+        // Only set to 1 if incrementing. Decrementing a non-existent doc should do nothing or stay 0.
+        transaction.set(docRef, { count: increment ? 1 : 0 });
       } else {
-        const newCount = (doc.data()?.count || 0) + 1;
+        const currentCount = doc.data()?.count || 0;
+        const newCount = Math.max(0, currentCount + delta);
         transaction.update(docRef, { count: newCount });
       }
     });
@@ -56,7 +60,7 @@ export async function incrementLike(componentId: string) {
     console.log(`[Firebase] Success! New count for ${componentId}: ${finalCount}`);
     return finalCount;
   } catch (error) {
-    console.error(`[Firebase Error] incrementLike for ${componentId}:`, error);
+    console.error(`[Firebase Error] toggleLike for ${componentId}:`, error);
     throw new Error('Failed to update likes');
   }
 }

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getLikes, incrementLike } from '@/app/actions/like';
+import { getLikes, toggleLike } from '@/app/actions/like';
 
 /**
  * LikeButton Component
@@ -22,34 +22,36 @@ export default function LikeButton({ componentId }: { componentId: string }) {
   const [hasLiked, setHasLiked] = useState(false);
 
   useEffect(() => {
-    const fetchLikes = async () => {
-      const count = await getLikes(componentId);
-      setLikes(count);
-    };
-    fetchLikes();
+    getLikes(componentId).then(setLikes);
+    const liked = localStorage.getItem(`liked-${componentId}`);
+    if (liked) setHasLiked(true);
   }, [componentId]);
 
-  const handleLike = async () => {
-    if (isLiking) return;
+  const handleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isLiking || likes === null) return;
     
-    setIsLiking(true);
-    setHasLiked(true);
+    const newHasLiked = !hasLiked;
+    const oldLikes = likes;
     
     // Optimistic UI
-    const prevLikes = likes || 0;
-    setLikes(prevLikes + 1);
+    setHasLiked(newHasLiked);
+    setLikes(prev => (prev !== null ? Math.max(0, prev + (newHasLiked ? 1 : -1)) : prev));
+    setIsLiking(true);
 
     try {
-      const newCount = await incrementLike(componentId);
-      // Only update if the newCount is actually different from our optimistic guess
-      // This prevents the "jumping" if many people are liking at once
-      if (newCount !== (prevLikes + 1)) {
-        setLikes(newCount);
+      const newCount = await toggleLike(componentId, newHasLiked);
+      setLikes(newCount);
+      
+      if (newHasLiked) {
+        localStorage.setItem(`liked-${componentId}`, 'true');
+      } else {
+        localStorage.removeItem(`liked-${componentId}`);
       }
     } catch (error) {
-      console.error('Failed to like:', error);
-      setLikes(prevLikes); // Rollback
-      setHasLiked(false);
+      console.error('Failed to toggle like:', error);
+      setLikes(oldLikes); // Rollback
+      setHasLiked(!newHasLiked);
     } finally {
       setIsLiking(false);
     }
@@ -126,13 +128,13 @@ export default function LikeButton({ componentId }: { componentId: string }) {
               left: '50%',
               top: '0',
               pointerEvents: 'none',
-              color: '#FF5F57',
+              color: hasLiked ? '#FF5F57' : 'rgba(27, 28, 25, 0.4)',
               fontSize: '0.65rem',
               fontWeight: 700,
               zIndex: 10,
             }}
           >
-            +1
+            {hasLiked ? '+1' : '-1'}
           </motion.span>
         )}
       </AnimatePresence>
