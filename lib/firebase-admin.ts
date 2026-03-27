@@ -23,16 +23,32 @@ function initializeFirebase() {
   // Case 1: ENV variables (Vercel Production)
   if (projectId && clientEmail && privateKey) {
     try {
-      // Clean up private key (Vercel can mangle newlines or add extra quotes)
-      let cleanedKey = privateKey;
+      // 1. Aggressive cleaning of the private key
+      let cleanedKey = privateKey.trim();
+      
+      // Remove surrounding quotes if they exist
       if (cleanedKey.startsWith('"') && cleanedKey.endsWith('"')) {
         cleanedKey = cleanedKey.slice(1, -1);
       }
       
-      // Crucial: Handle both literal newlines and escaped \n
-      const formattedKey = cleanedKey.replace(/\\n/g, '\n');
+      // Handle both literal escaped \n and real newlines
+      // Then ensure every single line ends with a real newline char
+      let formattedKey = cleanedKey.replace(/\\n/g, '\n');
+      
+      // Standardize headers and footers (ensure no missing dashes)
+      if (!formattedKey.includes('-----BEGIN PRIVATE KEY-----')) {
+        formattedKey = `-----BEGIN PRIVATE KEY-----\n${formattedKey}`;
+      }
+      if (!formattedKey.includes('-----END PRIVATE KEY-----')) {
+        formattedKey = `${formattedKey}\n-----END PRIVATE KEY-----`;
+      }
+      
+      // Ensure there is a final newline (PEM requirement)
+      if (!formattedKey.endsWith('\n')) {
+        formattedKey += '\n';
+      }
 
-      console.log(`[Firebase] Init attempt for: ${projectId}`);
+      console.log(`[Firebase] Attempting init for: ${projectId}`);
       return admin.initializeApp({
         credential: admin.credential.cert({
           projectId,
