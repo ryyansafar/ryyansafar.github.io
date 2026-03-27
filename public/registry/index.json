@@ -1,12 +1,17 @@
 [
   {
     "name": "cursor-spring",
-    "description": "Magnetic spring-physics cursor with motion blur.",
+    "description": "Spring-physics macOS cursor with velocity motion blur. Zero deps.",
     "files": ["cursor-spring.tsx"]
   },
   {
+    "name": "noise-overlay",
+    "description": "Film-grain canvas overlay with configurable blend mode. Zero deps.",
+    "files": ["noise-overlay.tsx"]
+  },
+  {
     "name": "magnetic-button",
-    "description": "A magnetic interaction primitive using Radix Slot.",
+    "description": "Magnetic button primitive using Radix Slot and Framer Motion.",
     "files": ["magnetic-button.tsx"]
   }
 ]

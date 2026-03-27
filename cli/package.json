@@ -1,7 +1,7 @@
 {
   "name": "ryyan-ui",
-  "version": "0.1.0",
-  "description": "CLI to add technical primitives from Ryyan Safar's portfolio.",
+  "version": "0.2.0",
+  "description": "CLI to add UI primitives from ryyansafar.site — cursor-spring, noise-overlay, and more.",
   "main": "bin/index.js",
   "bin": {
     "ryyan-ui": "bin/index.js"
@@ -14,7 +14,10 @@
     "components",
     "cli",
     "nextjs",
-    "framer-motion"
+    "cursor",
+    "noise",
+    "film-grain",
+    "animation"
   ],
   "author": "Ryyan Safar",
   "license": "MIT",
