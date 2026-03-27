@@ -3,5 +3,10 @@
     "name": "cursor-spring",
     "description": "Magnetic spring-physics cursor with motion blur.",
     "files": ["cursor-spring.tsx"]
+  },
+  {
+    "name": "magnetic-button",
+    "description": "A magnetic interaction primitive using Radix Slot.",
+    "files": ["magnetic-button.tsx"]
   }
 ]
