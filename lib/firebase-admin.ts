@@ -66,7 +66,30 @@ function initializeFirebase() {
   }
 }
 
-const app = initializeFirebase();
-export const getDb = () => (app ? admin.firestore() : null);
-export const db = getDb();
-export const isFirebaseReady = () => !!app;
+let dbInstance: admin.firestore.Firestore | null = null;
+
+export function getDb() {
+  if (dbInstance) return dbInstance;
+
+  if (admin.apps.length > 0) {
+    dbInstance = admin.app().firestore();
+    return dbInstance;
+  }
+
+  const app = initializeFirebase();
+  if (app) {
+    dbInstance = app.firestore();
+    return dbInstance;
+  }
+  
+  return null;
+}
+
+export const db = getDb(); // Keep for compatibility, but functions should use getDb()
+export const isFirebaseReady = () => {
+    try {
+        return !!getDb();
+    } catch {
+        return false;
+    }
+};

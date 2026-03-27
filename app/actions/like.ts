@@ -1,6 +1,6 @@
 'use server';
 
-import { db } from '@/lib/firebase-admin';
+import { getDb } from '@/lib/firebase-admin';
 import { revalidatePath } from 'next/cache';
 
 const LIKES_COLLECTION = 'component_likes';
@@ -11,6 +11,7 @@ const LIKES_COLLECTION = 'component_likes';
  * @returns {Promise<number>} - The current number of likes.
  */
 export async function getLikes(componentId: string) {
+  const db = getDb();
   if (!db) {
     console.error('[Firebase] getLikes: Database not initialized. Check your Vercel Environment Variables: FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY.');
     return 0;
@@ -36,6 +37,7 @@ export async function getLikes(componentId: string) {
  * @returns {Promise<number>} - The updated total like count.
  */
 export async function toggleLike(componentId: string, increment: boolean) {
+  const db = getDb();
   if (!db) {
     const projectId = process.env.FIREBASE_PROJECT_ID;
     console.error('[Firebase] toggleLike: Database not initialized.');
