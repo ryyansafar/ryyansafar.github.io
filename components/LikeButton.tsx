@@ -4,18 +4,18 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getLikes, incrementLike } from '@/app/actions/like';
 
-export default function LikeButton() {
+export default function LikeButton({ componentId }: { componentId: string }) {
   const [likes, setLikes] = useState<number | null>(null);
   const [isLiking, setIsLiking] = useState(false);
   const [hasLiked, setHasLiked] = useState(false);
 
   useEffect(() => {
     const fetchLikes = async () => {
-      const count = await getLikes();
+      const count = await getLikes(componentId);
       setLikes(count);
     };
     fetchLikes();
-  }, []);
+  }, [componentId]);
 
   const handleLike = async () => {
     if (isLiking) return;
@@ -28,7 +28,7 @@ export default function LikeButton() {
     setLikes(prevLikes + 1);
 
     try {
-      const newCount = await incrementLike();
+      const newCount = await incrementLike(componentId);
       setLikes(newCount);
     } catch (error) {
       console.error('Failed to like:', error);

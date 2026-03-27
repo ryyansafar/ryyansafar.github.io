@@ -2,7 +2,6 @@
 import { useEffect } from "react";
 import PillNav from '@/components/PillNav';
 import BubbleMenu from '@/components/BubbleMenu';
-import LikeButton from '@/components/LikeButton';
 
 function usePageInit() {
   useEffect(() => {
@@ -951,9 +950,6 @@ export default function Page() {
               </svg>
               <span>Buy me a coffee</span>
             </a>
-
-            <LikeButton />
-
 
             </div>
             <p style={{

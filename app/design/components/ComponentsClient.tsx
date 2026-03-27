@@ -1,6 +1,7 @@
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import LikeButton from '@/components/LikeButton';
 
 /* ─────────────────────────────────────────────────────────
    Constants
@@ -598,7 +599,7 @@ function ComponentCard() {
               {expanded ? '↑ close demo' : '→ try it live'}
             </button>
 
-            <a
+<a
               href="https://github.com/ryyansafar/Ryyan-components"
               target="_blank" rel="noopener noreferrer"
               style={{
@@ -612,6 +613,10 @@ function ComponentCard() {
             >
               GitHub ↗
             </a>
+
+            <div style={{ marginLeft: 'auto' }}>
+              <LikeButton componentId="cursor-spring" />
+            </div>
           </div>
         </div>
       </div>
