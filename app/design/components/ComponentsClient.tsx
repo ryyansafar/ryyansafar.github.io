@@ -12,7 +12,7 @@ const TAGS = ['vanilla-js', 'no-deps', 'spring-physics', 'cursor'];
 /* ─────────────────────────────────────────────────────────
    Noise Overlay — constants
 ───────────────────────────────────────────────────────── */
-const NOISE_DEFAULTS = { opacity: 0.12, grain: 1, speed: 1 };
+const NOISE_DEFAULTS = { opacity: 0.12, grain: 1, speed: 1, zIndex: 9998 };
 const NOISE_TAGS = ['vanilla-js', 'no-deps', 'canvas', 'texture', 'film-grain'];
 
 const NOISE_CODE = `// noise-overlay.js — drop into any project, zero dependencies
@@ -89,22 +89,26 @@ export default function RootLayout({ children }) {
   );
 }`,
 
-  react: `// Copy noise-overlay.tsx into your components:
-import NoiseOverlay from '@/components/noise-overlay';
+  react: `// 1. npx ryyan-ui add noise-overlay
+// 2. Render once at your app root:
 
-export default function App() {
+import NoiseOverlay from '@/components/ui/noise-overlay';
+
+export default function RootLayout({ children }) {
   return (
     <>
-      <YourContent />
-      <NoiseOverlay
-        opacity={0.12}
-        grain={1}
-        speed={1}
-        blend="overlay"
-      />
+      {children}
+      <NoiseOverlay opacity={0.12} grain={1} speed={1} blend="overlay" />
     </>
   );
-}`,
+}
+
+// All props (all optional):
+// opacity  0–1        default 0.12   canvas opacity
+// grain    1–8        default 1      pixel block size
+// speed    1+         default 1      refresh every N frames
+// blend    string     default overlay  CSS mix-blend-mode
+// zIndex   number     default 9998`,
 };
 
 const CURSOR_CODE = `// spring-cursor.js — drop into any project, zero dependencies
@@ -205,16 +209,24 @@ export default function RootLayout({ children }) {
   );
 }`,
 
-  react: `// index.html (Vite / CRA)
-<script src="/spring-cursor.js"></script>
+  react: `// 1. npx ryyan-ui add cursor-spring
+// 2. Render once at your app root:
 
-// Or dynamically in main.tsx:
-useEffect(() => {
-  const s = document.createElement('script');
-  s.src = '/spring-cursor.js';
-  document.body.appendChild(s);
-  return () => document.body.removeChild(s);
-}, []);`,
+import SpringCursor from '@/components/ui/cursor-spring';
+
+export default function RootLayout({ children }) {
+  return (
+    <>
+      {children}
+      <SpringCursor />
+    </>
+  );
+}
+
+// Customise physics:
+// <SpringCursor posStiff={80}  posDamp={12} /> {/* Floaty  */}
+// <SpringCursor posStiff={240} posDamp={27} /> {/* Default */}
+// <SpringCursor posStiff={500} posDamp={45} /> {/* Snappy  */}`,
 };
 
 const EXAMPLES: Record<string, { label: string; code: string }> = {
