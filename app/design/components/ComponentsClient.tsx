@@ -81,32 +81,30 @@ const USAGE: Record<string, string> = {
 </script>`,
 
   nextjs: `// app/layout.tsx
-import Script from 'next/script';
+import SpringCursor from '@/components/ui/cursor-spring';
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+        <SpringCursor />
         {children}
-        <Script
-          src="/spring-cursor.js"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   );
 }`,
 
-  react: `// index.html (Vite / CRA)
-<script src="/spring-cursor.js"></script>
+  react: `// In your main App file:
+import SpringCursor from './components/ui/cursor-spring';
 
-// Or dynamically in main.tsx:
-useEffect(() => {
-  const s = document.createElement('script');
-  s.src = '/spring-cursor.js';
-  document.body.appendChild(s);
-  return () => document.body.removeChild(s);
-}, []);`,
+function App() {
+  return (
+    <>
+      <SpringCursor />
+      <div>Your App Content</div>
+    </>
+  );
+}`,
 };
 
 const EXAMPLES: Record<string, { label: string; code: string }> = {
@@ -126,25 +124,22 @@ const EXAMPLES: Record<string, { label: string; code: string }> = {
   },
   nextjs: {
     label: 'Next.js App',
-    code: `// 1. Copy spring-cursor.js → /public/spring-cursor.js
-// 2. app/layout.tsx:
+    code: `// 1. Install via CLI: npx ryyan-ui add cursor-spring
+// 2. Import into app/layout.tsx:
 
-import Script from 'next/script';
+import SpringCursor from '@/components/ui/cursor-spring';
 
 export default function RootLayout({ children }) {
   return (
     <html>
       <body>
+        <SpringCursor />
         {children}
-        <Script
-          src="/spring-cursor.js"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   );
 }
-// Works with App Router and Pages Router.`,
+// Automatically handles client-side init and touch-detection.`,
   },
   params: {
     label: 'Custom Physics',
@@ -469,7 +464,7 @@ function DocTabs({ command }: { command: string }) {
         {mainTab === 'install' && (
           <div>
             <p style={{ fontSize: '0.8125rem', color: 'rgba(27,28,25,0.5)', marginBottom: '1rem', lineHeight: 1.6 }}>
-              CLI coming soon — for now, copy the implementation directly into your project.
+              The official <code style={{ color: '#1b1c19', fontWeight: 600 }}>ryyan-ui</code> CLI is now live! Use it to instantly add primitives to your project.
             </p>
             {/* Terminal */}
             <div style={{ background: '#1b1c19', borderRadius: 10, overflow: 'hidden', fontFamily: "'JetBrains Mono', monospace", marginBottom: '0.75rem', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
